@@ -16,18 +16,14 @@
             --muted: #94a3b8;
             --subtle: #64748b;
             --card: rgba(56,189,248,0.04);
-            --card-hover: rgba(56,189,248,0.075);
             --border: rgba(56,189,248,0.1);
         }
         html { scroll-behavior: smooth; }
         body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; line-height: 1.65; overflow-x: hidden; }
 
         body::before {
-            content: '';
-            position: fixed; inset: 0; z-index: -2; pointer-events: none;
-            background-image:
-                linear-gradient(rgba(56,189,248,0.025) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(56,189,248,0.025) 1px, transparent 1px);
+            content: ''; position: fixed; inset: 0; z-index: -2; pointer-events: none;
+            background-image: linear-gradient(rgba(56,189,248,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(56,189,248,0.025) 1px, transparent 1px);
             background-size: 50px 50px;
         }
         body::after {
@@ -37,218 +33,82 @@
 
         nav {
             position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-            padding: 1rem 2.5rem;
-            display: flex; align-items: center; gap: 1.2rem;
-            background: rgba(6,12,21,0.88);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            padding: 1rem 2.5rem; display: flex; align-items: center; gap: 1.2rem;
+            background: rgba(6,12,21,0.88); backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border);
         }
-        .back-link {
-            display: inline-flex; align-items: center; gap: 0.4rem;
-            color: var(--muted); text-decoration: none; font-size: 0.85rem;
-            font-weight: 500; transition: color 0.2s;
-        }
+        .back-link { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--muted); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
         .back-link:hover { color: #7dd3fc; }
         .nav-sep { color: var(--subtle); font-size: 0.8rem; }
         .nav-title { color: var(--text); font-size: 0.85rem; font-weight: 500; }
 
-        .hero {
-            padding: 7rem 2rem 3rem;
-            max-width: 1020px; margin: 0 auto;
-        }
+        /* ── HERO ── */
+        .hero { padding: 7rem 2rem 2.5rem; max-width: 1100px; margin: 0 auto; }
         .hero-badge {
             display: inline-flex; align-items: center; gap: 0.5rem;
             background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.2);
             border-radius: 2rem; padding: 0.3rem 0.9rem;
-            font-size: 0.78rem; color: var(--accent); font-weight: 500; letter-spacing: 0.04em;
-            margin-bottom: 1.4rem;
+            font-size: 0.78rem; color: var(--accent); font-weight: 500; letter-spacing: 0.04em; margin-bottom: 1.2rem;
         }
         .hero h1 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(2rem, 5vw, 3.2rem);
-            font-weight: 700; line-height: 1.1;
+            font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.9rem, 4.5vw, 3rem); font-weight: 700; line-height: 1.1;
             background: linear-gradient(135deg, #e2e8f0 30%, #38bdf8 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            background-clip: text; margin-bottom: 1.2rem;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 1rem;
         }
-        .hero-meta {
-            display: flex; flex-wrap: wrap; gap: 1.2rem;
-            align-items: center; margin-bottom: 1.6rem;
-        }
-        .hero-meta span {
-            display: inline-flex; align-items: center; gap: 0.4rem;
-            color: var(--muted); font-size: 0.85rem;
-        }
-        .hero p {
-            font-size: 1.05rem; color: var(--muted); max-width: 680px; line-height: 1.7;
-        }
+        .hero p { font-size: 1rem; color: var(--muted); max-width: 700px; line-height: 1.7; margin-bottom: 1.4rem; }
 
-        .award-banner {
-            margin: 2rem 0;
+        .award {
+            display: inline-flex; align-items: center; gap: 0.7rem;
             background: linear-gradient(135deg, rgba(251,146,60,0.1), rgba(251,146,60,0.05));
-            border: 1px solid rgba(251,146,60,0.3);
-            border-radius: 1rem; padding: 1.2rem 1.8rem;
-            display: flex; align-items: center; gap: 1rem;
+            border: 1px solid rgba(251,146,60,0.3); border-radius: 0.8rem;
+            padding: 0.7rem 1.1rem; margin-bottom: 1.6rem;
         }
-        .award-icon { font-size: 2rem; }
-        .award-text { }
-        .award-text strong { color: var(--accent2); font-family: 'Space Grotesk', sans-serif; font-size: 1.05rem; }
-        .award-text p { color: var(--muted); font-size: 0.88rem; margin-top: 0.2rem; }
+        .award strong { color: var(--accent2); font-size: 0.9rem; }
+        .award span { color: var(--muted); font-size: 0.82rem; }
 
-        main { max-width: 1020px; margin: 0 auto; padding: 0 2rem 5rem; }
+        /* ── STATS + TEAM ROW ── */
+        .meta-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; max-width: 1100px; margin: 0 auto 2rem; padding: 0 2rem; }
+        @media(max-width: 680px) { .meta-row { grid-template-columns: 1fr; } }
 
-        section { margin-bottom: 3.5rem; }
-        section h2 {
-            font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 600;
-            color: var(--text); margin-bottom: 1.4rem;
-            display: flex; align-items: center; gap: 0.7rem;
-        }
-        section h2::after {
-            content: ''; flex: 1; height: 1px;
-            background: linear-gradient(to right, var(--border), transparent);
-        }
-        section h3 {
-            font-family: 'Space Grotesk', sans-serif; font-size: 1.05rem; font-weight: 600;
-            color: var(--accent); margin: 1.4rem 0 0.7rem;
-        }
-        p { color: var(--muted); margin-bottom: 0.9rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; }
+        @media(max-width: 480px) { .stats-grid { grid-template-columns: 1fr 1fr; } }
+        .stat { background: var(--card); border: 1px solid var(--border); border-radius: 0.8rem; padding: 0.9rem; text-align: center; }
+        .stat .v { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--accent); line-height: 1; }
+        .stat .v.amber { color: var(--accent2); }
+        .stat .l { font-size: 0.72rem; color: var(--muted); margin-top: 0.3rem; }
 
-        .card {
-            background: var(--card); border: 1px solid var(--border);
-            border-radius: 1rem; padding: 1.6rem;
-            transition: background 0.2s;
-        }
-        .card:hover { background: var(--card-hover); }
+        .team-block { background: var(--card); border: 1px solid var(--border); border-radius: 1rem; padding: 1.2rem; }
+        .team-block h3 { font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem; color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.8rem; }
+        .team-list { display: flex; flex-direction: column; gap: 0.5rem; }
+        .tm { display: flex; align-items: baseline; gap: 0.5rem; }
+        .tm-name { font-size: 0.88rem; color: var(--text); font-weight: 500; }
+        .tm-role { font-size: 0.78rem; color: var(--muted); }
+        .tm-me .tm-name { color: var(--accent); }
 
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; }
-        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
-        @media(max-width: 720px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+        .tags-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; padding: 0 2rem; max-width: 1100px; margin-left: auto; margin-right: auto; }
+        .tag { display: inline-block; background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.18); border-radius: 0.4rem; padding: 0.2rem 0.6rem; font-size: 0.75rem; color: var(--accent); font-weight: 500; }
+        .tag.amber { background: rgba(251,146,60,0.08); border-color: rgba(251,146,60,0.18); color: var(--accent2); }
 
-        .callout {
-            border-left: 3px solid var(--accent);
-            background: rgba(56,189,248,0.05);
-            border-radius: 0 0.7rem 0.7rem 0;
-            padding: 1rem 1.3rem; margin: 1.2rem 0;
+        /* ── PDF VIEWER ── */
+        .pdf-section { max-width: 1100px; margin: 0 auto; padding: 0 2rem 4rem; }
+        .pdf-section h2 {
+            font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; font-weight: 600;
+            color: var(--muted); margin-bottom: 1rem;
+            display: flex; align-items: center; gap: 0.6rem;
         }
-        .callout.amber {
-            border-left-color: var(--accent2);
-            background: rgba(251,146,60,0.05);
+        .pdf-section h2::after { content: ''; flex: 1; height: 1px; background: linear-gradient(to right, var(--border), transparent); }
+        .pdf-wrap {
+            border: 1px solid var(--border); border-radius: 1rem; overflow: hidden;
+            background: #fff;
         }
-        .callout p { margin: 0; }
+        .pdf-wrap iframe { display: block; width: 100%; height: 88vh; border: none; }
+        .pdf-fallback {
+            display: none; padding: 3rem; text-align: center; color: var(--muted); font-size: 0.9rem;
+        }
+        .pdf-fallback a { color: var(--accent); text-decoration: none; font-weight: 500; }
+        .pdf-fallback a:hover { text-decoration: underline; }
 
-        .tag {
-            display: inline-block;
-            background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.18);
-            border-radius: 0.4rem; padding: 0.2rem 0.6rem;
-            font-size: 0.75rem; color: var(--accent); font-weight: 500; margin: 0.2rem;
-        }
-        .tag.amber {
-            background: rgba(251,146,60,0.08); border-color: rgba(251,146,60,0.18);
-            color: var(--accent2);
-        }
-        .tag.green {
-            background: rgba(52,211,153,0.08); border-color: rgba(52,211,153,0.18);
-            color: #34d399;
-        }
-
-        .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1.1rem; }
-        .team-card {
-            background: var(--card); border: 1px solid var(--border);
-            border-radius: 0.9rem; padding: 1.2rem;
-            text-align: center;
-        }
-        .team-card.me {
-            border-color: rgba(56,189,248,0.35);
-            background: rgba(56,189,248,0.06);
-        }
-        .team-card .role { font-size: 0.72rem; color: var(--accent); font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 0.4rem; }
-        .team-card .role.amber { color: var(--accent2); }
-        .team-card .name { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 0.95rem; color: var(--text); margin-bottom: 0.4rem; }
-        .team-card .desc { font-size: 0.8rem; color: var(--muted); }
-
-        .arch-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem; }
-        @media(max-width: 760px) { .arch-cards { grid-template-columns: 1fr; } }
-        .arch-card {
-            border: 1px solid var(--border);
-            border-radius: 0.9rem; padding: 1.3rem;
-            background: var(--card);
-            position: relative;
-        }
-        .arch-card.selected {
-            border-color: rgba(56,189,248,0.4);
-            background: rgba(56,189,248,0.06);
-        }
-        .arch-card.rejected { opacity: 0.65; }
-        .arch-card .arch-badge {
-            font-size: 0.7rem; font-weight: 600; letter-spacing: 0.06em;
-            text-transform: uppercase; padding: 0.2rem 0.6rem;
-            border-radius: 0.3rem; margin-bottom: 0.7rem; display: inline-block;
-        }
-        .arch-card.selected .arch-badge { background: rgba(56,189,248,0.15); color: var(--accent); }
-        .arch-card.rejected .arch-badge { background: rgba(100,116,139,0.15); color: var(--subtle); }
-        .arch-card h4 { font-family: 'Space Grotesk', sans-serif; font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 0.6rem; }
-        .arch-card p { font-size: 0.83rem; margin: 0; }
-        .arch-card .verdict {
-            margin-top: 0.8rem; font-size: 0.78rem; font-weight: 500;
-            color: var(--subtle); font-style: italic;
-        }
-        .arch-card.selected .verdict { color: #34d399; font-style: normal; }
-
-        .subsystem-row {
-            display: grid; grid-template-columns: 220px 1fr; gap: 1.2rem;
-            align-items: start; margin-bottom: 1.2rem;
-        }
-        @media(max-width: 640px) { .subsystem-row { grid-template-columns: 1fr; } }
-        .subsystem-label {
-            background: rgba(56,189,248,0.06); border: 1px solid rgba(56,189,248,0.15);
-            border-radius: 0.7rem; padding: 0.9rem 1rem; text-align: center;
-        }
-        .subsystem-label .ss-icon { font-size: 1.5rem; margin-bottom: 0.3rem; }
-        .subsystem-label .ss-name { font-family: 'Space Grotesk', sans-serif; font-size: 0.88rem; font-weight: 600; color: var(--accent); }
-        .subsystem-label .ss-comp { font-size: 0.75rem; color: var(--muted); margin-top: 0.2rem; }
-        .subsystem-desc { }
-        .subsystem-desc p { font-size: 0.87rem; margin-bottom: 0.5rem; }
-
-        .ivv-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.9rem; }
-        @media(max-width: 700px) { .ivv-steps { grid-template-columns: 1fr 1fr; } }
-        .ivv-step {
-            border-radius: 0.8rem; padding: 1.1rem; text-align: center;
-            border: 1px solid;
-        }
-        .ivv-step .step-num { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 0.3rem; }
-        .ivv-step .step-name { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem; }
-        .ivv-step .step-desc { font-size: 0.77rem; color: var(--muted); }
-        .ivv-step.blue { border-color: rgba(125,211,252,0.3); background: rgba(125,211,252,0.05); }
-        .ivv-step.blue .step-num, .ivv-step.blue .step-name { color: #7dd3fc; }
-        .ivv-step.indigo { border-color: rgba(129,140,248,0.3); background: rgba(129,140,248,0.05); }
-        .ivv-step.indigo .step-num, .ivv-step.indigo .step-name { color: #818cf8; }
-        .ivv-step.green { border-color: rgba(52,211,153,0.3); background: rgba(52,211,153,0.05); }
-        .ivv-step.green .step-num, .ivv-step.green .step-name { color: #34d399; }
-        .ivv-step.red { border-color: rgba(248,113,113,0.3); background: rgba(248,113,113,0.05); }
-        .ivv-step.red .step-num, .ivv-step.red .step-name { color: #f87171; }
-
-        .skills-wrap { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.8rem; }
-
-        .stats-row {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.1rem;
-            margin: 1.4rem 0;
-        }
-        @media(max-width: 640px) { .stats-row { grid-template-columns: 1fr 1fr; } }
-        .stat-box {
-            background: var(--card); border: 1px solid var(--border);
-            border-radius: 0.8rem; padding: 1rem; text-align: center;
-        }
-        .stat-box .val { font-family: 'Space Grotesk', sans-serif; font-size: 1.7rem; font-weight: 700; color: var(--accent); }
-        .stat-box .val.amber { color: var(--accent2); }
-        .stat-box .lbl { font-size: 0.75rem; color: var(--muted); margin-top: 0.2rem; }
-
-        .fade-in { opacity: 0; transform: translateY(18px); transition: opacity 0.55s ease, transform 0.55s ease; }
-        .fade-in.visible { opacity: 1; transform: none; }
-
-        footer {
-            text-align: center; padding: 2.5rem; color: var(--subtle); font-size: 0.82rem;
-            border-top: 1px solid var(--border);
-        }
+        footer { text-align: center; padding: 2rem; color: var(--subtle); font-size: 0.82rem; border-top: 1px solid var(--border); }
         footer a { color: var(--muted); text-decoration: none; }
         footer a:hover { color: var(--accent); }
     </style>
@@ -265,408 +125,64 @@
 </nav>
 
 <div class="hero">
-    <div class="hero-badge">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        Concours national — Automne 2025
-    </div>
+    <div class="hero-badge">Concours national AFIS · Automne 2025</div>
     <h1>RobAFIS — Robot Mobile Autonome de Rugby</h1>
-    <div class="hero-meta">
-        <span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            Équipe BACAR — 5 membres
-        </span>
-        <span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            UTC — Concours AFIS, Toulouse
-        </span>
-        <span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            Mon rôle : Coordinateur IVV
-        </span>
-    </div>
-    <p>Conception, intégration et validation d'un robot mobile autonome capable de jouer au rugby sur terrain normé — récupérer un ballon ovale, éviter des défenseurs et marquer des essais — dans le cadre du concours national RobAFIS organisé par l'AFIS.</p>
-
-    <div class="award-banner">
-        <div class="award-icon">🏆</div>
-        <div class="award-text">
-            <strong>Prix de l'Innovation — Concours RobAFIS 2025</strong>
-            <p>L'UTC, représentée par l'équipe BACAR, a décroché le Prix de l'Innovation pour l'originalité de son architecture système et de sa stratégie de validation.</p>
+    <p>Conception, intégration et validation d'un robot mobile autonome capable de jouer au rugby sur terrain normé (130×110 cm) — récupérer un ballon ovale, contourner des défenseurs et marquer des essais — dans le cadre du concours national RobAFIS organisé par l'AFIS (Association Française d'Ingénierie Système).</p>
+    <div class="award">
+        <span style="font-size:1.3rem">🏆</span>
+        <div>
+            <strong>Prix de l'Innovation — RobAFIS 2025</strong><br>
+            <span>UTC · Équipe BACAR · 13 écoles en compétition</span>
         </div>
     </div>
 </div>
 
-<main>
-
-    <!-- CONTEXTE -->
-    <section class="fade-in">
-        <h2>Contexte & Mission</h2>
-        <div class="grid-2">
-            <div>
-                <p>RobAFIS est un concours national d'ingénierie système organisé par l'AFIS (Association Française d'Ingénierie Système). Chaque équipe doit concevoir, intégrer et valider un robot mobile autonome, en appliquant rigoureusement les méthodologies IS : cahier des charges, exigences, conception, IVV.</p>
-                <p>L'édition 2025, baptisée <strong>RugbAFIS</strong>, impose un thème rugby. Le robot doit évoluer sur un terrain normé (130 × 110 cm), récupérer un ballon ovale en mousse, contourner jusqu'à quatre défenseurs (cubes rouges 3 cm), puis marquer un essai — et éventuellement réussir une transformation en lançant le ballon entre les poteaux.</p>
-            </div>
-            <div>
-                <div class="stats-row" style="grid-template-columns: 1fr 1fr; margin:0; gap: 0.9rem;">
-                    <div class="stat-box">
-                        <div class="val">130<span style="font-size:0.9rem">×</span>110</div>
-                        <div class="lbl">Terrain (cm)</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="val amber">4</div>
-                        <div class="lbl">Défenseurs max</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="val">3 min</div>
-                        <div class="lbl">Durée de match</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="val amber">&lt;3 s</div>
-                        <div class="lbl">Arrêt d'urgence</div>
-                    </div>
-                </div>
-                <div class="callout" style="margin-top:0.9rem">
-                    <p style="font-size:0.84rem">Le terrain est divisé en zones colorées : engagement (bleu), centrale, "des 22" et en-but (vert). La détection de ces zones est assurée par capteur couleur embarqué.</p>
-                </div>
-            </div>
+<div class="meta-row">
+    <div>
+        <div class="stats-grid">
+            <div class="stat"><div class="v">130<span style="font-size:0.9rem">×</span>110</div><div class="l">Terrain (cm)</div></div>
+            <div class="stat"><div class="v amber">×17</div><div class="l">Amplification</div></div>
+            <div class="stat"><div class="v">5</div><div class="l">Capteurs</div></div>
+            <div class="stat"><div class="v amber">75</div><div class="l">Pages dossier</div></div>
         </div>
-    </section>
-
-    <!-- ÉQUIPE -->
-    <section class="fade-in">
-        <h2>Équipe BACAR</h2>
-        <p>L'équipe se compose de cinq membres aux compétences complémentaires, couvrant la gestion de projet, la modélisation dynamique, le développement logiciel et la coordination IVV.</p>
-        <div class="team-grid">
-            <div class="team-card">
-                <div class="role amber">Chef de projet</div>
-                <div class="name">Rayan TALAOUBRID</div>
-                <div class="desc">Planification, suivi des objectifs, respect des délais et de la qualité.</div>
-            </div>
-            <div class="team-card">
-                <div class="role">Ingénieur modélisation</div>
-                <div class="name">Adama THIAM</div>
-                <div class="desc">Modélisation cinématique et dynamique, validation par simulation.</div>
-            </div>
-            <div class="team-card">
-                <div class="role">Ingénieur modélisation</div>
-                <div class="name">Apeesh SIVANANTHAM</div>
-                <div class="desc">Étude dynamique, modèles analytiques et simulations.</div>
-            </div>
-            <div class="team-card">
-                <div class="role">Ingénieur informatique</div>
-                <div class="name">Bryan COULIBALY</div>
-                <div class="desc">Architecture logicielle, algorithmes de contrôle, interface commande/embarqué.</div>
-            </div>
-            <div class="team-card me">
-                <div class="role">Coordinateur IVV</div>
-                <div class="name">Clément BALCON</div>
-                <div class="desc">Intégration, vérification & validation. Appui modélisation, essais, traitement des données et rédaction transversale.</div>
-            </div>
+    </div>
+    <div class="team-block">
+        <h3>Équipe BACAR</h3>
+        <div class="team-list">
+            <div class="tm"><span class="tm-name">Rayan Talaoubrid</span><span class="tm-role">— Chef de projet</span></div>
+            <div class="tm"><span class="tm-name">Adama Thiam</span><span class="tm-role">— Modélisation dynamique</span></div>
+            <div class="tm"><span class="tm-name">Apeesh Sivanantham</span><span class="tm-role">— Modélisation dynamique</span></div>
+            <div class="tm"><span class="tm-name">Bryan Coulibaly</span><span class="tm-role">— Développement logiciel</span></div>
+            <div class="tm tm-me"><span class="tm-name">Clément Balcon</span><span class="tm-role">— Coordinateur IVV</span></div>
         </div>
-    </section>
+    </div>
+</div>
 
-    <!-- EXIGENCES -->
-    <section class="fade-in">
-        <h2>Ingénierie Système & Exigences</h2>
-        <p>Le dossier de développement est structuré en LOTs conformément au plan-type RobAFIS, en appliquant une démarche IS rigoureuse : de la définition du besoin jusqu'à la validation en conditions réelles.</p>
+<div class="tags-row" style="margin-bottom:1.8rem">
+    <span class="tag">Ingénierie Système</span>
+    <span class="tag">SysML</span>
+    <span class="tag">IVV · Cycle en V</span>
+    <span class="tag">Robotique autonome</span>
+    <span class="tag">Arduino · MegaPi</span>
+    <span class="tag amber">BLE</span>
+    <span class="tag">Ultrason · Couleur · Gyroscope</span>
+    <span class="tag amber">Gestion de projet</span>
+    <span class="tag">AMDEC</span>
+</div>
 
-        <h3>Exigences fonctionnelles clés</h3>
-        <div class="grid-3">
-            <div class="card">
-                <div class="tag">Navigation</div>
-                <p style="font-size:0.85rem; margin-top:0.6rem;">Se déplacer sur le terrain avec ou sans ballon, rester dans les limites, franchir les axes de navigation.</p>
-            </div>
-            <div class="card">
-                <div class="tag">Manipulation</div>
-                <p style="font-size:0.85rem; margin-top:0.6rem;">Récupérer, maintenir et relâcher le ballon ovale. Exigence critique F.6 — pivot de toute la chaîne de valeur offensive.</p>
-            </div>
-            <div class="card">
-                <div class="tag">Scoring</div>
-                <p style="font-size:0.85rem; margin-top:0.6rem;">Aplatir le ballon en zone d'en-but (essai) et lancer entre les poteaux depuis la zone centrale (transformation).</p>
-            </div>
-            <div class="card">
-                <div class="tag">Perception</div>
-                <p style="font-size:0.85rem; margin-top:0.6rem;">Détecter le ballon, identifier les défenseurs et reconnaître les zones par couleur du terrain.</p>
-            </div>
-            <div class="card">
-                <div class="tag">Évitement</div>
-                <p style="font-size:0.85rem; margin-top:0.6rem;">Contourner jusqu'à 4 défenseurs (cubes rouges 3 cm) sans contact, via scan ultrasonique et calcul de trajectoire libre.</p>
-            </div>
-            <div class="card">
-                <div class="tag amber">Sécurité</div>
-                <p style="font-size:0.85rem; margin-top:0.6rem;">Arrêt d'urgence en moins de 3 secondes sur commande de l'entraîneur, prioritaire sur toutes les autres fonctions.</p>
-            </div>
-        </div>
-
-        <div class="callout amber" style="margin-top:1.4rem">
-            <p style="font-size:0.85rem"><strong style="color:var(--accent2)">Analyse SysML :</strong> Les diagrammes d'exigences (fonctionnelles, performance, interfaces, opérationnelles) ont été modélisés avec un code couleur catégoriel. La fonction F.6 "Prendre le ballon" a été identifiée comme nœud critique — sa défaillance entraîne l'effondrement de l'ensemble de la chaîne offensive.</p>
-        </div>
-    </section>
-
-    <!-- ARCHITECTURE -->
-    <section class="fade-in">
-        <h2>Conception Système — Choix Architecturaux</h2>
-        <p>Trois architectures ont été étudiées à partir du kit Ultimate 2.0, évaluées selon leur capacité à assurer la navigation précise, la préhension fiable du ballon et la fonction de lancer pour la transformation.</p>
-
-        <div class="arch-cards">
-            <div class="arch-card rejected">
-                <div class="arch-badge">Écartée</div>
-                <h4>Chenilles & Pelle Passive</h4>
-                <p style="font-size:0.82rem">Deux chenilles triangulaires + fourche fixe. Bonne stabilité mais frottements importants faussant l'odométrie, et impossibilité de réaliser le lancer pour la transformation.</p>
-                <div class="verdict">✗ Incompatible avec l'exigence de lancer</div>
-            </div>
-            <div class="arch-card rejected">
-                <div class="arch-badge">Écartée</div>
-                <h4>Tricycle Omni & Rouleaux</h4>
-                <p style="font-size:0.82rem">Trois roues dont une omnidirectionnelle + système "intake" par friction. Trop complexe avec les pièces du kit, risque élevé de blocage et restitution précise pour le tir très difficile.</p>
-                <div class="verdict">✗ Complexité trop élevée pour le kit disponible</div>
-            </div>
-            <div class="arch-card selected">
-                <div class="arch-badge">Retenue</div>
-                <h4>4 Roues & Pince Active</h4>
-                <p style="font-size:0.82rem">Châssis rectangulaire différentiel (2 roues motrices + 2 libres) + bras articulé avec pince motorisée. Meilleur compromis entre précision de rotation et capacité de manipulation. Le bras assure à la fois la préhension et le lancer par impulsion cinétique.</p>
-                <div class="verdict">✓ Retenue — MegaPi + BLE + 4 capteurs</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- SOUS-SYSTÈMES -->
-    <section class="fade-in">
-        <h2>Architecture Détaillée — Sous-systèmes</h2>
-        <p>L'architecture est organisée autour de cinq sous-systèmes interconnectés, pilotés par une carte MegaPi (ATmega2560) via des flux PWM, I²C, UART et Digital.</p>
-
-        <div class="subsystem-row">
-            <div class="subsystem-label">
-                <div class="ss-icon">⚙️</div>
-                <div class="ss-name">Locomotion</div>
-                <div class="ss-comp">2 moteurs encodeurs + 2 roues libres</div>
-            </div>
-            <div class="subsystem-desc">
-                <p>Architecture différentielle à quatre roues pour des déplacements rectilignes et des rotations sur place précises. Le maintien du cap est assuré par asservissement gyroscopique. Un capteur de ligne détecte les marquages au sol pour le recalage odométrique lors du franchissement des axes.</p>
-                <div style="margin-top:0.3rem">
-                    <span class="tag">Moteurs encodeurs</span>
-                    <span class="tag">Gyroscope 3 axes</span>
-                    <span class="tag">Capteur de ligne</span>
-                    <span class="tag">PWM</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="subsystem-row">
-            <div class="subsystem-label">
-                <div class="ss-icon">🦾</div>
-                <div class="ss-name">Manipulation</div>
-                <div class="ss-comp">Bras pivotant + pince motorisée</div>
-            </div>
-            <div class="subsystem-desc">
-                <p>Bras articulé commandé par servomoteur pour orienter (lever/baisser) et pince motorisée pour saisir, maintenir et relâcher le ballon. La fonction de lancer exploite l'énergie cinétique du bras en trois temps : pré-libération (ouverture partielle), impulsion (rotation rapide), relâchement par arrêt brusque en fin de course.</p>
-                <div style="margin-top:0.3rem">
-                    <span class="tag">Servomoteur bras</span>
-                    <span class="tag">Servomoteur pince</span>
-                    <span class="tag">Lancer cinétique</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="subsystem-row">
-            <div class="subsystem-label">
-                <div class="ss-icon">📡</div>
-                <div class="ss-name">Perception</div>
-                <div class="ss-comp">4 capteurs hétérogènes</div>
-            </div>
-            <div class="subsystem-desc">
-                <p>Télémètre ultrason à l'avant (détection défenseurs, scan 180° pour cartographie obstacles), capteur de couleur (validation zones, confirmation teinte ballon), capteur de ligne (détection limites, recalage position), gyroscope 3 axes (asservissement cap).</p>
-                <div style="margin-top:0.3rem">
-                    <span class="tag">Ultrason</span>
-                    <span class="tag">Couleur (I²C)</span>
-                    <span class="tag">Ligne</span>
-                    <span class="tag">Gyroscope (I²C)</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="subsystem-row">
-            <div class="subsystem-label">
-                <div class="ss-icon">🧠</div>
-                <div class="ss-name">Commande & Énergie</div>
-                <div class="ss-comp">MegaPi + LiPo 11.1V</div>
-            </div>
-            <div class="subsystem-desc">
-                <p>Carte MegaPi (ATmega2560) centralise le traitement : algorithmes de navigation, gestion d'obstacles, séquencement des mouvements du bras. Batterie LiPo 11.1V positionnée à l'arrière pour agir comme contrepoids lors du levage du ballon et garantir un centre de gravité stable.</p>
-                <div style="margin-top:0.3rem">
-                    <span class="tag">ATmega2560</span>
-                    <span class="tag">LiPo 11.1V</span>
-                    <span class="tag">PWM / I²C / UART</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="subsystem-row">
-            <div class="subsystem-label">
-                <div class="ss-icon">📱</div>
-                <div class="ss-name">IHM</div>
-                <div class="ss-comp">Application smartphone BLE</div>
-            </div>
-            <div class="subsystem-desc">
-                <p>Interface sur smartphone via Bluetooth Low Energy (BLE). Mode Entraîneur : boutons Start/Stop larges, indicateurs d'état colorés (vert/rouge), télémétrie minimale (zone, possession ballon, essai marqué). Mode Mainteneur : accès journaux d'erreurs et valeurs brutes capteurs. Arrêt d'urgence transmis avec latence quasi nulle.</p>
-                <div style="margin-top:0.3rem">
-                    <span class="tag">BLE</span>
-                    <span class="tag">User-Centered Design</span>
-                    <span class="tag">Arrêt d'urgence &lt;3s</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- STRATÉGIE ALGORITHMIQUE -->
-    <section class="fade-in">
-        <h2>Stratégie Algorithmique</h2>
-        <p>La dynamique opérationnelle est régie par une <strong>machine à états séquentielle</strong>. Lors du coup d'envoi, le robot progresse selon un cap rectiligne asservi, valide sa progression par franchissement de la ligne centrale, détecte le ballon par capteur couleur et déclenche la séquence de préhension.</p>
-
-        <div class="callout">
-            <p style="font-size:0.85rem"><strong style="color:var(--accent)">Mode de rattrapage :</strong> Si le ballon est manqué (détection de la ligne de fond), le robot initie une marche arrière, effectue un scan directionnel ultrasonique à 180°, localise le ballon par triangulation angle-distance et relance la procédure d'approche.</p>
-        </div>
-
-        <h3>Séquence de jeu</h3>
-        <div class="grid-2">
-            <div class="card">
-                <div style="color:var(--accent); font-weight:600; font-size:0.88rem; margin-bottom:0.6rem;">① Approche</div>
-                <p style="font-size:0.83rem">Navigation différentielle depuis zone d'engagement, asservissement gyroscopique, recalage odométrique sur lignes d'axes.</p>
-            </div>
-            <div class="card">
-                <div style="color:var(--accent); font-weight:600; font-size:0.88rem; margin-bottom:0.6rem;">② Acquisition du ballon</div>
-                <p style="font-size:0.83rem">Détection par capteur couleur (teinte marron), fermeture pince + rotation bras pour sécuriser la charge.</p>
-            </div>
-            <div class="card">
-                <div style="color:var(--accent); font-weight:600; font-size:0.88rem; margin-bottom:0.6rem;">③ Navigation tactique</div>
-                <p style="font-size:0.83rem">Scan ultrasonique 180° pour cartographier les défenseurs, calcul du couloir optimal, contournement latéral si nécessaire.</p>
-            </div>
-            <div class="card">
-                <div style="color:var(--accent2); font-weight:600; font-size:0.88rem; margin-bottom:0.6rem;">④ Scoring</div>
-                <p style="font-size:0.83rem">Validation entrée en-but (colorimétrie verte), aplatissement par descente du bras (essai) ou lancer dynamique par impulsion cinétique (transformation).</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- IVV -->
-    <section class="fade-in">
-        <h2>Mon Rôle — Coordinateur IVV</h2>
-        <p>En tant que coordinateur Intégration, Vérification et Validation, j'ai assuré la cohérence entre le besoin client et la réalité technique du robot, en structurant la stratégie de validation selon un <strong>cycle en V ascendant</strong>.</p>
-
-        <div class="ivv-steps">
-            <div class="ivv-step blue">
-                <div class="step-num">1</div>
-                <div class="step-name">Fiabilisation</div>
-                <div class="step-desc">Validation des protocoles bas niveau — communication capteurs/actionneurs correcte.</div>
-            </div>
-            <div class="ivv-step indigo">
-                <div class="step-num">2</div>
-                <div class="step-name">Intégration</div>
-                <div class="step-desc">Vérification de la coopération entre sous-systèmes — synchronisation Navigation ↔ Interface.</div>
-            </div>
-            <div class="ivv-step green">
-                <div class="step-num">3</div>
-                <div class="step-name">Performance</div>
-                <div class="step-desc">Mission complète en &lt;2 min — récupération ballon + marquage essai dans l'enveloppe temporelle.</div>
-            </div>
-            <div class="ivv-step red">
-                <div class="step-num">4</div>
-                <div class="step-name">Robustesse</div>
-                <div class="step-desc">Tests en conditions réelles — perturbations, pannes, scénarios de défaillance.</div>
-            </div>
-        </div>
-
-        <div class="callout" style="margin-top:1.4rem">
-            <p style="font-size:0.85rem"><strong style="color:var(--accent)">Méthodologie :</strong> Chaque essai est formalisé par une fiche standardisée définissant un objectif précis, un protocole reproductible et un critère d'acceptation binaire (Pass/Fail). Cela assure une traçabilité totale entre le besoin (exigences OP.1 à OP.13) et le résultat technique.</p>
-        </div>
-
-        <h3>Contributions transversales</h3>
-        <div class="grid-2">
-            <div class="card">
-                <p style="font-size:0.85rem"><strong style="color:var(--text)">Appui modélisation</strong> — contribution à la modélisation cinématique et dynamique du robot, en lien avec les ingénieurs modélisation.</p>
-            </div>
-            <div class="card">
-                <p style="font-size:0.85rem"><strong style="color:var(--text)">Traitement de données</strong> — exploitation des résultats d'essais, analyse des écarts et rédaction des fiches de validation.</p>
-            </div>
-            <div class="card">
-                <p style="font-size:0.85rem"><strong style="color:var(--text)">Rédaction technique</strong> — contribution au dossier de développement (75 pages) : LOT 10 à LOT 60, exigences, conception, IVV, maintenance, management.</p>
-            </div>
-            <div class="card">
-                <p style="font-size:0.85rem"><strong style="color:var(--text)">Management des risques</strong> — participation à l'AMDEC produit et au plan de maintenance préventive (LOT 40).</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- COMPÉTENCES -->
-    <section class="fade-in">
-        <h2>Compétences Développées</h2>
-        <div class="grid-2">
-            <div class="card">
-                <h3 style="margin-top:0">Ingénierie Système</h3>
-                <div class="skills-wrap">
-                    <span class="tag">Modélisation SysML</span>
-                    <span class="tag">Analyse d'exigences</span>
-                    <span class="tag">Architecture système</span>
-                    <span class="tag">Plan IVV</span>
-                    <span class="tag">Cycle en V</span>
-                    <span class="tag">AMDEC</span>
-                    <span class="tag">Traçabilité</span>
-                </div>
-            </div>
-            <div class="card">
-                <h3 style="margin-top:0">Systèmes Embarqués & Robotique</h3>
-                <div class="skills-wrap">
-                    <span class="tag amber">Arduino / MegaPi</span>
-                    <span class="tag amber">BLE</span>
-                    <span class="tag amber">Capteurs multi-types</span>
-                    <span class="tag amber">Asservissement</span>
-                    <span class="tag amber">Machine à états</span>
-                    <span class="tag amber">Odométrie</span>
-                </div>
-            </div>
-            <div class="card">
-                <h3 style="margin-top:0">Mécanique & Conception</h3>
-                <div class="skills-wrap">
-                    <span class="tag">Cinématique différentielle</span>
-                    <span class="tag">Modélisation dynamique</span>
-                    <span class="tag">Analyse de centre de gravité</span>
-                    <span class="tag">Mécanisme de préhension</span>
-                </div>
-            </div>
-            <div class="card">
-                <h3 style="margin-top:0">Gestion de Projet IS</h3>
-                <div class="skills-wrap">
-                    <span class="tag amber">Rédaction dossier technique</span>
-                    <span class="tag amber">Management des risques</span>
-                    <span class="tag amber">Coordination équipe</span>
-                    <span class="tag amber">Travail sous contrainte temps</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CONCLUSION -->
-    <section class="fade-in">
-        <h2>Conclusion</h2>
-        <p>RobAFIS 2025 a été une expérience d'ingénierie système complète — de la définition du besoin jusqu'aux tests en conditions réelles de compétition. La rigueur du concours (dossier de développement 75 pages, fiches d'essais standardisées, jury AFIS) nous a imposé une discipline méthodologique que l'on retrouve dans les grands projets industriels.</p>
-        <p>Le Prix de l'Innovation récompense notamment notre démarche sur la stratégie de validation (cycle en V formalisé avec critères Pass/Fail binaires) et l'architecture IHM centrée utilisateur, pensée pour minimiser la charge cognitive de l'opérateur en conditions de match.</p>
-        <div class="callout amber">
-            <p style="font-size:0.85rem"><strong style="color:var(--accent2)">Bilan personnel :</strong> Ce projet m'a permis de consolider mon rôle de coordinateur IVV en contexte d'équipe pluridisciplinaire, en combinant des contributions techniques (modélisation, essais) à une dimension méthodologique forte (traçabilité exigences → tests → validation).</p>
-        </div>
-    </section>
-
-</main>
+<div class="pdf-section">
+    <h2>Dossier de développement complet</h2>
+    <div class="pdf-wrap">
+        <iframe src="robafis.pdf" title="Dossier de développement RobAFIS 2025"></iframe>
+    </div>
+    <p style="margin-top:0.8rem; font-size:0.8rem; color:var(--subtle); text-align:center">
+        Si le PDF ne s'affiche pas, <a href="robafis.pdf" target="_blank" style="color:var(--accent)">téléchargez-le directement</a>.
+    </p>
+</div>
 
 <footer>
-    <a href="index.html">← Retour au portfolio</a>
-    &nbsp;&middot;&nbsp;
-    Clément Balcon &copy; 2025
+    <a href="index.html">← Retour au portfolio</a> &nbsp;&middot;&nbsp; Clément Balcon &copy; 2025
 </footer>
 
-<script>
-    const obs = new IntersectionObserver(entries => {
-        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
-    }, { threshold: 0.08 });
-    document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
-</script>
 </body>
 </html>

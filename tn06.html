@@ -16,18 +16,14 @@
             --muted: #94a3b8;
             --subtle: #64748b;
             --card: rgba(56,189,248,0.04);
-            --card-hover: rgba(56,189,248,0.075);
             --border: rgba(56,189,248,0.1);
         }
         html { scroll-behavior: smooth; }
         body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; line-height: 1.65; overflow-x: hidden; }
 
         body::before {
-            content: '';
-            position: fixed; inset: 0; z-index: -2; pointer-events: none;
-            background-image:
-                linear-gradient(rgba(56,189,248,0.025) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(56,189,248,0.025) 1px, transparent 1px);
+            content: ''; position: fixed; inset: 0; z-index: -2; pointer-events: none;
+            background-image: linear-gradient(rgba(56,189,248,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(56,189,248,0.025) 1px, transparent 1px);
             background-size: 50px 50px;
         }
         body::after {
@@ -38,141 +34,64 @@
         nav {
             position: fixed; top: 0; left: 0; right: 0; z-index: 100;
             padding: 1rem 2.5rem; display: flex; align-items: center; gap: 1.2rem;
-            background: rgba(6,12,21,0.88);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            background: rgba(6,12,21,0.88); backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border);
         }
-        .back-link {
-            display: inline-flex; align-items: center; gap: 0.4rem;
-            color: var(--muted); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: color 0.2s;
-        }
+        .back-link { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--muted); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
         .back-link:hover { color: #7dd3fc; }
         .nav-sep { color: var(--subtle); font-size: 0.8rem; }
         .nav-title { color: var(--text); font-size: 0.85rem; font-weight: 500; }
 
-        .hero { padding: 7rem 2rem 3rem; max-width: 1020px; margin: 0 auto; }
+        .hero { padding: 7rem 2rem 2.5rem; max-width: 1100px; margin: 0 auto; }
         .hero-badge {
             display: inline-flex; align-items: center; gap: 0.5rem;
             background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.2);
             border-radius: 2rem; padding: 0.3rem 0.9rem;
-            font-size: 0.78rem; color: var(--accent); font-weight: 500; letter-spacing: 0.04em; margin-bottom: 1.4rem;
+            font-size: 0.78rem; color: var(--accent); font-weight: 500; letter-spacing: 0.04em; margin-bottom: 1.2rem;
         }
         .hero h1 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 700; line-height: 1.1;
+            font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.9rem, 4.5vw, 3rem); font-weight: 700; line-height: 1.1;
             background: linear-gradient(135deg, #e2e8f0 30%, #38bdf8 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            background-clip: text; margin-bottom: 1.2rem;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 1rem;
         }
-        .hero-meta { display: flex; flex-wrap: wrap; gap: 1.2rem; align-items: center; margin-bottom: 1.6rem; }
-        .hero-meta span { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--muted); font-size: 0.85rem; }
-        .hero p { font-size: 1.05rem; color: var(--muted); max-width: 680px; line-height: 1.7; }
+        .hero p { font-size: 1rem; color: var(--muted); max-width: 700px; line-height: 1.7; margin-bottom: 1.6rem; }
 
-        main { max-width: 1020px; margin: 0 auto; padding: 0 2rem 5rem; }
-        section { margin-bottom: 3.5rem; }
-        section h2 {
-            font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 600;
-            color: var(--text); margin-bottom: 1.4rem;
-            display: flex; align-items: center; gap: 0.7rem;
-        }
-        section h2::after { content: ''; flex: 1; height: 1px; background: linear-gradient(to right, var(--border), transparent); }
-        section h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.05rem; font-weight: 600; color: var(--accent); margin: 1.4rem 0 0.7rem; }
-        p { color: var(--muted); margin-bottom: 0.9rem; }
+        .meta-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; max-width: 1100px; margin: 0 auto 2rem; padding: 0 2rem; }
+        @media(max-width: 680px) { .meta-row { grid-template-columns: 1fr; } }
 
-        .card { background: var(--card); border: 1px solid var(--border); border-radius: 1rem; padding: 1.6rem; transition: background 0.2s; }
-        .card:hover { background: var(--card-hover); }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; }
+        @media(max-width: 480px) { .stats-grid { grid-template-columns: 1fr 1fr; } }
+        .stat { background: var(--card); border: 1px solid var(--border); border-radius: 0.8rem; padding: 0.9rem; text-align: center; }
+        .stat .v { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--accent); line-height: 1; }
+        .stat .v.amber { color: var(--accent2); }
+        .stat .v.green { color: #34d399; }
+        .stat .l { font-size: 0.72rem; color: var(--muted); margin-top: 0.3rem; }
 
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; }
-        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
-        @media(max-width: 720px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+        .pb-block { background: var(--card); border: 1px solid var(--border); border-radius: 1rem; padding: 1.2rem; }
+        .pb-block h3 { font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem; color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.8rem; }
+        .pb-list { display: flex; flex-direction: column; gap: 0.6rem; }
+        .pb { display: flex; gap: 0.7rem; align-items: flex-start; }
+        .pb-num { width: 22px; height: 22px; border-radius: 0.35rem; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', sans-serif; font-size: 0.75rem; font-weight: 700; margin-top: 0.05rem; }
+        .pb-num.b { background: rgba(56,189,248,0.15); color: var(--accent); }
+        .pb-num.a { background: rgba(251,146,60,0.15); color: var(--accent2); }
+        .pb-num.g { background: rgba(52,211,153,0.15); color: #34d399; }
+        .pb-text { font-size: 0.83rem; color: var(--muted); line-height: 1.4; }
 
-        .callout {
-            border-left: 3px solid var(--accent); background: rgba(56,189,248,0.05);
-            border-radius: 0 0.7rem 0.7rem 0; padding: 1rem 1.3rem; margin: 1.2rem 0;
-        }
-        .callout.amber { border-left-color: var(--accent2); background: rgba(251,146,60,0.05); }
-        .callout.green { border-left-color: #34d399; background: rgba(52,211,153,0.05); }
-        .callout p { margin: 0; }
-
-        .tag {
-            display: inline-block; background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.18);
-            border-radius: 0.4rem; padding: 0.2rem 0.6rem; font-size: 0.75rem; color: var(--accent); font-weight: 500; margin: 0.2rem;
-        }
+        .tags-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.8rem; padding: 0 2rem; max-width: 1100px; margin-left: auto; margin-right: auto; }
+        .tag { display: inline-block; background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.18); border-radius: 0.4rem; padding: 0.2rem 0.6rem; font-size: 0.75rem; color: var(--accent); font-weight: 500; }
         .tag.amber { background: rgba(251,146,60,0.08); border-color: rgba(251,146,60,0.18); color: var(--accent2); }
 
-        /* Jack diagram */
-        .jack-diagram {
-            background: rgba(56,189,248,0.03); border: 1px solid var(--border);
-            border-radius: 1rem; padding: 2rem; position: relative;
+        .pdf-section { max-width: 1100px; margin: 0 auto; padding: 0 2rem 4rem; }
+        .pdf-section h2 {
+            font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; font-weight: 600;
+            color: var(--muted); margin-bottom: 1rem;
+            display: flex; align-items: center; gap: 0.6rem;
         }
-        .components-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.8rem; margin-top: 1rem; }
-        .comp-item {
-            display: flex; align-items: flex-start; gap: 0.7rem;
-            background: rgba(56,189,248,0.04); border: 1px solid rgba(56,189,248,0.12);
-            border-radius: 0.6rem; padding: 0.7rem 0.9rem;
-        }
-        .comp-num {
-            background: rgba(56,189,248,0.15); color: var(--accent); font-family: 'Space Grotesk', sans-serif;
-            font-size: 0.8rem; font-weight: 700; border-radius: 0.3rem;
-            padding: 0.15rem 0.45rem; flex-shrink: 0; margin-top: 0.05rem;
-        }
-        .comp-name { font-size: 0.84rem; color: var(--text); font-weight: 500; line-height: 1.3; }
-        .comp-role { font-size: 0.77rem; color: var(--muted); margin-top: 0.2rem; }
+        .pdf-section h2::after { content: ''; flex: 1; height: 1px; background: linear-gradient(to right, var(--border), transparent); }
+        .pdf-wrap { border: 1px solid var(--border); border-radius: 1rem; overflow: hidden; background: #fff; }
+        .pdf-wrap iframe { display: block; width: 100%; height: 88vh; border: none; }
 
-        .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.1rem; margin: 1.4rem 0; }
-        @media(max-width: 640px) { .stats-row { grid-template-columns: 1fr 1fr; } }
-        .stat-box { background: var(--card); border: 1px solid var(--border); border-radius: 0.8rem; padding: 1rem; text-align: center; }
-        .stat-box .val { font-family: 'Space Grotesk', sans-serif; font-size: 1.6rem; font-weight: 700; color: var(--accent); line-height: 1.1; }
-        .stat-box .val.amber { color: var(--accent2); }
-        .stat-box .val.green { color: #34d399; }
-        .stat-box .lbl { font-size: 0.75rem; color: var(--muted); margin-top: 0.3rem; }
-
-        /* Problem blocks */
-        .pb-row { display: flex; gap: 1.2rem; margin-bottom: 1.2rem; align-items: flex-start; }
-        @media(max-width: 640px) { .pb-row { flex-direction: column; } }
-        .pb-num {
-            width: 44px; height: 44px; border-radius: 0.7rem; flex-shrink: 0;
-            display: flex; align-items: center; justify-content: center;
-            font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; font-weight: 700;
-        }
-        .pb-num.blue { background: rgba(56,189,248,0.15); color: var(--accent); }
-        .pb-num.amber { background: rgba(251,146,60,0.15); color: var(--accent2); }
-        .pb-num.green { background: rgba(52,211,153,0.15); color: #34d399; }
-        .pb-content { flex: 1; }
-        .pb-content h4 { font-family: 'Space Grotesk', sans-serif; font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 0.4rem; }
-        .pb-content p { font-size: 0.85rem; margin: 0; }
-
-        /* Resolution steps */
-        .steps { counter-reset: step; display: flex; flex-direction: column; gap: 0.9rem; }
-        .step {
-            display: flex; gap: 1rem; align-items: flex-start;
-            background: var(--card); border: 1px solid var(--border); border-radius: 0.8rem; padding: 1rem 1.2rem;
-        }
-        .step-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 0.1rem; }
-        .step-body h4 { font-size: 0.9rem; font-weight: 600; color: var(--text); margin-bottom: 0.3rem; }
-        .step-body p { font-size: 0.83rem; margin: 0; }
-
-        /* Result table */
-        .result-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-        .result-table th { color: var(--accent); font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.6rem 0.8rem; border-bottom: 1px solid var(--border); text-align: left; }
-        .result-table td { padding: 0.55rem 0.8rem; border-bottom: 1px solid rgba(56,189,248,0.06); color: var(--muted); }
-        .result-table tr:last-child td { border-bottom: none; }
-        .result-table .val-cell { color: var(--text); font-family: 'Space Grotesk', sans-serif; font-weight: 600; }
-        .result-table .hl { color: var(--accent); }
-        .result-table .hl.amber { color: var(--accent2); }
-
-        /* Error bar */
-        .error-bar-wrap { margin: 1.2rem 0; }
-        .error-bar-label { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--muted); margin-bottom: 0.4rem; }
-        .error-bar { height: 8px; border-radius: 4px; background: rgba(56,189,248,0.1); overflow: hidden; }
-        .error-bar-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, #34d399, #fb923c); }
-
-        .skills-wrap { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.8rem; }
-
-        .fade-in { opacity: 0; transform: translateY(18px); transition: opacity 0.55s ease, transform 0.55s ease; }
-        .fade-in.visible { opacity: 1; transform: none; }
-
-        footer { text-align: center; padding: 2.5rem; color: var(--subtle); font-size: 0.82rem; border-top: 1px solid var(--border); }
+        footer { text-align: center; padding: 2rem; color: var(--subtle); font-size: 0.82rem; border-top: 1px solid var(--border); }
         footer a { color: var(--muted); text-decoration: none; }
         footer a:hover { color: var(--accent); }
     </style>
@@ -189,311 +108,66 @@
 </nav>
 
 <div class="hero">
-    <div class="hero-badge">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        UV TN06 — Automne 2023
-    </div>
-    <h1>Étude de cas : Cric hydraulique</h1>
-    <div class="hero-meta">
-        <span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-            Lucas Arulnadin · Clément Balcon · Damien Guichon
-        </span>
-        <span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            UTC — Transmission d'efforts en mécanique
-        </span>
-    </div>
-    <p>Analyse statique complète d'un cric hydraulique de levage automobile : modélisation cinématique, résolution graphique et analytique du Principe Fondamental de la Statique sur chaque composant, étude de la démultiplication hydraulique et validation expérimentale.</p>
+    <div class="hero-badge">UV TN06 · Transmission d'efforts en mécanique · Automne 2023</div>
+    <h1>Étude de cas : Cric Hydraulique</h1>
+    <p>Analyse statique complète d'un cric hydraulique automobile (charge max 2 tonnes) : modélisation cinématique des 7 composants, résolution graphique et analytique 3D du Principe Fondamental de la Statique, étude de la démultiplication hydraulique et validation par expérimentation.</p>
 </div>
 
-<main>
-
-    <!-- CONTEXTE -->
-    <section class="fade-in">
-        <h2>Contexte & Système Étudié</h2>
-        <div class="grid-2">
-            <div>
-                <p>Un cric hydraulique de levage automobile — capable de soulever jusqu'à <strong>2 tonnes</strong> — est un système technique élégant dont le principe repose sur la démultiplication de force par voie hydraulique. L'utilisateur exerce quelques centaines de newtons sur un levier ; le cric restitue en sortie une force suffisante pour soulever une voiture.</p>
-                <p>L'objectif de cette étude de cas est de modéliser ce mécanisme, d'appliquer rigoureusement la statique à chacun de ses composants, et de confronter les résultats théoriques à une expérimentation réelle.</p>
-                <div class="callout">
-                    <p style="font-size:0.84rem"><strong style="color:var(--accent)">Zone hydraulique :</strong> traitée comme une boîte noire partielle — son comportement est modélisé par une relation de pression entre deux pistons de surfaces différentes. La mécanique des fluides détaillée est hors du périmètre de l'UV TN06.</p>
-                </div>
+<div class="meta-row">
+    <div>
+        <div class="stats-grid">
+            <div class="stat"><div class="v">2 T</div><div class="l">Charge max</div></div>
+            <div class="stat"><div class="v amber">×17</div><div class="l">Amplification hydraulique</div></div>
+            <div class="stat"><div class="v green">~280 N</div><div class="l">Force utilisateur (théo.)</div></div>
+            <div class="stat"><div class="v">32%</div><div class="l">Écart théorie/expérience</div></div>
+        </div>
+        <p style="font-size:0.8rem; color:var(--subtle); margin-top:0.7rem; padding-left:0.2rem">
+            Équipe : Lucas Arulnadin · <strong style="color:var(--muted)">Clément Balcon</strong> · Damien Guichon
+        </p>
+    </div>
+    <div class="pb-block">
+        <h3>Trois problématiques</h3>
+        <div class="pb-list">
+            <div class="pb">
+                <div class="pb-num b">1</div>
+                <div class="pb-text">Sous 2 tonnes, quelle force doit exercer le vérin hydraulique sur le bras de levage ?</div>
             </div>
-            <div class="stats-row" style="grid-template-columns: 1fr 1fr; margin: 0; gap: 0.9rem; align-content: start;">
-                <div class="stat-box">
-                    <div class="val">2 T</div>
-                    <div class="lbl">Charge max</div>
-                </div>
-                <div class="stat-box">
-                    <div class="val amber">×17</div>
-                    <div class="lbl">Amplification hydraulique</div>
-                </div>
-                <div class="stat-box">
-                    <div class="val">7</div>
-                    <div class="lbl">Composants isolés</div>
-                </div>
-                <div class="stat-box">
-                    <div class="val green">43 p.</div>
-                    <div class="lbl">Rapport complet</div>
-                </div>
+            <div class="pb">
+                <div class="pb-num a">2</div>
+                <div class="pb-text">Étudier l'équilibre global du cric et la démultiplication hydraulique (entrée levier → sortie vérin).</div>
+            </div>
+            <div class="pb">
+                <div class="pb-num g">3</div>
+                <div class="pb-text">Quelle force minimale l'utilisateur doit-il exercer pour rompre l'équilibre ? Confrontation théorie/expérience.</div>
             </div>
         </div>
-    </section>
+    </div>
+</div>
 
-    <!-- SYSTÈME -->
-    <section class="fade-in">
-        <h2>Modélisation du Mécanisme</h2>
-        <p>Le système est décomposé en 7 solides reliés par des liaisons pivot et une liaison linéaire rectiligne. Un schéma cinématique et un graphe de liaison formalisent les interactions.</p>
-        <div class="components-list">
-            <div class="comp-item">
-                <span class="comp-num">1</span>
-                <div><div class="comp-name">Châssis (bâti)</div><div class="comp-role">Référentiel fixe, supporte l'ensemble du système</div></div>
-            </div>
-            <div class="comp-item">
-                <span class="comp-num">2</span>
-                <div><div class="comp-name">Levier</div><div class="comp-role">Interface utilisateur — pivot en A, contact linéaire en B</div></div>
-            </div>
-            <div class="comp-item">
-                <span class="comp-num">3</span>
-                <div><div class="comp-name">Corps hydraulique (vérin)</div><div class="comp-role">Boîte noire hydraulique — amplifie la force d'entrée</div></div>
-            </div>
-            <div class="comp-item">
-                <span class="comp-num">4</span>
-                <div><div class="comp-name">Piston</div><div class="comp-role">Translate sous pression hydraulique, pivot avec le bras en E</div></div>
-            </div>
-            <div class="comp-item">
-                <span class="comp-num">5</span>
-                <div><div class="comp-name">Bras de levage</div><div class="comp-role">Pièce principale — pivot en G avec châssis, piston en E, sellette en H</div></div>
-            </div>
-            <div class="comp-item">
-                <span class="comp-num">6</span>
-                <div><div class="comp-name">Biellette</div><div class="comp-role">Pivot en I (sellette) et F (châssis) — guidage de la sellette</div></div>
-            </div>
-            <div class="comp-item">
-                <span class="comp-num">7</span>
-                <div><div class="comp-name">Sellette soudée</div><div class="comp-role">Support du véhicule — reçoit le poids en J (centré) ou K (décalé)</div></div>
-            </div>
-        </div>
+<div class="tags-row">
+    <span class="tag">Statique · PFS</span>
+    <span class="tag">Résolution graphique</span>
+    <span class="tag">Résolution analytique 3D</span>
+    <span class="tag">Schéma cinématique</span>
+    <span class="tag amber">Calcul d'incertitudes</span>
+    <span class="tag">Expérimentation</span>
+    <span class="tag amber">Hydraulique</span>
+    <span class="tag">Torseurs</span>
+</div>
 
-        <div class="callout amber" style="margin-top:1.2rem">
-            <p style="font-size:0.84rem"><strong style="color:var(--accent2)">Hypothèses simplificatrices :</strong> Poids propre du cric négligé · Liaisons parfaites (pas de frottement) · Solides indéformables · Problème plan pour les pièces symétriques (biellette, sellette, levier, piston) · Problème 3D pour le bras de levage (ressort hors du plan de symétrie).</p>
-        </div>
-    </section>
-
-    <!-- PROBLÉMATIQUES -->
-    <section class="fade-in">
-        <h2>Trois Problématiques</h2>
-
-        <div class="pb-row">
-            <div class="pb-num blue">P1</div>
-            <div class="pb-content">
-                <h4>Effort du vérin sous charge maximale</h4>
-                <p>Sous 2 tonnes, quelle action mécanique doit exercer le vérin hydraulique sur le bras de levage ? Application du PFS sur le bras de levage en 3D pour déterminer les composantes de la liaison pivot en E.</p>
-            </div>
-        </div>
-        <div class="pb-row">
-            <div class="pb-num amber">P2</div>
-            <div class="pb-content">
-                <h4>Équilibre global du cric — démultiplication hydraulique</h4>
-                <p>En supposant l'utilisateur orthogonal au levier, analyser l'ensemble de la chaîne de transmission de forces — de la force utilisateur à la charge — en étudiant la zone hydraulique comme un piston.</p>
-            </div>
-        </div>
-        <div class="pb-row">
-            <div class="pb-num green">P3</div>
-            <div class="pb-content">
-                <h4>Force minimale de l'utilisateur — confrontation théorie/expérience</h4>
-                <p>Sous charge décalée en K, calculer la force théorique minimale pour rompre l'équilibre, puis la comparer à la valeur mesurée expérimentalement.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- EXPÉRIENCES -->
-    <section class="fade-in">
-        <h2>Partie Expérimentale</h2>
-        <p>Deux expériences ont été menées pour alimenter l'étude théorique avec des données réelles, assortie d'un calcul d'incertitudes complet (type A aléatoire + type B systématique, propagation).</p>
-
-        <div class="grid-2">
-            <div class="card">
-                <h3 style="margin-top:0">Raideur du ressort</h3>
-                <p style="font-size:0.85rem">Le ressort entre le bras de levage et le bâti est une inconnue du PFS. Sa raideur a été mesurée expérimentalement : application de 6 charges différentes sur le ressort, mesure de l'allongement au pied à coulisse (5 répétitions chacune).</p>
-                <div class="callout green" style="margin-top:0.8rem; margin-bottom:0">
-                    <p style="font-size:0.85rem"><strong style="color:#34d399">Résultat :</strong> k = 7,94 ± 0,05 N/mm</p>
-                </div>
-            </div>
-            <div class="card">
-                <h3 style="margin-top:0">Corrélation force utilisateur / charge</h3>
-                <p style="font-size:0.85rem">Protocole : bras à 20°, poids sur la sellette, ficelle et masses sur le levier jusqu'à rupture de l'équilibre. Répété pour 5 charges différentes (3 fois chaque).</p>
-                <div class="callout green" style="margin-top:0.8rem; margin-bottom:0">
-                    <p style="font-size:0.85rem"><strong style="color:#34d399">Résultat :</strong> Relation linéaire — F<sub>u</sub> = 0,0214 × P + 9,85 (N)</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- RÉSOLUTION -->
-    <section class="fade-in">
-        <h2>Résolution Statique</h2>
-        <p>L'étude adopte une approche progressive : résolution graphique (PFS plan) pour les pièces symétriques, puis résolution analytique (3D) pour le bras de levage, et enfin analyse hydraulique.</p>
-
-        <div class="steps">
-            <div class="step">
-                <div class="step-icon">📐</div>
-                <div class="step-body">
-                    <h4>Biellette (6) — problème plan, 2 forces</h4>
-                    <p>Deux forces coplanaires → même direction, sens opposés. Direction imposée par l'axe (IF). Permet de déduire le rôle de la biellette selon la position du point d'application du poids (J ou K) : biellette inutile en J (effort nul), nécessaire dès que la charge est décalée en K.</p>
-                </div>
-            </div>
-            <div class="step">
-                <div class="step-icon">🔺</div>
-                <div class="step-body">
-                    <h4>Sellette soudée (7) — triangle des forces</h4>
-                    <p>Trois forces coplanaires → triangle des forces. Phase J : biellette à effort nul, F<sub>H</sub> = P = 19 620 N verticale. Phase K (charge décalée 40 mm) : la biellette rentre en jeu — résolution graphique donne |F<sub>H</sub>| ≈ 20 730 N et |F<sub>I</sub>| ≈ 3 500 N.</p>
-                </div>
-            </div>
-            <div class="step">
-                <div class="step-icon">⚙️</div>
-                <div class="step-body">
-                    <h4>Levier (2) & Piston (4) — relations de proportionnalité</h4>
-                    <p>Résolution graphique sur le levier donne : F<sub>U</sub> = 0,08 × F<sub>B</sub> (force utilisateur en fonction de la force en B). Piston soumis à deux forces égales et opposées, direction donnée par l'axe (ED), angle θ ≈ 1°.</p>
-                </div>
-            </div>
-            <div class="step">
-                <div class="step-icon">🧮</div>
-                <div class="step-body">
-                    <h4>Bras de levage (5) — PFS 3D avec 4 forces non coplanaires</h4>
-                    <p>Le ressort est décalé latéralement par rapport au plan de symétrie → problème 3D obligatoire. 6 équations (3 forces + 3 moments en R), mesures géométriques sur pièce réelle. Résolution du système avec calcul d'incertitudes associées à chaque inconnue.</p>
-                </div>
-            </div>
-            <div class="step">
-                <div class="step-icon">💧</div>
-                <div class="step-body">
-                    <h4>Zone hydraulique — modèle piston / Pascal</h4>
-                    <p>Même pression en B (∅ 11,67 mm) et en D (∅ 46,57 mm). Application de P = F/S : la force passe de ~3 480 N en entrée à ~58 997 N en sortie — amplification ×17. La valeur de F<sub>U</sub> est ensuite déduite via la relation graphique F<sub>U</sub> = 0,08 × F<sub>B</sub>.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- RÉSULTATS -->
-    <section class="fade-in">
-        <h2>Résultats & Confrontation Théorie / Expérience</h2>
-
-        <table class="result-table">
-            <thead>
-                <tr>
-                    <th>Grandeur</th>
-                    <th>Poids en J (centré)</th>
-                    <th>Poids en K (décalé 40 mm)</th>
-                    <th>Note</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Force du vérin F<sub>E</sub></td>
-                    <td class="val-cell hl">58 997 ± 327 N</td>
-                    <td class="val-cell hl">52 864 ± 315 N</td>
-                    <td>≈ 3× le poids du véhicule</td>
-                </tr>
-                <tr>
-                    <td>Force en entrée hydraulique F<sub>B</sub></td>
-                    <td class="val-cell">3 480 ± 98 N</td>
-                    <td class="val-cell">3 118 ± 78 N</td>
-                    <td>Amplification ×17 par la zone hydraulique</td>
-                </tr>
-                <tr>
-                    <td>Force utilisateur F<sub>U</sub> théorique</td>
-                    <td class="val-cell">278 ± 26 N</td>
-                    <td class="val-cell">249 ± 23 N</td>
-                    <td>Coeff. de démultiplication global : ×71 à ×79</td>
-                </tr>
-                <tr>
-                    <td>Force utilisateur F<sub>U</sub> expérimentale</td>
-                    <td colspan="2" class="val-cell hl amber" style="text-align:center">330 ± 22 N</td>
-                    <td>Mesurée à l'angle du bras = 20°</td>
-                </tr>
-                <tr>
-                    <td>Écart théorie / expérience</td>
-                    <td colspan="2" class="val-cell" style="text-align:center">~32 %</td>
-                    <td>Friction des liaisons non modélisée</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div class="grid-2" style="margin-top:1.4rem">
-            <div>
-                <h3 style="margin-top:0">Analyse de l'écart</h3>
-                <p style="font-size:0.85rem">Les liaisons ont été supposées parfaites (sans frottement). En réalité, les frottements internes au mécanisme augmentent la force nécessaire à l'actionnement. Cet effet, non modélisé théoriquement, explique l'essentiel de l'écart de 32 %.</p>
-                <p style="font-size:0.85rem">L'épaisseur du carter hydraulique est également inconnue — elle influe directement sur le diamètre de la section D et donc sur l'amplification. Nous avons choisi D = 46,57 mm (épaisseur carter estimée à 5 mm) pour minimiser l'écart avec l'expérience.</p>
-                <div class="error-bar-wrap">
-                    <div class="error-bar-label"><span>Théorie (249 N)</span><span>Expérience (330 N)</span></div>
-                    <div class="error-bar"><div class="error-bar-fill" style="width:75%"></div></div>
-                    <div style="font-size:0.77rem; color:var(--subtle); margin-top:0.3rem">Rapport théorique/expérimental ≈ 75%</div>
-                </div>
-            </div>
-            <div>
-                <h3 style="margin-top:0">Relation expérimentale</h3>
-                <p style="font-size:0.85rem">La courbe expérimentale révèle une relation <strong>linéaire</strong> (et non strictement proportionnelle comme supposé en théorie) entre la charge et la force utilisateur :</p>
-                <div class="callout" style="margin: 0.6rem 0">
-                    <p style="font-family: 'Space Grotesk', sans-serif; font-size:0.95rem; color:var(--text)">F<sub>u</sub> = 0,0214 × P + 9,85</p>
-                </div>
-                <p style="font-size:0.85rem">L'ordonnée à l'origine (9,85 N) traduit la présence de frottements — une force résiduelle à fournir même sans charge extérieure, absente du modèle théorique.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- COMPÉTENCES -->
-    <section class="fade-in">
-        <h2>Compétences Développées</h2>
-        <div class="grid-2">
-            <div class="card">
-                <h3 style="margin-top:0">Mécanique & Statique</h3>
-                <div class="skills-wrap">
-                    <span class="tag">PFS (Principe Fondamental de la Statique)</span>
-                    <span class="tag">Résolution graphique</span>
-                    <span class="tag">Résolution analytique 3D</span>
-                    <span class="tag">Schéma cinématique</span>
-                    <span class="tag">Graphe de liaison</span>
-                    <span class="tag">Torseurs</span>
-                    <span class="tag">Transport de moments</span>
-                </div>
-            </div>
-            <div class="card">
-                <h3 style="margin-top:0">Modélisation & Expérimentation</h3>
-                <div class="skills-wrap">
-                    <span class="tag amber">Calcul d'incertitudes (type A/B)</span>
-                    <span class="tag amber">Propagation d'incertitudes</span>
-                    <span class="tag amber">Protocole expérimental</span>
-                    <span class="tag amber">Analyse hydraulique (Pascal)</span>
-                    <span class="tag amber">Confrontation théorie/expérience</span>
-                    <span class="tag amber">Hypothèses et remise en question</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CONCLUSION -->
-    <section class="fade-in">
-        <h2>Conclusion</h2>
-        <p>Cette étude de cas illustre l'intérêt d'une approche statique rigoureuse pour comprendre le fonctionnement d'un objet du quotidien. La chaîne de transmission de force du cric peut se résumer ainsi : un utilisateur fournit ~280 N sur le levier → la zone hydraulique amplifie ×17 en sortie (~52 000 N) → le véhicule de 2 tonnes est soulevé.</p>
-        <div class="callout amber">
-            <p style="font-size:0.85rem"><strong style="color:var(--accent2)">Enseignement clé :</strong> La négligence des frottements est une hypothèse commode pour simplifier un problème, mais elle introduit un écart systématique de ~32 % avec la réalité. Ce type de biais est inhérent à tout modèle théorique — le travail de l'ingénieur consiste à l'identifier, le quantifier, et juger s'il est acceptable compte tenu du contexte.</p>
-        </div>
-    </section>
-
-</main>
+<div class="pdf-section">
+    <h2>Rapport complet</h2>
+    <div class="pdf-wrap">
+        <iframe src="tn06.pdf" title="TN06 — Étude de cas Cric hydraulique"></iframe>
+    </div>
+    <p style="margin-top:0.8rem; font-size:0.8rem; color:var(--subtle); text-align:center">
+        Si le PDF ne s'affiche pas, <a href="tn06.pdf" target="_blank" style="color:var(--accent)">téléchargez-le directement</a>.
+    </p>
+</div>
 
 <footer>
-    <a href="index.html">← Retour au portfolio</a>
-    &nbsp;&middot;&nbsp;
-    Clément Balcon &copy; 2025
+    <a href="index.html">← Retour au portfolio</a> &nbsp;&middot;&nbsp; Clément Balcon &copy; 2025
 </footer>
 
-<script>
-    const obs = new IntersectionObserver(entries => {
-        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
-    }, { threshold: 0.08 });
-    document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
-</script>
 </body>
 </html>
