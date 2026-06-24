@@ -10,74 +10,121 @@
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
-            --bg: #07070e;
-            --bg2: #0d0d1a;
-            --accent: #6366f1;
-            --accent2: #a855f7;
+            --bg: #060c15;
+            --accent: #38bdf8;
+            --accent2: #fb923c;
             --text: #e2e8f0;
             --muted: #94a3b8;
             --subtle: #64748b;
-            --card: rgba(255,255,255,0.035);
-            --card-hover: rgba(255,255,255,0.06);
-            --border: rgba(255,255,255,0.07);
-            --border-accent: rgba(99,102,241,0.3);
+            --card: rgba(56,189,248,0.04);
+            --card-hover: rgba(56,189,248,0.075);
+            --border: rgba(56,189,248,0.1);
+            --border-accent: rgba(56,189,248,0.32);
         }
 
         html { scroll-behavior: smooth; }
-        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; line-height: 1.65; overflow-x: hidden; }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.65;
+            overflow-x: hidden;
+        }
+
+        /* ── BLUEPRINT GRID ── */
+        body::before {
+            content: '';
+            position: fixed; inset: 0; z-index: -2; pointer-events: none;
+            background-image:
+                linear-gradient(rgba(56,189,248,0.028) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(56,189,248,0.028) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+        body::after {
+            content: '';
+            position: fixed; inset: 0; z-index: -1; pointer-events: none;
+            background:
+                radial-gradient(ellipse 80% 55% at 50% 0%, rgba(56,189,248,0.1), transparent 65%),
+                radial-gradient(ellipse 40% 35% at 90% 90%, rgba(251,146,60,0.08), transparent 55%);
+        }
+
+        /* ── FLYING PLANES ── */
+        .planes-layer {
+            position: fixed; inset: 0; z-index: 0;
+            pointer-events: none; overflow: hidden;
+        }
+        .plane {
+            position: absolute;
+            color: var(--accent);
+            opacity: 0.07;
+        }
+        .plane.amber { color: var(--accent2); opacity: 0.06; }
+
+        .rafale { width: 88px; }
+        .a400m  { width: 130px; }
+        .rafale-sm { width: 58px; }
+
+        /* fly directions */
+        .fr { animation: fly-r linear infinite; }
+        .fl { animation: fly-l linear infinite; transform-origin: center; }
+        .fl svg { transform: scaleX(-1); }
+
+        @keyframes fly-r {
+            from { left: -180px; }
+            to   { left: calc(100vw + 180px); }
+        }
+        @keyframes fly-l {
+            from { left: calc(100vw + 180px); }
+            to   { left: -180px; }
+        }
+
+        .p1 { top: 9%;  animation-duration: 42s; animation-delay: 0s; }
+        .p2 { top: 28%; animation-duration: 30s; animation-delay: -14s; }
+        .p3 { top: 52%; animation-duration: 58s; animation-delay: -22s; }
+        .p4 { top: 18%; animation-duration: 24s; animation-delay: -8s; }
+        .p5 { top: 72%; animation-duration: 50s; animation-delay: -38s; }
+        .p6 { top: 41%; animation-duration: 36s; animation-delay: -5s; }
 
         /* ── NAV ── */
         nav {
             position: fixed; top: 0; left: 0; right: 0; z-index: 100;
             padding: 1rem 2.5rem;
             display: flex; justify-content: space-between; align-items: center;
-            background: rgba(7,7,14,0.88);
-            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            background: rgba(6,12,21,0.85);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border);
         }
         .nav-logo {
             font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1rem;
-            background: linear-gradient(135deg, #818cf8, #a855f7);
+            background: linear-gradient(135deg, #38bdf8, #fb923c);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.06em;
         }
         .nav-links { display: flex; gap: 1.75rem; list-style: none; }
         .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
-        .nav-links a:hover { color: var(--text); }
+        .nav-links a:hover { color: #7dd3fc; }
         @media (max-width: 640px) { .nav-links { display: none; } nav { padding: 1rem 1.5rem; } }
 
         /* ── HERO ── */
         #hero {
             min-height: 100vh; display: flex; align-items: center; justify-content: center;
-            text-align: center; padding: 7rem 2rem 5rem; position: relative; overflow: hidden;
+            text-align: center; padding: 7rem 2rem 5rem; position: relative;
         }
-        .hero-bg {
-            position: absolute; inset: 0; pointer-events: none;
-            background:
-                radial-gradient(ellipse 90% 55% at 50% -5%, rgba(99,102,241,0.16), transparent),
-                radial-gradient(ellipse 55% 45% at 88% 90%, rgba(168,85,247,0.11), transparent),
-                radial-gradient(ellipse 35% 30% at 8% 65%, rgba(99,102,241,0.07), transparent);
-        }
-        .hero-grid-bg {
-            position: absolute; inset: 0; pointer-events: none;
-            background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
-            background-size: 60px 60px;
-            mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black, transparent);
-        }
-        .hero-content { position: relative; max-width: 760px; }
+        .hero-content { position: relative; z-index: 1; max-width: 780px; }
 
         .hero-tag {
             display: inline-flex; align-items: center; gap: 0.5rem;
-            background: rgba(99,102,241,0.09); border: 1px solid rgba(99,102,241,0.28);
-            color: #a5b4fc; padding: 0.38rem 1.1rem; border-radius: 999px;
+            background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.25);
+            color: #7dd3fc; padding: 0.38rem 1.1rem; border-radius: 999px;
             font-size: 0.8rem; font-weight: 500; margin-bottom: 1.75rem;
             animation: fadeUp 0.7s ease 0.05s both;
         }
         .hero-tag::before {
-            content: ''; width: 6px; height: 6px; background: #818cf8;
-            border-radius: 50%; flex-shrink: 0; animation: blink 2.2s ease-in-out infinite;
+            content: ''; width: 6px; height: 6px; background: #38bdf8;
+            border-radius: 50%; flex-shrink: 0;
+            animation: blink 2.5s ease-in-out infinite;
         }
-        @keyframes blink { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.35;transform:scale(1.5)} }
+        @keyframes blink { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.3;transform:scale(1.6)} }
 
         h1 {
             font-family: 'Space Grotesk', sans-serif;
@@ -86,7 +133,7 @@
             animation: fadeUp 0.7s ease 0.15s both;
         }
         .gradient-text {
-            background: linear-gradient(135deg, #818cf8 0%, #a855f7 50%, #ec4899 100%);
+            background: linear-gradient(135deg, #38bdf8 0%, #60a5fa 45%, #fb923c 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
         .hero-sub {
@@ -99,36 +146,37 @@
         }
         .btn {
             padding: 0.72rem 1.7rem; border-radius: 999px;
-            font-size: 0.9rem; font-weight: 600; text-decoration: none; transition: all 0.22s;
-            display: inline-flex; align-items: center; gap: 0.4rem;
+            font-size: 0.9rem; font-weight: 600; text-decoration: none;
+            transition: all 0.22s; display: inline-flex; align-items: center; gap: 0.4rem;
         }
         .btn-primary {
-            background: linear-gradient(135deg, #6366f1, #a855f7); color: white; border: none;
-            box-shadow: 0 0 24px rgba(99,102,241,0.28);
+            background: linear-gradient(135deg, #0ea5e9, #38bdf8); color: #060c15; border: none;
+            box-shadow: 0 0 28px rgba(56,189,248,0.3);
         }
-        .btn-primary:hover { opacity: 0.85; transform: translateY(-2px); box-shadow: 0 6px 28px rgba(99,102,241,0.4); }
+        .btn-primary:hover { opacity: 0.88; transform: translateY(-2px); box-shadow: 0 6px 30px rgba(56,189,248,0.42); }
         .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
-        .btn-outline:hover { border-color: rgba(99,102,241,0.45); color: #a5b4fc; background: rgba(99,102,241,0.05); }
+        .btn-outline:hover { border-color: rgba(56,189,248,0.4); color: #7dd3fc; background: rgba(56,189,248,0.05); }
 
         .hero-flags {
             display: flex; justify-content: center; gap: 1.5rem; margin-top: 2.5rem;
             animation: fadeUp 0.7s ease 0.45s both;
         }
-        .flag-item { display: flex; align-items: center; gap: 0.4rem; color: var(--muted); font-size: 0.82rem; }
+        .flag-item { display: flex; align-items: center; gap: 0.4rem; color: var(--muted); font-size: 0.83rem; }
         .flag-item strong { color: var(--text); font-weight: 600; }
 
-        @keyframes fadeUp { from{opacity:0;transform:translateY(26px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
 
         /* ── LAYOUT ── */
+        section, .section-wrap { position: relative; z-index: 1; }
         .section-wrap { max-width: 1020px; margin: 0 auto; padding: 5.5rem 2rem; }
         .divider { height: 1px; background: var(--border); max-width: 1020px; margin: 0 auto; }
 
         .section-eyebrow {
             display: inline-flex; align-items: center; gap: 0.55rem;
-            color: #a5b4fc; font-size: 0.75rem; font-weight: 600;
+            color: #7dd3fc; font-size: 0.75rem; font-weight: 600;
             text-transform: uppercase; letter-spacing: 0.13em; margin-bottom: 0.7rem;
         }
-        .section-eyebrow::after { content:''; display:inline-block; width:36px; height:1px; background:rgba(99,102,241,0.35); }
+        .section-eyebrow::after { content:''; display:inline-block; width:36px; height:1px; background:rgba(56,189,248,0.35); }
 
         h2 {
             font-family: 'Space Grotesk', sans-serif;
@@ -147,10 +195,14 @@
             border-right: 1px solid var(--border); background: var(--card);
         }
         .stat-item:last-child { border-right: none; }
-        @media(max-width:640px){ .stat-item:nth-child(2){ border-right:none; } .stat-item:nth-child(3){ border-top:1px solid var(--border); } .stat-item:nth-child(4){ border-top:1px solid var(--border); border-right:none; } }
+        @media(max-width:640px){
+            .stat-item:nth-child(2){ border-right:none; }
+            .stat-item:nth-child(3){ border-top:1px solid var(--border); }
+            .stat-item:nth-child(4){ border-top:1px solid var(--border); border-right:none; }
+        }
         .stat-value {
             font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.9rem;
-            background: linear-gradient(135deg, #818cf8, #a855f7);
+            background: linear-gradient(135deg, #38bdf8, #fb923c);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
         .stat-label { color: var(--muted); font-size: 0.78rem; margin-top: 0.2rem; }
@@ -163,26 +215,26 @@
         .about-text strong { color: var(--text); font-weight: 600; }
         .about-avatar {
             width: 200px; height: 200px; border-radius: 1.5rem;
-            border: 1px solid rgba(99,102,241,0.28);
+            border: 1px solid rgba(56,189,248,0.28);
             object-fit: cover; display: block; flex-shrink: 0;
-            box-shadow: 0 0 0 4px rgba(99,102,241,0.08), 0 20px 40px rgba(0,0,0,0.4);
+            box-shadow: 0 0 0 4px rgba(56,189,248,0.07), 0 20px 40px rgba(0,0,0,0.5);
         }
         @media(max-width:640px){ .about-avatar{ width:130px; height:130px; border-radius:1rem; } }
 
         .lang-chips { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.4rem; }
         .lang-chip {
             display: inline-flex; align-items: center; gap: 0.45rem;
-            background: var(--card); border: 1px solid var(--border);
+            background: rgba(56,189,248,0.05); border: 1px solid rgba(56,189,248,0.15);
             padding: 0.35rem 0.85rem; border-radius: 999px; font-size: 0.82rem; color: var(--text);
         }
         .lang-chip .flag { font-size: 1rem; }
         .lang-chip .level {
-            font-size: 0.72rem; color: #a5b4fc; font-weight: 600;
-            background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.2);
+            font-size: 0.72rem; color: #38bdf8; font-weight: 600;
+            background: rgba(56,189,248,0.1); border: 1px solid rgba(56,189,248,0.2);
             padding: 0.1rem 0.45rem; border-radius: 999px;
         }
 
-        /* ── EXPERIENCE / TIMELINE ── */
+        /* ── TIMELINE ── */
         .timeline { display: flex; flex-direction: column; gap: 1.2rem; }
         .tl-item {
             background: var(--card); border: 1px solid var(--border); border-radius: 1rem;
@@ -191,17 +243,17 @@
         }
         .tl-item::before {
             content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
-            background: linear-gradient(180deg, #6366f1, #a855f7);
+            background: linear-gradient(180deg, #38bdf8, #fb923c);
         }
         .tl-item:hover { border-color: var(--border-accent); transform: translateX(5px); background: var(--card-hover); }
         .tl-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 0.3rem; flex-wrap: wrap; }
         .tl-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 1.05rem; }
         .tl-date {
-            color: #a5b4fc; font-size: 0.76rem; font-weight: 600;
-            background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.22);
+            color: #7dd3fc; font-size: 0.76rem; font-weight: 600;
+            background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.2);
             padding: 0.2rem 0.72rem; border-radius: 999px; white-space: nowrap;
         }
-        .tl-company { color: #818cf8; font-weight: 500; font-size: 0.87rem; margin-bottom: 0.65rem; }
+        .tl-company { color: #38bdf8; font-weight: 500; font-size: 0.87rem; margin-bottom: 0.65rem; }
         .tl-desc { color: var(--muted); font-size: 0.92rem; line-height: 1.7; }
 
         /* ── SKILLS ── */
@@ -214,10 +266,11 @@
         .skill-card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 0.93rem; margin-bottom: 0.9rem; }
         .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
         .tag {
-            background: rgba(255,255,255,0.045); border: 1px solid var(--border); color: var(--muted);
-            padding: 0.25rem 0.68rem; border-radius: 999px; font-size: 0.78rem;
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09);
+            color: var(--muted); padding: 0.25rem 0.68rem; border-radius: 999px; font-size: 0.78rem;
+            transition: border-color 0.2s, color 0.2s;
         }
-        .tag.highlight { background: rgba(99,102,241,0.1); border-color: rgba(99,102,241,0.25); color: #a5b4fc; }
+        .skill-card:hover .tag { border-color: rgba(56,189,248,0.15); }
 
         /* ── PROJECTS ── */
         .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(295px, 1fr)); gap: 1.5rem; }
@@ -227,29 +280,28 @@
             display: flex; flex-direction: column;
         }
         .project-card:hover { border-color: var(--border-accent); transform: translateY(-6px); background: var(--card-hover); }
-        .project-card-img {
-            width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block;
-            background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(168,85,247,0.15));
-        }
         .project-card-img-placeholder {
             width: 100%; aspect-ratio: 16/9;
-            background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(168,85,247,0.12));
+            background: linear-gradient(135deg, rgba(56,189,248,0.1), rgba(251,146,60,0.1));
             display: flex; align-items: center; justify-content: center; font-size: 3.5rem;
         }
         .project-card-body { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; }
         .project-badge {
             display: inline-flex; align-items: center; gap: 0.3rem;
-            background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.22);
-            color: #a5b4fc; font-size: 0.74rem; font-weight: 600;
+            background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.22);
+            color: #7dd3fc; font-size: 0.74rem; font-weight: 600;
             padding: 0.18rem 0.65rem; border-radius: 999px; margin-bottom: 0.75rem;
+        }
+        .project-badge.amber {
+            background: rgba(251,146,60,0.1); border-color: rgba(251,146,60,0.28); color: #fdba74;
         }
         .project-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 1.05rem; margin-bottom: 0.45rem; }
         .project-context { color: var(--subtle); font-size: 0.8rem; margin-bottom: 0.75rem; }
         .project-desc { color: var(--muted); font-size: 0.9rem; line-height: 1.68; margin-bottom: 1.1rem; flex: 1; }
         .project-link {
             display: inline-flex; align-items: center; gap: 0.35rem;
-            color: #a5b4fc; font-size: 0.83rem; font-weight: 500; text-decoration: none; transition: all 0.2s;
-            margin-top: auto;
+            color: #7dd3fc; font-size: 0.83rem; font-weight: 500; text-decoration: none;
+            transition: all 0.2s; margin-top: auto;
         }
         .project-link:hover { color: white; gap: 0.55rem; }
         .project-link svg { transition: transform 0.2s; }
@@ -273,7 +325,7 @@
         .vol-card-header { display: flex; align-items: flex-start; gap: 0.9rem; margin-bottom: 0.65rem; }
         .vol-icon { font-size: 1.6rem; flex-shrink: 0; margin-top: 0.1rem; }
         .vol-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 0.97rem; margin-bottom: 0.15rem; }
-        .vol-org { color: #818cf8; font-size: 0.82rem; font-weight: 500; }
+        .vol-org { color: #38bdf8; font-size: 0.82rem; font-weight: 500; }
         .vol-date { color: var(--subtle); font-size: 0.76rem; margin-bottom: 0.6rem; }
         .vol-desc { color: var(--muted); font-size: 0.88rem; line-height: 1.65; }
 
@@ -290,20 +342,121 @@
             color: var(--muted); text-decoration: none; font-size: 0.86rem; font-weight: 500;
             padding: 0.48rem 1.1rem; border: 1px solid var(--border); border-radius: 999px; transition: all 0.22s;
         }
-        .social-link:hover { border-color: rgba(99,102,241,0.4); color: #a5b4fc; background: rgba(99,102,241,0.06); }
+        .social-link:hover { border-color: rgba(56,189,248,0.4); color: #7dd3fc; background: rgba(56,189,248,0.05); }
 
         footer {
             text-align: center; padding: 2rem; color: var(--subtle); font-size: 0.8rem;
-            border-top: 1px solid var(--border);
+            border-top: 1px solid var(--border); position: relative; z-index: 1;
         }
 
-        /* ── FADE IN ON SCROLL ── */
+        /* ── FADE IN ── */
         .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
         .fade-in.visible { opacity: 1; transform: translateY(0); }
     </style>
 </head>
 <body>
 
+<!-- ─── FLYING AIRCRAFT ─── -->
+<div class="planes-layer" aria-hidden="true">
+
+    <!-- Rafale SVG (delta wing, canards, side profile) -->
+    <!-- p1: top, flying right, slow -->
+    <div class="plane rafale fr p1">
+        <svg viewBox="0 0 88 22" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="9.5" width="78" height="3" rx="1.5"/>
+            <polygon points="0,11 5,9 5,13"/>
+            <polygon points="38,9.5 63,1.5 74,9.5"/>
+            <polygon points="38,12.5 63,20.5 74,12.5"/>
+            <polygon points="19,9.5 29,5.5 32,9.5"/>
+            <polygon points="19,12.5 29,16.5 32,12.5"/>
+            <polygon points="73,9.5 77,4.5 82,9.5"/>
+            <ellipse cx="82" cy="11" rx="4" ry="2.2" opacity="0.45"/>
+        </svg>
+    </div>
+
+    <!-- p2: lower-mid, flying left, medium -->
+    <div class="plane rafale fl p2">
+        <svg viewBox="0 0 88 22" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="9.5" width="78" height="3" rx="1.5"/>
+            <polygon points="0,11 5,9 5,13"/>
+            <polygon points="38,9.5 63,1.5 74,9.5"/>
+            <polygon points="38,12.5 63,20.5 74,12.5"/>
+            <polygon points="19,9.5 29,5.5 32,9.5"/>
+            <polygon points="19,12.5 29,16.5 32,12.5"/>
+            <polygon points="73,9.5 77,4.5 82,9.5"/>
+            <ellipse cx="82" cy="11" rx="4" ry="2.2" opacity="0.45"/>
+        </svg>
+    </div>
+
+    <!-- p4: upper area, flying left, fast, small -->
+    <div class="plane rafale-sm fl p4">
+        <svg viewBox="0 0 88 22" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="9.5" width="78" height="3" rx="1.5"/>
+            <polygon points="0,11 5,9 5,13"/>
+            <polygon points="38,9.5 63,1.5 74,9.5"/>
+            <polygon points="38,12.5 63,20.5 74,12.5"/>
+            <polygon points="19,9.5 29,5.5 32,9.5"/>
+            <polygon points="19,12.5 29,16.5 32,12.5"/>
+            <polygon points="73,9.5 77,4.5 82,9.5"/>
+        </svg>
+    </div>
+
+    <!-- A400M SVG (high-wing turboprop transport, T-tail) -->
+    <!-- p3: mid-screen, flying right, slow -->
+    <div class="plane a400m amber fr p3">
+        <svg viewBox="0 0 130 34" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <!-- fuselage -->
+            <rect x="5" y="15.5" width="102" height="6" rx="3"/>
+            <!-- nose (rounder) -->
+            <ellipse cx="8" cy="18.5" rx="8" ry="4"/>
+            <!-- high wing upper side (near) -->
+            <polygon points="42,15.5 42,13 88,7 88,14"/>
+            <!-- high wing lower side (far) -->
+            <polygon points="42,21.5 42,24 88,30 88,22"/>
+            <!-- engine nacelles with prop circles -->
+            <ellipse cx="56" cy="10" rx="5.5" ry="2.8"/>
+            <circle cx="56" cy="10" r="5" fill="none" stroke="currentColor" stroke-width="0.9" opacity="0.35"/>
+            <ellipse cx="72" cy="7.5" rx="5.5" ry="2.8"/>
+            <circle cx="72" cy="7.5" r="5" fill="none" stroke="currentColor" stroke-width="0.9" opacity="0.35"/>
+            <!-- vertical tail -->
+            <rect x="103" y="7" width="3" height="10" rx="1"/>
+            <!-- T-tail horizontal -->
+            <polygon points="97,7 120,4.5 120,7.5 97,10.5"/>
+        </svg>
+    </div>
+
+    <!-- p5: near bottom, flying right -->
+    <div class="plane a400m amber fl p5">
+        <svg viewBox="0 0 130 34" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <rect x="5" y="15.5" width="102" height="6" rx="3"/>
+            <ellipse cx="8" cy="18.5" rx="8" ry="4"/>
+            <polygon points="42,15.5 42,13 88,7 88,14"/>
+            <polygon points="42,21.5 42,24 88,30 88,22"/>
+            <ellipse cx="56" cy="10" rx="5.5" ry="2.8"/>
+            <circle cx="56" cy="10" r="5" fill="none" stroke="currentColor" stroke-width="0.9" opacity="0.35"/>
+            <ellipse cx="72" cy="7.5" rx="5.5" ry="2.8"/>
+            <circle cx="72" cy="7.5" r="5" fill="none" stroke="currentColor" stroke-width="0.9" opacity="0.35"/>
+            <rect x="103" y="7" width="3" height="10" rx="1"/>
+            <polygon points="97,7 120,4.5 120,7.5 97,10.5"/>
+        </svg>
+    </div>
+
+    <!-- p6: mid, Rafale flying right -->
+    <div class="plane rafale fr p6">
+        <svg viewBox="0 0 88 22" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="9.5" width="78" height="3" rx="1.5"/>
+            <polygon points="0,11 5,9 5,13"/>
+            <polygon points="38,9.5 63,1.5 74,9.5"/>
+            <polygon points="38,12.5 63,20.5 74,12.5"/>
+            <polygon points="19,9.5 29,5.5 32,9.5"/>
+            <polygon points="19,12.5 29,16.5 32,12.5"/>
+            <polygon points="73,9.5 77,4.5 82,9.5"/>
+            <ellipse cx="82" cy="11" rx="4" ry="2.2" opacity="0.45"/>
+        </svg>
+    </div>
+</div>
+
+<!-- ─── NAV ─── -->
 <nav>
     <div class="nav-logo">CB</div>
     <ul class="nav-links">
@@ -315,9 +468,8 @@
     </ul>
 </nav>
 
+<!-- ─── HERO ─── -->
 <section id="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-grid-bg"></div>
     <div class="hero-content">
         <div class="hero-tag">Apprenti Ingénieur · Safran Aircraft Engines · Châtellerault</div>
         <h1>Clément Balcon<br><span class="gradient-text">Ingénieur Mécanique</span></h1>
@@ -336,6 +488,7 @@
 
 <div class="divider"></div>
 
+<!-- ─── STATS + ABOUT ─── -->
 <div class="section-wrap">
     <div class="stats-bar fade-in">
         <div class="stat-item">
@@ -356,7 +509,6 @@
         </div>
     </div>
 
-    <!-- ABOUT -->
     <div id="about" class="fade-in">
         <div class="section-eyebrow">À propos</div>
         <h2>Qui suis-je ?</h2>
@@ -378,10 +530,10 @@
 
 <div class="divider"></div>
 
+<!-- ─── EXPERIENCE ─── -->
 <div class="section-wrap" id="experience">
     <div class="section-eyebrow">Parcours</div>
     <h2>Expérience & Formation</h2>
-
     <div class="timeline fade-in">
         <div class="tl-item">
             <div class="tl-header">
@@ -428,6 +580,7 @@
 
 <div class="divider"></div>
 
+<!-- ─── SKILLS ─── -->
 <div class="section-wrap" id="skills">
     <div class="section-eyebrow">Compétences</div>
     <h2>Ce que je maîtrise</h2>
@@ -435,7 +588,7 @@
         <div class="skill-card">
             <div class="skill-card-title">⚙️ CAO & Simulation</div>
             <div class="tags">
-                <span class="tag highlight">CATIA V5</span>
+                <span class="tag">CATIA V5</span>
                 <span class="tag">SolidWorks</span>
                 <span class="tag">Onshape</span>
                 <span class="tag">Abaqus</span>
@@ -444,7 +597,7 @@
         <div class="skill-card">
             <div class="skill-card-title">🏭 Production & Data</div>
             <div class="tags">
-                <span class="tag highlight">Pilotage industriel</span>
+                <span class="tag">Pilotage industriel</span>
                 <span class="tag">Amélioration continue</span>
                 <span class="tag">DMAIC / Lean</span>
                 <span class="tag">Business Intelligence</span>
@@ -462,9 +615,9 @@
         <div class="skill-card">
             <div class="skill-card-title">🌍 Langues</div>
             <div class="tags">
-                <span class="tag highlight">Français — Natif</span>
-                <span class="tag highlight">Anglais — C1 IELTS</span>
-                <span class="tag highlight">Portugais — C1</span>
+                <span class="tag">Français — Natif</span>
+                <span class="tag">Anglais — C1 IELTS</span>
+                <span class="tag">Portugais — C1</span>
             </div>
         </div>
         <div class="skill-card">
@@ -480,7 +633,7 @@
         <div class="skill-card">
             <div class="skill-card-title">🏆 Certifications</div>
             <div class="tags">
-                <span class="tag highlight">IELTS — C1 (Août 2024)</span>
+                <span class="tag">IELTS — C1 (Août 2024)</span>
             </div>
         </div>
     </div>
@@ -488,20 +641,20 @@
 
 <div class="divider"></div>
 
+<!-- ─── PROJECTS ─── -->
 <div class="section-wrap" id="projects">
     <div class="section-eyebrow">Projets</div>
     <h2>Réalisations</h2>
     <div class="projects-grid fade-in">
 
-        <!-- RobAFIS -->
         <div class="project-card">
             <div class="project-card-img-placeholder">🤖</div>
             <div class="project-card-body">
-                <div class="project-badge">🏆 Prix de l'Innovation</div>
+                <div class="project-badge amber">🏆 Prix de l'Innovation</div>
                 <div class="project-title">RobAFIS — Robot Mobile Autonome</div>
                 <div class="project-context">Équipe BACAR · UTC · Sept. 2025 – Janv. 2026 · 13 écoles</div>
-                <div class="project-desc">Concours national RobAFIS (AFIS, Toulouse) représentant l'UTC au sein de l'équipe BACAR. Objectif : concevoir, intégrer et valider un robot mobile autonome capable d'évoluer sur terrain normé (détection de ballon, évitement d'obstacles, actions de jeu). Rôle de coordinateur Intégration, Vérification & Validation (IVV). L'UTC a décroché le Prix de l'Innovation à l'issue de la compétition.</div>
-                <div class="tags" style="margin-bottom:1rem;">
+                <div class="project-desc">Concours national RobAFIS (AFIS, Toulouse) représentant l'UTC au sein de l'équipe BACAR. Objectif : concevoir, intégrer et valider un robot mobile autonome capable d'évoluer sur terrain normé. Rôle de coordinateur Intégration, Vérification & Validation (IVV). L'UTC a décroché le Prix de l'Innovation.</div>
+                <div class="tags">
                     <span class="tag">Robotique</span>
                     <span class="tag">IVV</span>
                     <span class="tag">Ingénierie Système</span>
@@ -510,10 +663,9 @@
             </div>
         </div>
 
-        <!-- Nerf -->
         <div class="project-card">
             <div class="nerf-gallery">
-                <img class="main-img" src="https://balconguichonridercf35.wordpress.com/wp-content/uploads/2024/06/image-5.jpeg" alt="Nerf Rider CS-35 — vue générale" onerror="this.style.display='none'">
+                <img class="main-img" src="https://balconguichonridercf35.wordpress.com/wp-content/uploads/2024/06/image-5.jpeg" alt="Nerf Rider CS-35" onerror="this.style.display='none'">
                 <div style="display:flex;flex-direction:column;gap:3px;">
                     <img src="https://balconguichonridercf35.wordpress.com/wp-content/uploads/2024/06/image-6.jpeg" alt="Détail" style="flex:1;width:100%;object-fit:cover;" onerror="this.style.display='none'">
                     <img src="https://balconguichonridercf35.wordpress.com/wp-content/uploads/2024/06/image-4.jpeg" alt="Détail 2" style="flex:1;width:100%;object-fit:cover;" onerror="this.style.display='none'">
@@ -523,10 +675,9 @@
                 <div class="project-badge">CATIA V5 · CAO</div>
                 <div class="project-title">Rétro-modélisation Nerf Rider CS-35</div>
                 <div class="project-context">UV TN20 · UTC P24 · Binôme avec Damien Guichon</div>
-                <div class="project-desc">Rétro-modélisation complète d'un pistolet NERF Rider CS-35 sous CATIA V5. Application de la méthodologie squelette pour une conception collaborative : mesures au pied à coulisse, modélisation surfacique complexe (poignées, lunette de visée, chargeur), gestion d'assemblages multi-pièces.</div>
+                <div class="project-desc">Rétro-modélisation complète d'un pistolet NERF Rider CS-35 sous CATIA V5. Application de la méthodologie squelette pour une conception collaborative : mesures au pied à coulisse, modélisation surfacique complexe, gestion d'assemblages multi-pièces.</div>
                 <div class="tags" style="margin-bottom:1rem;">
                     <span class="tag">CATIA V5</span>
-                    <span class="tag">CAO</span>
                     <span class="tag">Méthodologie squelette</span>
                     <span class="tag">Rétro-conception</span>
                 </div>
@@ -542,6 +693,7 @@
 
 <div class="divider"></div>
 
+<!-- ─── VOLUNTEER ─── -->
 <div class="section-wrap">
     <div class="section-eyebrow">Engagement</div>
     <h2>Bénévolat & Associations</h2>
@@ -555,7 +707,7 @@
                 </div>
             </div>
             <div class="vol-date">Févr. 2024 — Févr. 2026 · 2 ans</div>
-            <div class="vol-desc">Responsable et coach de l'équipe de futsal de l'UTC. Organisation des entraînements, gestion des engagements en compétitions universitaires (FFSU), coordination avec le service des sports et les partenaires.</div>
+            <div class="vol-desc">Responsable et coach de l'équipe de futsal de l'UTC. Organisation des entraînements, gestion des engagements en compétitions universitaires (FFSU), coordination avec le service des sports.</div>
         </div>
         <div class="vol-card">
             <div class="vol-card-header">
@@ -584,6 +736,7 @@
 
 <div class="divider"></div>
 
+<!-- ─── CONTACT ─── -->
 <div class="section-wrap" id="contact">
     <div id="contact-wrap">
         <div class="section-eyebrow">Contact</div>
@@ -612,7 +765,7 @@
 <script>
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
-    }, { threshold: 0.12 });
+    }, { threshold: 0.1 });
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 </script>
 
