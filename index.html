@@ -8,120 +8,298 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
         :root {
-            --bg: #08080f; --bg2: #0f0f1a; --accent: #6366f1; --accent2: #a855f7;
-            --text: #e2e8f0; --muted: #94a3b8; --card: rgba(255,255,255,0.04); --border: rgba(255,255,255,0.08);
+            --bg: #07070e;
+            --bg2: #0d0d1a;
+            --accent: #6366f1;
+            --accent2: #a855f7;
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+            --subtle: #64748b;
+            --card: rgba(255,255,255,0.035);
+            --card-hover: rgba(255,255,255,0.06);
+            --border: rgba(255,255,255,0.07);
+            --border-accent: rgba(99,102,241,0.3);
         }
+
         html { scroll-behavior: smooth; }
-        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; line-height: 1.6; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; line-height: 1.65; overflow-x: hidden; }
+
+        /* ── NAV ── */
         nav {
             position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-            padding: 1.1rem 2.5rem; display: flex; justify-content: space-between; align-items: center;
-            background: rgba(8,8,15,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border);
+            padding: 1rem 2.5rem;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(7,7,14,0.88);
+            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--border);
         }
         .nav-logo {
-            font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.1rem;
-            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1rem;
+            background: linear-gradient(135deg, #818cf8, #a855f7);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            letter-spacing: 0.05em;
         }
-        .nav-links { display: flex; gap: 2rem; list-style: none; }
-        .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.88rem; font-weight: 500; transition: color 0.2s; }
+        .nav-links { display: flex; gap: 1.75rem; list-style: none; }
+        .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
         .nav-links a:hover { color: var(--text); }
-        @media (max-width: 600px) { .nav-links { display: none; } }
+        @media (max-width: 640px) { .nav-links { display: none; } nav { padding: 1rem 1.5rem; } }
+
+        /* ── HERO ── */
         #hero {
             min-height: 100vh; display: flex; align-items: center; justify-content: center;
-            text-align: center; padding: 6rem 2rem 4rem; position: relative; overflow: hidden;
+            text-align: center; padding: 7rem 2rem 5rem; position: relative; overflow: hidden;
         }
         .hero-bg {
-            position: absolute; inset: 0;
-            background: radial-gradient(ellipse 80% 50% at 50% -5%, rgba(99,102,241,0.18), transparent),
-                        radial-gradient(ellipse 50% 40% at 85% 85%, rgba(168,85,247,0.12), transparent),
-                        radial-gradient(ellipse 40% 30% at 10% 70%, rgba(99,102,241,0.08), transparent);
+            position: absolute; inset: 0; pointer-events: none;
+            background:
+                radial-gradient(ellipse 90% 55% at 50% -5%, rgba(99,102,241,0.16), transparent),
+                radial-gradient(ellipse 55% 45% at 88% 90%, rgba(168,85,247,0.11), transparent),
+                radial-gradient(ellipse 35% 30% at 8% 65%, rgba(99,102,241,0.07), transparent);
         }
-        .hero-content { position: relative; max-width: 720px; }
+        .hero-grid-bg {
+            position: absolute; inset: 0; pointer-events: none;
+            background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black, transparent);
+        }
+        .hero-content { position: relative; max-width: 760px; }
+
         .hero-tag {
             display: inline-flex; align-items: center; gap: 0.5rem;
-            background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.3);
-            color: #a5b4fc; padding: 0.4rem 1.1rem; border-radius: 999px;
-            font-size: 0.83rem; font-weight: 500; margin-bottom: 1.75rem;
-            animation: fadeUp 0.6s ease 0.1s both;
+            background: rgba(99,102,241,0.09); border: 1px solid rgba(99,102,241,0.28);
+            color: #a5b4fc; padding: 0.38rem 1.1rem; border-radius: 999px;
+            font-size: 0.8rem; font-weight: 500; margin-bottom: 1.75rem;
+            animation: fadeUp 0.7s ease 0.05s both;
         }
         .hero-tag::before {
-            content: ''; width: 6px; height: 6px; background: #6366f1;
-            border-radius: 50%; animation: blink 2s infinite;
+            content: ''; width: 6px; height: 6px; background: #818cf8;
+            border-radius: 50%; flex-shrink: 0; animation: blink 2.2s ease-in-out infinite;
         }
-        @keyframes blink { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.4); } }
+        @keyframes blink { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.35;transform:scale(1.5)} }
+
         h1 {
-            font-family: 'Space Grotesk', sans-serif; font-size: clamp(2.6rem, 6vw, 4.8rem);
-            font-weight: 700; line-height: 1.1; margin-bottom: 1.25rem;
-            animation: fadeUp 0.6s ease 0.2s both;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.8rem, 6.5vw, 5rem);
+            font-weight: 700; line-height: 1.08; margin-bottom: 1.25rem;
+            animation: fadeUp 0.7s ease 0.15s both;
         }
         .gradient-text {
-            background: linear-gradient(135deg, #818cf8, #a855f7, #ec4899);
+            background: linear-gradient(135deg, #818cf8 0%, #a855f7 50%, #ec4899 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
-        .hero-sub { font-size: 1.1rem; color: var(--muted); max-width: 480px; margin: 0 auto 2.5rem; animation: fadeUp 0.6s ease 0.3s both; }
-        .hero-cta { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; animation: fadeUp 0.6s ease 0.4s both; }
-        .btn { padding: 0.75rem 1.75rem; border-radius: 999px; font-size: 0.92rem; font-weight: 600; text-decoration: none; transition: all 0.2s; }
-        .btn-primary { background: linear-gradient(135deg, #6366f1, #a855f7); color: white; border: none; box-shadow: 0 0 20px rgba(99,102,241,0.3); }
-        .btn-primary:hover { opacity: 0.88; transform: translateY(-2px); box-shadow: 0 4px 24px rgba(99,102,241,0.4); }
+        .hero-sub {
+            font-size: 1.1rem; color: var(--muted); max-width: 520px; margin: 0 auto 2.75rem;
+            animation: fadeUp 0.7s ease 0.25s both;
+        }
+        .hero-cta {
+            display: flex; gap: 0.9rem; justify-content: center; flex-wrap: wrap;
+            animation: fadeUp 0.7s ease 0.35s both;
+        }
+        .btn {
+            padding: 0.72rem 1.7rem; border-radius: 999px;
+            font-size: 0.9rem; font-weight: 600; text-decoration: none; transition: all 0.22s;
+            display: inline-flex; align-items: center; gap: 0.4rem;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1, #a855f7); color: white; border: none;
+            box-shadow: 0 0 24px rgba(99,102,241,0.28);
+        }
+        .btn-primary:hover { opacity: 0.85; transform: translateY(-2px); box-shadow: 0 6px 28px rgba(99,102,241,0.4); }
         .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
-        .btn-outline:hover { border-color: rgba(99,102,241,0.5); color: #a5b4fc; }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
-        .section-wrap { max-width: 1000px; margin: 0 auto; padding: 5rem 2rem; }
-        .divider { height: 1px; background: var(--border); max-width: 1000px; margin: 0 auto; }
-        .section-label {
-            display: inline-flex; align-items: center; gap: 0.6rem;
-            color: #a5b4fc; font-size: 0.78rem; font-weight: 600;
-            text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.75rem;
+        .btn-outline:hover { border-color: rgba(99,102,241,0.45); color: #a5b4fc; background: rgba(99,102,241,0.05); }
+
+        .hero-flags {
+            display: flex; justify-content: center; gap: 1.5rem; margin-top: 2.5rem;
+            animation: fadeUp 0.7s ease 0.45s both;
         }
-        .section-label::after { content: ''; display: inline-block; width: 40px; height: 1px; background: rgba(99,102,241,0.4); }
-        h2 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.9rem, 4vw, 2.6rem); font-weight: 700; margin-bottom: 2.75rem; }
-        .about-grid { display: grid; grid-template-columns: 1fr auto; gap: 3rem; align-items: start; }
-        @media (max-width: 640px) { .about-grid { grid-template-columns: 1fr; } }
-        .about-text p { color: var(--muted); margin-bottom: 1rem; font-size: 1.05rem; }
+        .flag-item { display: flex; align-items: center; gap: 0.4rem; color: var(--muted); font-size: 0.82rem; }
+        .flag-item strong { color: var(--text); font-weight: 600; }
+
+        @keyframes fadeUp { from{opacity:0;transform:translateY(26px)} to{opacity:1;transform:translateY(0)} }
+
+        /* ── LAYOUT ── */
+        .section-wrap { max-width: 1020px; margin: 0 auto; padding: 5.5rem 2rem; }
+        .divider { height: 1px; background: var(--border); max-width: 1020px; margin: 0 auto; }
+
+        .section-eyebrow {
+            display: inline-flex; align-items: center; gap: 0.55rem;
+            color: #a5b4fc; font-size: 0.75rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.13em; margin-bottom: 0.7rem;
+        }
+        .section-eyebrow::after { content:''; display:inline-block; width:36px; height:1px; background:rgba(99,102,241,0.35); }
+
+        h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2rem, 4.5vw, 2.75rem); font-weight: 700; margin-bottom: 3rem;
+        }
+
+        /* ── STATS BAR ── */
+        .stats-bar {
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            border: 1px solid var(--border); border-radius: 1rem;
+            overflow: hidden; margin-bottom: 5.5rem;
+        }
+        @media(max-width:640px){ .stats-bar{ grid-template-columns: 1fr 1fr; } }
+        .stat-item {
+            padding: 1.4rem 1.25rem; text-align: center;
+            border-right: 1px solid var(--border); background: var(--card);
+        }
+        .stat-item:last-child { border-right: none; }
+        @media(max-width:640px){ .stat-item:nth-child(2){ border-right:none; } .stat-item:nth-child(3){ border-top:1px solid var(--border); } .stat-item:nth-child(4){ border-top:1px solid var(--border); border-right:none; } }
+        .stat-value {
+            font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.9rem;
+            background: linear-gradient(135deg, #818cf8, #a855f7);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .stat-label { color: var(--muted); font-size: 0.78rem; margin-top: 0.2rem; }
+
+        /* ── ABOUT ── */
+        .about-grid { display: grid; grid-template-columns: 1fr 200px; gap: 3.5rem; align-items: start; }
+        @media(max-width:640px){ .about-grid{ grid-template-columns:1fr; } }
+        .about-text p { color: var(--muted); margin-bottom: 1rem; font-size: 1.02rem; line-height: 1.75; }
+        .about-text p:last-child { margin-bottom: 0; }
+        .about-text strong { color: var(--text); font-weight: 600; }
         .about-avatar {
-            width: 160px; height: 160px; border-radius: 1.25rem;
-            background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(168,85,247,0.2));
-            border: 1px solid rgba(99,102,241,0.25);
-            display: flex; align-items: center; justify-content: center; font-size: 4.5rem; flex-shrink: 0;
+            width: 200px; height: 200px; border-radius: 1.5rem;
+            border: 1px solid rgba(99,102,241,0.28);
+            object-fit: cover; display: block; flex-shrink: 0;
+            box-shadow: 0 0 0 4px rgba(99,102,241,0.08), 0 20px 40px rgba(0,0,0,0.4);
         }
-        .timeline { display: flex; flex-direction: column; gap: 1.25rem; }
-        .timeline-item {
+        @media(max-width:640px){ .about-avatar{ width:130px; height:130px; border-radius:1rem; } }
+
+        .lang-chips { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.4rem; }
+        .lang-chip {
+            display: inline-flex; align-items: center; gap: 0.45rem;
+            background: var(--card); border: 1px solid var(--border);
+            padding: 0.35rem 0.85rem; border-radius: 999px; font-size: 0.82rem; color: var(--text);
+        }
+        .lang-chip .flag { font-size: 1rem; }
+        .lang-chip .level {
+            font-size: 0.72rem; color: #a5b4fc; font-weight: 600;
+            background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.2);
+            padding: 0.1rem 0.45rem; border-radius: 999px;
+        }
+
+        /* ── EXPERIENCE / TIMELINE ── */
+        .timeline { display: flex; flex-direction: column; gap: 1.2rem; }
+        .tl-item {
             background: var(--card); border: 1px solid var(--border); border-radius: 1rem;
-            padding: 1.5rem 1.5rem 1.5rem 2rem; position: relative; overflow: hidden; transition: border-color 0.25s, transform 0.25s;
+            padding: 1.6rem 1.6rem 1.6rem 2.1rem; position: relative; overflow: hidden;
+            transition: border-color 0.25s, transform 0.25s, background 0.25s;
         }
-        .timeline-item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: linear-gradient(180deg, #6366f1, #a855f7); }
-        .timeline-item:hover { border-color: rgba(99,102,241,0.3); transform: translateX(4px); }
-        .timeline-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 0.35rem; flex-wrap: wrap; }
-        .timeline-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 1.05rem; }
-        .timeline-date { color: #a5b4fc; font-size: 0.78rem; font-weight: 500; background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.2); padding: 0.22rem 0.75rem; border-radius: 999px; white-space: nowrap; }
-        .timeline-company { color: #818cf8; font-weight: 500; font-size: 0.88rem; margin-bottom: 0.6rem; }
-        .timeline-desc { color: var(--muted); font-size: 0.93rem; }
-        .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; }
-        .skill-card { background: var(--card); border: 1px solid var(--border); border-radius: 1rem; padding: 1.4rem; transition: border-color 0.25s; }
-        .skill-card:hover { border-color: rgba(99,102,241,0.3); }
-        .skill-card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 0.95rem; margin-bottom: 1rem; }
-        .tags { display: flex; flex-wrap: wrap; gap: 0.45rem; }
-        .tag { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--muted); padding: 0.28rem 0.72rem; border-radius: 999px; font-size: 0.8rem; }
-        .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
-        .project-card { background: var(--card); border: 1px solid var(--border); border-radius: 1rem; padding: 1.75rem; transition: border-color 0.25s, transform 0.25s; display: flex; flex-direction: column; }
-        .project-card:hover { border-color: rgba(99,102,241,0.3); transform: translateY(-5px); }
-        .project-icon { font-size: 2rem; margin-bottom: 1rem; }
-        .project-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 1.05rem; margin-bottom: 0.5rem; }
-        .project-context { color: #818cf8; font-size: 0.82rem; font-weight: 500; margin-bottom: 0.75rem; }
-        .project-desc { color: var(--muted); font-size: 0.91rem; margin-bottom: 1.25rem; flex: 1; }
-        .project-link { display: inline-flex; align-items: center; gap: 0.4rem; color: #a5b4fc; font-size: 0.85rem; font-weight: 500; text-decoration: none; transition: color 0.2s; }
-        .project-link:hover { color: white; }
-        .project-link:hover svg { transform: translateX(3px); }
+        .tl-item::before {
+            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+            background: linear-gradient(180deg, #6366f1, #a855f7);
+        }
+        .tl-item:hover { border-color: var(--border-accent); transform: translateX(5px); background: var(--card-hover); }
+        .tl-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 0.3rem; flex-wrap: wrap; }
+        .tl-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 1.05rem; }
+        .tl-date {
+            color: #a5b4fc; font-size: 0.76rem; font-weight: 600;
+            background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.22);
+            padding: 0.2rem 0.72rem; border-radius: 999px; white-space: nowrap;
+        }
+        .tl-company { color: #818cf8; font-weight: 500; font-size: 0.87rem; margin-bottom: 0.65rem; }
+        .tl-desc { color: var(--muted); font-size: 0.92rem; line-height: 1.7; }
+
+        /* ── SKILLS ── */
+        .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 1.2rem; }
+        .skill-card {
+            background: var(--card); border: 1px solid var(--border); border-radius: 1rem; padding: 1.4rem;
+            transition: border-color 0.25s, background 0.25s;
+        }
+        .skill-card:hover { border-color: var(--border-accent); background: var(--card-hover); }
+        .skill-card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 0.93rem; margin-bottom: 0.9rem; }
+        .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+        .tag {
+            background: rgba(255,255,255,0.045); border: 1px solid var(--border); color: var(--muted);
+            padding: 0.25rem 0.68rem; border-radius: 999px; font-size: 0.78rem;
+        }
+        .tag.highlight { background: rgba(99,102,241,0.1); border-color: rgba(99,102,241,0.25); color: #a5b4fc; }
+
+        /* ── PROJECTS ── */
+        .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(295px, 1fr)); gap: 1.5rem; }
+        .project-card {
+            background: var(--card); border: 1px solid var(--border); border-radius: 1.1rem; overflow: hidden;
+            transition: border-color 0.25s, transform 0.25s, background 0.25s;
+            display: flex; flex-direction: column;
+        }
+        .project-card:hover { border-color: var(--border-accent); transform: translateY(-6px); background: var(--card-hover); }
+        .project-card-img {
+            width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block;
+            background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(168,85,247,0.15));
+        }
+        .project-card-img-placeholder {
+            width: 100%; aspect-ratio: 16/9;
+            background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(168,85,247,0.12));
+            display: flex; align-items: center; justify-content: center; font-size: 3.5rem;
+        }
+        .project-card-body { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; }
+        .project-badge {
+            display: inline-flex; align-items: center; gap: 0.3rem;
+            background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.22);
+            color: #a5b4fc; font-size: 0.74rem; font-weight: 600;
+            padding: 0.18rem 0.65rem; border-radius: 999px; margin-bottom: 0.75rem;
+        }
+        .project-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 1.05rem; margin-bottom: 0.45rem; }
+        .project-context { color: var(--subtle); font-size: 0.8rem; margin-bottom: 0.75rem; }
+        .project-desc { color: var(--muted); font-size: 0.9rem; line-height: 1.68; margin-bottom: 1.1rem; flex: 1; }
+        .project-link {
+            display: inline-flex; align-items: center; gap: 0.35rem;
+            color: #a5b4fc; font-size: 0.83rem; font-weight: 500; text-decoration: none; transition: all 0.2s;
+            margin-top: auto;
+        }
+        .project-link:hover { color: white; gap: 0.55rem; }
         .project-link svg { transition: transform 0.2s; }
-        #contact-section { text-align: center; }
-        .contact-card { background: var(--card); border: 1px solid var(--border); border-radius: 1.5rem; padding: 3rem 2rem; max-width: 520px; margin: 0 auto; }
-        .contact-card p { color: var(--muted); margin-bottom: 2rem; font-size: 1.05rem; }
-        .contact-links { display: flex; justify-content: center; gap: 0.75rem; margin-top: 1.5rem; flex-wrap: wrap; }
-        .contact-link { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--muted); text-decoration: none; font-size: 0.88rem; font-weight: 500; padding: 0.5rem 1.1rem; border: 1px solid var(--border); border-radius: 999px; transition: all 0.2s; }
-        .contact-link:hover { border-color: rgba(99,102,241,0.4); color: #a5b4fc; background: rgba(99,102,241,0.06); }
-        footer { text-align: center; padding: 2rem; color: var(--muted); font-size: 0.82rem; border-top: 1px solid var(--border); }
+        .project-link:hover svg { transform: translateX(3px); }
+
+        /* Nerf photo gallery */
+        .nerf-gallery {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px;
+            width: 100%; aspect-ratio: 16/7; overflow: hidden;
+        }
+        .nerf-gallery img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .nerf-gallery .main-img { grid-column: span 2; }
+
+        /* ── VOLUNTEER ── */
+        .volunteer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.2rem; }
+        .vol-card {
+            background: var(--card); border: 1px solid var(--border); border-radius: 1rem; padding: 1.4rem;
+            transition: border-color 0.25s, background 0.25s;
+        }
+        .vol-card:hover { border-color: var(--border-accent); background: var(--card-hover); }
+        .vol-card-header { display: flex; align-items: flex-start; gap: 0.9rem; margin-bottom: 0.65rem; }
+        .vol-icon { font-size: 1.6rem; flex-shrink: 0; margin-top: 0.1rem; }
+        .vol-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 0.97rem; margin-bottom: 0.15rem; }
+        .vol-org { color: #818cf8; font-size: 0.82rem; font-weight: 500; }
+        .vol-date { color: var(--subtle); font-size: 0.76rem; margin-bottom: 0.6rem; }
+        .vol-desc { color: var(--muted); font-size: 0.88rem; line-height: 1.65; }
+
+        /* ── CONTACT ── */
+        #contact-wrap { text-align: center; }
+        .contact-card {
+            background: var(--card); border: 1px solid var(--border); border-radius: 1.5rem;
+            padding: 3rem 2rem; max-width: 520px; margin: 0 auto;
+        }
+        .contact-card p { color: var(--muted); margin-bottom: 2rem; font-size: 1.02rem; }
+        .contact-socials { display: flex; justify-content: center; gap: 0.7rem; margin-top: 1.5rem; flex-wrap: wrap; }
+        .social-link {
+            display: inline-flex; align-items: center; gap: 0.45rem;
+            color: var(--muted); text-decoration: none; font-size: 0.86rem; font-weight: 500;
+            padding: 0.48rem 1.1rem; border: 1px solid var(--border); border-radius: 999px; transition: all 0.22s;
+        }
+        .social-link:hover { border-color: rgba(99,102,241,0.4); color: #a5b4fc; background: rgba(99,102,241,0.06); }
+
+        footer {
+            text-align: center; padding: 2rem; color: var(--subtle); font-size: 0.8rem;
+            border-top: 1px solid var(--border);
+        }
+
+        /* ── FADE IN ON SCROLL ── */
+        .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
     </style>
 </head>
 <body>
@@ -139,53 +317,111 @@
 
 <section id="hero">
     <div class="hero-bg"></div>
+    <div class="hero-grid-bg"></div>
     <div class="hero-content">
-        <div class="hero-tag">Alternant Ingénieur · Safran Aircraft Engines</div>
+        <div class="hero-tag">Apprenti Ingénieur · Safran Aircraft Engines · Châtellerault</div>
         <h1>Clément Balcon<br><span class="gradient-text">Ingénieur Mécanique</span></h1>
-        <p class="hero-sub">Étudiant ingénieur en alternance à l'UTC · Passionné par la conception mécanique et l'aéronautique</p>
+        <p class="hero-sub">Étudiant ingénieur à l'UTC · Filière PIL · Passionné par la production aéronautique et l'innovation industrielle</p>
         <div class="hero-cta">
             <a href="#contact" class="btn btn-primary">Me contacter</a>
             <a href="#projects" class="btn btn-outline">Voir mes projets</a>
+        </div>
+        <div class="hero-flags">
+            <div class="flag-item"><span>🇫🇷</span> <strong>Français</strong> natif</div>
+            <div class="flag-item"><span>🇬🇧</span> <strong>English</strong> C1</div>
+            <div class="flag-item"><span>🇧🇷</span> <strong>Português</strong> C1</div>
         </div>
     </div>
 </section>
 
 <div class="divider"></div>
 
-<div class="section-wrap" id="about">
-    <div class="section-label">À propos</div>
-    <h2>Qui suis-je ?</h2>
-    <div class="about-grid">
-        <div class="about-text">
-            <p>Étudiant en ingénierie mécanique à l'Université de Technologie de Compiègne (UTC), je prépare mon diplôme d'ingénieur en alternance chez <strong style="color: var(--text);">Safran Aircraft Engines</strong>, leader mondial des moteurs d'avion.</p>
-            <p>Passionné par la conception mécanique, la simulation numérique et les défis techniques, je cherche à appliquer mes compétences sur des projets à fort impact dans le secteur aéronautique et industriel.</p>
-            <p>Co-responsable de l'association de futsal de l'UTC, je cultive aussi le goût du collectif, du leadership et du dépassement de soi — sur le terrain comme dans les projets.</p>
+<div class="section-wrap">
+    <div class="stats-bar fade-in">
+        <div class="stat-item">
+            <div class="stat-value">3</div>
+            <div class="stat-label">Langues C1+</div>
         </div>
-        <div class="about-avatar">👨‍🔧</div>
+        <div class="stat-item">
+            <div class="stat-value">Prix</div>
+            <div class="stat-label">Innovation RobAFIS</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">1 400</div>
+            <div class="stat-label">Étudiants — SDF 2025</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">3</div>
+            <div class="stat-label">Pays d'étude</div>
+        </div>
+    </div>
+
+    <!-- ABOUT -->
+    <div id="about" class="fade-in">
+        <div class="section-eyebrow">À propos</div>
+        <h2>Qui suis-je ?</h2>
+        <div class="about-grid">
+            <div class="about-text">
+                <p>Étudiant en ingénierie mécanique à l'<strong>Université de Technologie de Compiègne (UTC)</strong>, je prépare mon diplôme d'ingénieur en alternance chez <strong>Safran Aircraft Engines</strong> (Châtellerault), dans la filière <strong>PIL — Production Intégrée et Logistique</strong>.</p>
+                <p>Mon parcours est marqué par une forte dimension internationale : scolarisé à la <strong>Sayfol International School</strong> puis au <strong>Lycée Molière de Rio de Janeiro</strong>, j'ai développé une aisance naturelle dans trois langues et une capacité à m'adapter à des environnements multiculturels.</p>
+                <p>Rigoureux et impliqué, je m'engage aussi bien dans mes projets académiques que dans la vie associative — responsable du Futsal UTC, secrétaire de la Soirée des Finaux, trésorier du service des sports.</p>
+                <div class="lang-chips">
+                    <div class="lang-chip"><span class="flag">🇫🇷</span> Français <span class="level">Natif</span></div>
+                    <div class="lang-chip"><span class="flag">🇬🇧</span> English <span class="level">C1 — IELTS</span></div>
+                    <div class="lang-chip"><span class="flag">🇧🇷</span> Português <span class="level">C1</span></div>
+                </div>
+            </div>
+            <img src="photo.jpg" alt="Clément Balcon" class="about-avatar">
+        </div>
     </div>
 </div>
 
 <div class="divider"></div>
 
 <div class="section-wrap" id="experience">
-    <div class="section-label">Parcours</div>
+    <div class="section-eyebrow">Parcours</div>
     <h2>Expérience & Formation</h2>
-    <div class="timeline">
-        <div class="timeline-item">
-            <div class="timeline-header">
-                <div class="timeline-title">Alternant Ingénieur</div>
-                <div class="timeline-date">2023 — 2026</div>
+
+    <div class="timeline fade-in">
+        <div class="tl-item">
+            <div class="tl-header">
+                <div class="tl-title">Apprenti Ingénieur — Production Aéronautique</div>
+                <div class="tl-date">Août 2024 — Aujourd'hui</div>
             </div>
-            <div class="timeline-company">Safran Aircraft Engines · Villaroche, France</div>
-            <div class="timeline-desc">Participation à des projets de conception et d'optimisation de composants mécaniques pour moteurs d'avion. Travail au sein d'équipes pluridisciplinaires dans un environnement industriel de haute exigence.</div>
+            <div class="tl-company">Safran Aircraft Engines · Châtellerault, France</div>
+            <div class="tl-desc">Au sein de la Division des Moteurs Militaires, participation à des projets de transformation industrielle axés sur le pilotage de la production, la digitalisation des lignes de maintenance et l'amélioration continue. Travail en binôme sur des sujets mêlant gestion de données, performance industrielle et conduite du changement.</div>
         </div>
-        <div class="timeline-item">
-            <div class="timeline-header">
-                <div class="timeline-title">Diplôme d'Ingénieur — Ingénierie Mécanique (IM)</div>
-                <div class="timeline-date">2021 — 2026</div>
+        <div class="tl-item">
+            <div class="tl-header">
+                <div class="tl-title">Diplôme d'Ingénieur — Ingénierie Mécanique · Filière PIL</div>
+                <div class="tl-date">Févr. 2024 — Sept. 2026</div>
             </div>
-            <div class="timeline-company">Université de Technologie de Compiègne (UTC)</div>
-            <div class="timeline-desc">Formation d'ingénieur en alternance, spécialisation Ingénierie Mécanique. UV clés : mécanique des structures, dynamique des systèmes, fabrication, management de projet. Co-responsable de l'association Futsal UTC.</div>
+            <div class="tl-company">Université de Technologie de Compiègne (UTC)</div>
+            <div class="tl-desc">Spécialisation en Production Intégrée et Logistique (PIL). Formation en alternance intégrant mécanique des structures, dynamique des systèmes, méthodes de production et management de projet industriel.</div>
+        </div>
+        <div class="tl-item">
+            <div class="tl-header">
+                <div class="tl-title">Tronc Commun Ingénieur</div>
+                <div class="tl-date">Févr. 2022 — Févr. 2024</div>
+            </div>
+            <div class="tl-company">Université de Technologie de Compiègne (UTC)</div>
+            <div class="tl-desc">Cycle préparatoire pluridisciplinaire : sciences de l'ingénieur, mathématiques, informatique, sciences humaines. Parcours réalisé en 2 ans (durée standard : 2 ans).</div>
+        </div>
+        <div class="tl-item">
+            <div class="tl-header">
+                <div class="tl-title">Stage Ouvrier — Construction Navale</div>
+                <div class="tl-date">Juil. — Août 2022</div>
+            </div>
+            <div class="tl-company">ICN — Itaguaí Construções Navais · Rio de Janeiro, Brésil</div>
+            <div class="tl-desc">Immersion en environnement de production industrielle lourde au sein d'un chantier naval militaire brésilien. Découverte des procédés de fabrication et des métiers de l'industrie navale.</div>
+        </div>
+        <div class="tl-item">
+            <div class="tl-header">
+                <div class="tl-title">Baccalauréat Général — Maths · Physique · Option Maths Expert</div>
+                <div class="tl-date">2018 — 2021</div>
+            </div>
+            <div class="tl-company">Lycée Molière · Rio de Janeiro, Brésil</div>
+            <div class="tl-desc">Baccalauréat français obtenu au Lycée Molière de Rio de Janeiro, école française homologuée. Spécialités Mathématiques et Physique-Chimie, option Mathématiques Expertes.</div>
         </div>
     </div>
 </div>
@@ -193,16 +429,26 @@
 <div class="divider"></div>
 
 <div class="section-wrap" id="skills">
-    <div class="section-label">Compétences</div>
+    <div class="section-eyebrow">Compétences</div>
     <h2>Ce que je maîtrise</h2>
-    <div class="skills-grid">
+    <div class="skills-grid fade-in">
         <div class="skill-card">
             <div class="skill-card-title">⚙️ CAO & Simulation</div>
             <div class="tags">
-                <span class="tag">CATIA V5</span>
+                <span class="tag highlight">CATIA V5</span>
                 <span class="tag">SolidWorks</span>
                 <span class="tag">Onshape</span>
                 <span class="tag">Abaqus</span>
+            </div>
+        </div>
+        <div class="skill-card">
+            <div class="skill-card-title">🏭 Production & Data</div>
+            <div class="tags">
+                <span class="tag highlight">Pilotage industriel</span>
+                <span class="tag">Amélioration continue</span>
+                <span class="tag">DMAIC / Lean</span>
+                <span class="tag">Business Intelligence</span>
+                <span class="tag">ERP (SAP)</span>
             </div>
         </div>
         <div class="skill-card">
@@ -216,17 +462,25 @@
         <div class="skill-card">
             <div class="skill-card-title">🌍 Langues</div>
             <div class="tags">
-                <span class="tag">Français — Natif</span>
-                <span class="tag">Anglais — B2</span>
+                <span class="tag highlight">Français — Natif</span>
+                <span class="tag highlight">Anglais — C1 IELTS</span>
+                <span class="tag highlight">Portugais — C1</span>
             </div>
         </div>
         <div class="skill-card">
             <div class="skill-card-title">🤝 Savoir-être</div>
             <div class="tags">
-                <span class="tag">Gestion de projet</span>
-                <span class="tag">Travail en équipe</span>
+                <span class="tag">Conduite de projet</span>
                 <span class="tag">Leadership</span>
+                <span class="tag">Travail en équipe</span>
                 <span class="tag">Rigueur</span>
+                <span class="tag">Adaptabilité</span>
+            </div>
+        </div>
+        <div class="skill-card">
+            <div class="skill-card-title">🏆 Certifications</div>
+            <div class="tags">
+                <span class="tag highlight">IELTS — C1 (Août 2024)</span>
             </div>
         </div>
     </div>
@@ -235,45 +489,95 @@
 <div class="divider"></div>
 
 <div class="section-wrap" id="projects">
-    <div class="section-label">Projets</div>
+    <div class="section-eyebrow">Projets</div>
     <h2>Réalisations</h2>
-    <div class="projects-grid">
+    <div class="projects-grid fade-in">
+
+        <!-- RobAFIS -->
         <div class="project-card">
-            <div class="project-icon">🔫</div>
-            <div class="project-title">Rétro-modélisation Nerf Rider CS-35</div>
-            <div class="project-context">TN20 · UTC · P24 · Binôme</div>
-            <div class="project-desc">Rétro-modélisation complète d'un pistolet NERF en CAO sous CATIA V5. Application de la méthodologie squelette pour une conception collaborative, mesures au pied à coulisse, modélisation de géométries surfaciques complexes.</div>
-            <div class="tags" style="margin-bottom:1.25rem;">
-                <span class="tag">CATIA V5</span>
-                <span class="tag">CAO</span>
-                <span class="tag">Méthodologie squelette</span>
-            </div>
-            <a href="https://balconguichonridercf35.wordpress.com/2024/06/02/tn20-projet-nerf-rider-cs-35/" target="_blank" class="project-link">
-                Voir le projet
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
-        </div>
-        <div class="project-card">
-            <div class="project-icon">🤖</div>
-            <div class="project-title">RobAFIS</div>
-            <div class="project-context">Compétition nationale · UTC</div>
-            <div class="project-desc">Conception et réalisation d'un système mécanique automatisé dans le cadre de la compétition RobAFIS organisée par l'AFIS. Travail en équipe projet avec contraintes de temps et de performance.</div>
-            <div class="tags">
-                <span class="tag">Robotique</span>
-                <span class="tag">Mécanique</span>
-                <span class="tag">Gestion de projet</span>
+            <div class="project-card-img-placeholder">🤖</div>
+            <div class="project-card-body">
+                <div class="project-badge">🏆 Prix de l'Innovation</div>
+                <div class="project-title">RobAFIS — Robot Mobile Autonome</div>
+                <div class="project-context">Équipe BACAR · UTC · Sept. 2025 – Janv. 2026 · 13 écoles</div>
+                <div class="project-desc">Concours national RobAFIS (AFIS, Toulouse) représentant l'UTC au sein de l'équipe BACAR. Objectif : concevoir, intégrer et valider un robot mobile autonome capable d'évoluer sur terrain normé (détection de ballon, évitement d'obstacles, actions de jeu). Rôle de coordinateur Intégration, Vérification & Validation (IVV). L'UTC a décroché le Prix de l'Innovation à l'issue de la compétition.</div>
+                <div class="tags" style="margin-bottom:1rem;">
+                    <span class="tag">Robotique</span>
+                    <span class="tag">IVV</span>
+                    <span class="tag">Ingénierie Système</span>
+                    <span class="tag">V&V</span>
+                </div>
             </div>
         </div>
+
+        <!-- Nerf -->
         <div class="project-card">
-            <div class="project-icon">⚽</div>
-            <div class="project-title">Association Futsal UTC</div>
-            <div class="project-context">Co-responsable · 2023 — Present</div>
-            <div class="project-desc">Co-gestion de l'association de futsal de l'UTC : organisation des entraînements, engagement en compétitions universitaires FFSU, coordination avec les services de l'université et les partenaires sportifs.</div>
-            <div class="tags">
-                <span class="tag">Leadership</span>
-                <span class="tag">Management</span>
-                <span class="tag">Sport universitaire</span>
+            <div class="nerf-gallery">
+                <img class="main-img" src="https://balconguichonridercf35.wordpress.com/wp-content/uploads/2024/06/image-5.jpeg" alt="Nerf Rider CS-35 — vue générale" onerror="this.style.display='none'">
+                <div style="display:flex;flex-direction:column;gap:3px;">
+                    <img src="https://balconguichonridercf35.wordpress.com/wp-content/uploads/2024/06/image-6.jpeg" alt="Détail" style="flex:1;width:100%;object-fit:cover;" onerror="this.style.display='none'">
+                    <img src="https://balconguichonridercf35.wordpress.com/wp-content/uploads/2024/06/image-4.jpeg" alt="Détail 2" style="flex:1;width:100%;object-fit:cover;" onerror="this.style.display='none'">
+                </div>
             </div>
+            <div class="project-card-body">
+                <div class="project-badge">CATIA V5 · CAO</div>
+                <div class="project-title">Rétro-modélisation Nerf Rider CS-35</div>
+                <div class="project-context">UV TN20 · UTC P24 · Binôme avec Damien Guichon</div>
+                <div class="project-desc">Rétro-modélisation complète d'un pistolet NERF Rider CS-35 sous CATIA V5. Application de la méthodologie squelette pour une conception collaborative : mesures au pied à coulisse, modélisation surfacique complexe (poignées, lunette de visée, chargeur), gestion d'assemblages multi-pièces.</div>
+                <div class="tags" style="margin-bottom:1rem;">
+                    <span class="tag">CATIA V5</span>
+                    <span class="tag">CAO</span>
+                    <span class="tag">Méthodologie squelette</span>
+                    <span class="tag">Rétro-conception</span>
+                </div>
+                <a href="https://balconguichonridercf35.wordpress.com/2024/06/02/tn20-projet-nerf-rider-cs-35/" target="_blank" class="project-link">
+                    Voir le rapport complet
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="section-wrap">
+    <div class="section-eyebrow">Engagement</div>
+    <h2>Bénévolat & Associations</h2>
+    <div class="volunteer-grid fade-in">
+        <div class="vol-card">
+            <div class="vol-card-header">
+                <div class="vol-icon">⚽</div>
+                <div>
+                    <div class="vol-title">Responsable & Coach</div>
+                    <div class="vol-org">Futsal UTC</div>
+                </div>
+            </div>
+            <div class="vol-date">Févr. 2024 — Févr. 2026 · 2 ans</div>
+            <div class="vol-desc">Responsable et coach de l'équipe de futsal de l'UTC. Organisation des entraînements, gestion des engagements en compétitions universitaires (FFSU), coordination avec le service des sports et les partenaires.</div>
+        </div>
+        <div class="vol-card">
+            <div class="vol-card-header">
+                <div class="vol-icon">🎉</div>
+                <div>
+                    <div class="vol-title">Secrétaire</div>
+                    <div class="vol-org">Soirée Des Finaux (SDF)</div>
+                </div>
+            </div>
+            <div class="vol-date">Janv. 2025 — Févr. 2026 · 1 an</div>
+            <div class="vol-desc">Secrétaire de la Soirée des Finaux, soirée étudiante de fin de semestre ayant rassemblé <strong>1 400 étudiants</strong> lors de l'édition 2025. Gestion administrative et coordination logistique.</div>
+        </div>
+        <div class="vol-card">
+            <div class="vol-card-header">
+                <div class="vol-icon">🏅</div>
+                <div>
+                    <div class="vol-title">Trésorier</div>
+                    <div class="vol-org">UTC Service des Sports</div>
+                </div>
+            </div>
+            <div class="vol-date">Juil. 2025 — Aujourd'hui</div>
+            <div class="vol-desc">Gestion de la trésorerie du service des sports de l'UTC. Suivi des budgets associatifs, gestion des engagements financiers et des relations avec les instances universitaires.</div>
         </div>
     </div>
 </div>
@@ -281,19 +585,19 @@
 <div class="divider"></div>
 
 <div class="section-wrap" id="contact">
-    <div id="contact-section">
-        <div class="section-label">Contact</div>
+    <div id="contact-wrap">
+        <div class="section-eyebrow">Contact</div>
         <h2>Travaillons ensemble</h2>
-        <div class="contact-card">
-            <p>Ouvert aux opportunités dans le secteur aéronautique et industriel. N'hésitez pas à me contacter !</p>
+        <div class="contact-card fade-in">
+            <p>Ouvert aux opportunités dans les secteurs aéronautique, industriel et de la production. N'hésitez pas à me contacter !</p>
             <a href="mailto:clement.balcon29@gmail.com" class="btn btn-primary">clement.balcon29@gmail.com</a>
-            <div class="contact-links">
-                <a href="https://github.com/clementbalcon" target="_blank" class="contact-link">
-                    <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            <div class="contact-socials">
+                <a href="https://github.com/clementbalcon" target="_blank" class="social-link">
+                    <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
                     GitHub
                 </a>
-                <a href="https://www.linkedin.com/in/cl%C3%A9ment-balcon-456b31289/" target="_blank" class="contact-link">
-                    <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                <a href="https://www.linkedin.com/in/cl%C3%A9ment-balcon-456b31289/" target="_blank" class="social-link">
+                    <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
                     LinkedIn
                 </a>
             </div>
@@ -302,8 +606,15 @@
 </div>
 
 <footer>
-    © 2025 Clément Balcon · Ingénieur Mécanique
+    © 2025 Clément Balcon · Ingénieur Mécanique · UTC
 </footer>
+
+<script>
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
 
 </body>
 </html>
