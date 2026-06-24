@@ -53,37 +53,48 @@
             position: fixed; inset: 0; z-index: 0;
             pointer-events: none; overflow: hidden;
         }
-        .plane {
-            position: absolute;
-            color: var(--accent);
-            opacity: 0.07;
+        .plane { position: absolute; }
+
+        /* Make the white-bg PNG look like glowing technical lines on dark bg:
+           invert() flips black→white / white→black
+           sepia+hue-rotate tints toward sky blue
+           screen blend mode makes the black bg transparent */
+        .plane-img {
+            display: block;
+            filter: invert(1) sepia(1) hue-rotate(165deg) saturate(2.5) brightness(1.1);
+            mix-blend-mode: screen;
+            opacity: 0.22;
         }
-        .plane.amber { color: var(--accent2); opacity: 0.06; }
+        .plane-img.amber {
+            filter: invert(1) sepia(1) hue-rotate(20deg) saturate(3) brightness(1.1);
+            opacity: 0.18;
+        }
 
-        .rafale { width: 88px; }
-        .a400m  { width: 130px; }
-        .rafale-sm { width: 58px; }
+        .p-sm .plane-img  { width: 95px; }
+        .p-md .plane-img  { width: 155px; }
+        .p-lg .plane-img  { width: 220px; }
 
-        /* fly directions */
+        /* left-flying: flip the image */
+        .fl .plane-img { transform: scaleX(-1); }
+
         .fr { animation: fly-r linear infinite; }
-        .fl { animation: fly-l linear infinite; transform-origin: center; }
-        .fl svg { transform: scaleX(-1); }
+        .fl { animation: fly-l linear infinite; }
 
         @keyframes fly-r {
-            from { left: -180px; }
-            to   { left: calc(100vw + 180px); }
+            from { left: -280px; }
+            to   { left: calc(100vw + 280px); }
         }
         @keyframes fly-l {
-            from { left: calc(100vw + 180px); }
-            to   { left: -180px; }
+            from { left: calc(100vw + 280px); }
+            to   { left: -280px; }
         }
 
-        .p1 { top: 9%;  animation-duration: 42s; animation-delay: 0s; }
-        .p2 { top: 28%; animation-duration: 30s; animation-delay: -14s; }
-        .p3 { top: 52%; animation-duration: 58s; animation-delay: -22s; }
-        .p4 { top: 18%; animation-duration: 24s; animation-delay: -8s; }
-        .p5 { top: 72%; animation-duration: 50s; animation-delay: -38s; }
-        .p6 { top: 41%; animation-duration: 36s; animation-delay: -5s; }
+        .p1 { top: 8%;  animation-duration: 45s; animation-delay: 0s; }
+        .p2 { top: 30%; animation-duration: 32s; animation-delay: -16s; }
+        .p3 { top: 55%; animation-duration: 62s; animation-delay: -25s; }
+        .p4 { top: 19%; animation-duration: 26s; animation-delay: -9s; }
+        .p5 { top: 74%; animation-duration: 52s; animation-delay: -40s; }
+        .p6 { top: 43%; animation-duration: 38s; animation-delay: -6s; }
 
         /* ── NAV ── */
         nav {
@@ -356,103 +367,31 @@
 </head>
 <body>
 
-<!-- ─── FLYING AIRCRAFT ─── -->
+<!-- ─── FLYING A400M ─── -->
 <div class="planes-layer" aria-hidden="true">
-
-    <!-- Rafale SVG (delta wing, canards, side profile) -->
-    <!-- p1: top, flying right, slow -->
-    <div class="plane rafale fr p1">
-        <svg viewBox="0 0 88 22" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-            <rect x="2" y="9.5" width="78" height="3" rx="1.5"/>
-            <polygon points="0,11 5,9 5,13"/>
-            <polygon points="38,9.5 63,1.5 74,9.5"/>
-            <polygon points="38,12.5 63,20.5 74,12.5"/>
-            <polygon points="19,9.5 29,5.5 32,9.5"/>
-            <polygon points="19,12.5 29,16.5 32,12.5"/>
-            <polygon points="73,9.5 77,4.5 82,9.5"/>
-            <ellipse cx="82" cy="11" rx="4" ry="2.2" opacity="0.45"/>
-        </svg>
+    <!-- p1: top, flying right, slow, medium -->
+    <div class="plane p-md fr p1">
+        <img src="A400M.png" class="plane-img" alt="">
     </div>
-
-    <!-- p2: lower-mid, flying left, medium -->
-    <div class="plane rafale fl p2">
-        <svg viewBox="0 0 88 22" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-            <rect x="2" y="9.5" width="78" height="3" rx="1.5"/>
-            <polygon points="0,11 5,9 5,13"/>
-            <polygon points="38,9.5 63,1.5 74,9.5"/>
-            <polygon points="38,12.5 63,20.5 74,12.5"/>
-            <polygon points="19,9.5 29,5.5 32,9.5"/>
-            <polygon points="19,12.5 29,16.5 32,12.5"/>
-            <polygon points="73,9.5 77,4.5 82,9.5"/>
-            <ellipse cx="82" cy="11" rx="4" ry="2.2" opacity="0.45"/>
-        </svg>
+    <!-- p2: lower-mid, flying left, medium, small -->
+    <div class="plane p-sm fl p2">
+        <img src="A400M.png" class="plane-img" alt="">
     </div>
-
-    <!-- p4: upper area, flying left, fast, small -->
-    <div class="plane rafale-sm fl p4">
-        <svg viewBox="0 0 88 22" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-            <rect x="2" y="9.5" width="78" height="3" rx="1.5"/>
-            <polygon points="0,11 5,9 5,13"/>
-            <polygon points="38,9.5 63,1.5 74,9.5"/>
-            <polygon points="38,12.5 63,20.5 74,12.5"/>
-            <polygon points="19,9.5 29,5.5 32,9.5"/>
-            <polygon points="19,12.5 29,16.5 32,12.5"/>
-            <polygon points="73,9.5 77,4.5 82,9.5"/>
-        </svg>
+    <!-- p3: mid-screen, flying right, slow, large -->
+    <div class="plane p-lg fr p3">
+        <img src="A400M.png" class="plane-img amber" alt="">
     </div>
-
-    <!-- A400M SVG (high-wing turboprop transport, T-tail) -->
-    <!-- p3: mid-screen, flying right, slow -->
-    <div class="plane a400m amber fr p3">
-        <svg viewBox="0 0 130 34" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-            <!-- fuselage -->
-            <rect x="5" y="15.5" width="102" height="6" rx="3"/>
-            <!-- nose (rounder) -->
-            <ellipse cx="8" cy="18.5" rx="8" ry="4"/>
-            <!-- high wing upper side (near) -->
-            <polygon points="42,15.5 42,13 88,7 88,14"/>
-            <!-- high wing lower side (far) -->
-            <polygon points="42,21.5 42,24 88,30 88,22"/>
-            <!-- engine nacelles with prop circles -->
-            <ellipse cx="56" cy="10" rx="5.5" ry="2.8"/>
-            <circle cx="56" cy="10" r="5" fill="none" stroke="currentColor" stroke-width="0.9" opacity="0.35"/>
-            <ellipse cx="72" cy="7.5" rx="5.5" ry="2.8"/>
-            <circle cx="72" cy="7.5" r="5" fill="none" stroke="currentColor" stroke-width="0.9" opacity="0.35"/>
-            <!-- vertical tail -->
-            <rect x="103" y="7" width="3" height="10" rx="1"/>
-            <!-- T-tail horizontal -->
-            <polygon points="97,7 120,4.5 120,7.5 97,10.5"/>
-        </svg>
+    <!-- p4: upper, flying left, fast, small -->
+    <div class="plane p-sm fl p4">
+        <img src="A400M.png" class="plane-img" alt="">
     </div>
-
-    <!-- p5: near bottom, flying right -->
-    <div class="plane a400m amber fl p5">
-        <svg viewBox="0 0 130 34" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-            <rect x="5" y="15.5" width="102" height="6" rx="3"/>
-            <ellipse cx="8" cy="18.5" rx="8" ry="4"/>
-            <polygon points="42,15.5 42,13 88,7 88,14"/>
-            <polygon points="42,21.5 42,24 88,30 88,22"/>
-            <ellipse cx="56" cy="10" rx="5.5" ry="2.8"/>
-            <circle cx="56" cy="10" r="5" fill="none" stroke="currentColor" stroke-width="0.9" opacity="0.35"/>
-            <ellipse cx="72" cy="7.5" rx="5.5" ry="2.8"/>
-            <circle cx="72" cy="7.5" r="5" fill="none" stroke="currentColor" stroke-width="0.9" opacity="0.35"/>
-            <rect x="103" y="7" width="3" height="10" rx="1"/>
-            <polygon points="97,7 120,4.5 120,7.5 97,10.5"/>
-        </svg>
+    <!-- p5: near bottom, flying left, slow, medium -->
+    <div class="plane p-md fl p5">
+        <img src="A400M.png" class="plane-img amber" alt="">
     </div>
-
-    <!-- p6: mid, Rafale flying right -->
-    <div class="plane rafale fr p6">
-        <svg viewBox="0 0 88 22" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-            <rect x="2" y="9.5" width="78" height="3" rx="1.5"/>
-            <polygon points="0,11 5,9 5,13"/>
-            <polygon points="38,9.5 63,1.5 74,9.5"/>
-            <polygon points="38,12.5 63,20.5 74,12.5"/>
-            <polygon points="19,9.5 29,5.5 32,9.5"/>
-            <polygon points="19,12.5 29,16.5 32,12.5"/>
-            <polygon points="73,9.5 77,4.5 82,9.5"/>
-            <ellipse cx="82" cy="11" rx="4" ry="2.2" opacity="0.45"/>
-        </svg>
+    <!-- p6: mid, flying right, large -->
+    <div class="plane p-lg fr p6">
+        <img src="A400M.png" class="plane-img" alt="">
     </div>
 </div>
 
