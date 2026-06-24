@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nerf Rider CS-35 — TN20 · Clément Balcon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg: #060c15;
+            --accent: #38bdf8;
+            --accent2: #fb923c;
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+            --subtle: #64748b;
+            --card: rgba(56,189,248,0.04);
+            --card-hover: rgba(56,189,248,0.075);
+            --border: rgba(56,189,248,0.1);
+        }
+        html { scroll-behavior: smooth; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; line-height: 1.65; overflow-x: hidden; }
+
+        body::before {
+            content: '';
+            position: fixed; inset: 0; z-index: -2; pointer-events: none;
+            background-image:
+                linear-gradient(rgba(56,189,248,0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(56,189,248,0.025) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+        body::after {
+            content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+            background: radial-gradient(ellipse 70% 45% at 50% 0%, rgba(56,189,248,0.09), transparent 60%);
+        }
+
+        /* ── NAV ── */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            padding: 1rem 2.5rem;
+            display: flex; align-items: center; gap: 1.2rem;
+            background: rgba(6,12,21,0.88);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+        .back-link {
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            color: var(--muted); text-decoration: none; font-size: 0.85rem;
+            font-weight: 500; transition: color 0.2s;
+        }
+        .back-link:hover { color: #7dd3fc; }
+        .nav-sep { color: var(--subtle); font-size: 0.8rem; }
+        .nav-title { color: var(--text); font-size: 0.85rem; font-weight: 500; }
+
+        /* ── HERO ── */
+        .hero {
+            padding: 7rem 2rem 3rem;
+            max-width: 1020px; margin: 0 auto;
+        }
+        .hero-meta {
+            display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1.5rem;
+        }
+        .badge {
+            display: inline-flex; align-items: center;
+            background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.22);
+            color: #7dd3fc; font-size: 0.75rem; font-weight: 600;
+            padding: 0.22rem 0.75rem; border-radius: 999px;
+        }
+        .badge.amber {
+            background: rgba(251,146,60,0.08); border-color: rgba(251,146,60,0.25); color: #fdba74;
+        }
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 700; line-height: 1.1;
+            margin-bottom: 1rem;
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #38bdf8 0%, #60a5fa 50%, #fb923c 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .hero-sub { color: var(--muted); font-size: 1.05rem; max-width: 620px; margin-bottom: 2rem; }
+
+        .hero-img {
+            width: 100%; border-radius: 1.25rem; border: 1px solid var(--border);
+            box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+            display: block; margin-bottom: 4rem;
+        }
+
+        /* ── LAYOUT ── */
+        .wrap { max-width: 1020px; margin: 0 auto; padding: 0 2rem 5rem; }
+        .divider { height: 1px; background: var(--border); margin: 3.5rem 0; }
+
+        .section-eyebrow {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            color: #7dd3fc; font-size: 0.72rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.13em; margin-bottom: 0.6rem;
+        }
+        .section-eyebrow::after { content:''; display:inline-block; width:30px; height:1px; background:rgba(56,189,248,0.35); }
+
+        h2 {
+            font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+            font-size: clamp(1.5rem, 3vw, 2rem); margin-bottom: 1rem;
+        }
+        h3 {
+            font-family: 'Space Grotesk', sans-serif; font-weight: 600;
+            font-size: 1.1rem; margin-bottom: 0.6rem; color: var(--text);
+        }
+        p { color: var(--muted); line-height: 1.75; margin-bottom: 1rem; }
+        p:last-child { margin-bottom: 0; }
+        strong { color: var(--text); font-weight: 600; }
+
+        /* ── CONTENT LAYOUTS ── */
+        .two-col {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;
+        }
+        .two-col.flip { direction: rtl; }
+        .two-col.flip > * { direction: ltr; }
+        @media(max-width: 700px) { .two-col { grid-template-columns: 1fr; } .two-col.flip { direction: ltr; } }
+
+        .text-block { }
+
+        /* ── IMAGES ── */
+        .img-card {
+            border-radius: 1rem; border: 1px solid var(--border);
+            overflow: hidden; background: var(--card);
+        }
+        .img-card img { width: 100%; display: block; }
+        .img-caption {
+            padding: 0.65rem 0.9rem;
+            color: var(--subtle); font-size: 0.78rem; text-align: center;
+            border-top: 1px solid var(--border);
+        }
+
+        .img-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .img-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+        @media(max-width: 600px) { .img-grid-2, .img-grid-3 { grid-template-columns: 1fr; } }
+
+        /* ── CALLOUT BOX ── */
+        .callout {
+            background: var(--card); border: 1px solid var(--border);
+            border-left: 3px solid var(--accent); border-radius: 0 0.75rem 0.75rem 0;
+            padding: 1.1rem 1.3rem; margin: 1.5rem 0;
+        }
+        .callout.amber { border-left-color: var(--accent2); }
+        .callout p { margin: 0; font-size: 0.92rem; }
+
+        /* ── TAGS ── */
+        .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1rem; }
+        .tag {
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09);
+            color: var(--muted); padding: 0.22rem 0.65rem; border-radius: 999px; font-size: 0.77rem;
+        }
+
+        /* ── BACK TO TOP ── */
+        .back-btn {
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            color: #7dd3fc; text-decoration: none; font-size: 0.88rem; font-weight: 500;
+            padding: 0.65rem 1.4rem; border: 1px solid rgba(56,189,248,0.28);
+            border-radius: 999px; transition: all 0.2s; margin-top: 2rem;
+        }
+        .back-btn:hover { background: rgba(56,189,248,0.07); }
+
+        /* ── FADE IN ── */
+        .fade-in { opacity: 0; transform: translateY(18px); transition: opacity 0.55s ease, transform 0.55s ease; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="index.html" class="back-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Retour au portfolio
+    </a>
+    <span class="nav-sep">/</span>
+    <span class="nav-title">TN20 — Nerf Rider CS-35</span>
+</nav>
+
+<div class="hero">
+    <div class="hero-meta">
+        <span class="badge">UV TN20 · UTC</span>
+        <span class="badge">Semestre P24 · 2024</span>
+        <span class="badge amber">CATIA V5</span>
+        <span class="badge amber">Rétro-modélisation</span>
+    </div>
+    <h1>Nerf Rider CS-35<br><span class="gradient-text">Revue de Projet CAO</span></h1>
+    <p class="hero-sub">Rétro-modélisation complète d'un pistolet NERF Rider CS-35 sous CATIA V5, réalisée en binôme avec <strong>Damien Guichon</strong> dans le cadre de l'UV TN20 à l'UTC.</p>
+    <img src="nerf/hero.png" alt="Rendu final CATIA V5 — Nerf Rider CS-35" class="hero-img">
+</div>
+
+<div class="wrap">
+
+    <!-- ── INTRODUCTION ── -->
+    <div class="fade-in">
+        <div class="section-eyebrow">Contexte</div>
+        <h2>Le projet</h2>
+        <div class="two-col">
+            <div class="text-block">
+                <p>Durant le semestre P24 à l'<strong>Université de Technologie de Compiègne</strong>, notre binôme — Damien Guichon et Clément Balcon — a eu l'opportunité de rétro-modéliser un pistolet NERF dans le cadre de l'UV TN20.</p>
+                <p>L'objet choisi est le <strong>Nerf Rider CS-35</strong>, légèrement modifié par rapport à son modèle d'origine : la crosse arrière a été retirée et une <strong>lunette de visée</strong> a été ajoutée.</p>
+                <p>Le projet visait à appliquer la <strong>méthodologie squelette</strong> pour une modélisation collaborative, en se répartissant les différentes pièces tout en conservant une cohérence d'ensemble.</p>
+                <div class="tags">
+                    <span class="tag">CATIA V5</span>
+                    <span class="tag">Modélisation surfacique</span>
+                    <span class="tag">Assemblage</span>
+                    <span class="tag">Méthodologie squelette</span>
+                    <span class="tag">Opérations booléennes</span>
+                </div>
+            </div>
+            <div class="img-card">
+                <img src="nerf/assemblage.png" alt="Arbre d'assemblage CATIA V5 — Nerf Rider CS-35">
+                <div class="img-caption">Arbre d'assemblage : SKL, corps Nerf, poignées, chargeur, lunette</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ── MÉTHODOLOGIE SQUELETTE ── -->
+    <div class="fade-in">
+        <div class="section-eyebrow">Méthodologie</div>
+        <h2>La méthodologie squelette</h2>
+        <p>Avant de commencer la modélisation, la <strong>méthodologie squelette</strong> nous a été enseignée. Cette approche consiste à créer d'abord une structure de base — un "squelette" — avant de détailler les éléments spécifiques.</p>
+
+        <div class="callout">
+            <p>La méthodologie squelette est particulièrement utile pour les projets <strong>complexes et collaboratifs</strong> : elle fournit une base commune permettant à chaque membre de l'équipe de travailler simultanément sur des parties distinctes sans créer d'incohérences géométriques.</p>
+        </div>
+
+        <p>Elle nous a permis de nous répartir le travail et d'avancer en parallèle sur les différentes pièces, puis d'assembler le tout sur le squelette central. Cependant, son application a nécessité une <strong>adaptation constante</strong> — certains contacts entre pièces n'avaient pas été anticipés et ont dû être réintégrés au fur et à mesure.</p>
+
+        <div class="img-grid-3" style="margin-top:1.5rem;">
+            <div class="img-card">
+                <img src="nerf/squelette1.png" alt="Squelette CATIA">
+                <div class="img-caption">Vue d'ensemble assemblage</div>
+            </div>
+            <div class="img-card">
+                <img src="nerf/squelette2.png" alt="Squelette détail">
+                <div class="img-caption">Structure squelette</div>
+            </div>
+            <div class="img-card">
+                <img src="nerf/squelette3.png" alt="Assemblage partiel">
+                <div class="img-caption">Assemblage partiel</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ── POIGNÉES ── -->
+    <div class="fade-in">
+        <div class="section-eyebrow">Partie 1</div>
+        <h2>Poignées</h2>
+        <div class="two-col">
+            <div class="img-card">
+                <img src="nerf/poignee.png" alt="Modélisation des poignées">
+                <div class="img-caption">Poignées avant et arrière modélisées</div>
+            </div>
+            <div class="text-block">
+                <p>La modélisation surfacique des <strong>poignées</strong> a constitué l'une des principales difficultés du projet. Les formes organiques et les raccordements complexes ont nécessité la création d'un grand nombre de <strong>courbes guides et de points de contrôle</strong> dont le positionnement n'était pas toujours évident.</p>
+                <p>Pour faire face à cette difficulté, nous avons utilisé un <strong>croquis intermédiaire</strong> servant de référence géométrique afin de guider la construction des surfaces et d'assurer la continuité de courbure.</p>
+                <div class="callout amber">
+                    <p>La modélisation surfacique impose une rigueur dans l'ordre de création des entités — une courbe guide mal positionnée peut invalider l'ensemble du réseau de surfaces.</p>
+                </div>
+            </div>
+        </div>
+        <div class="img-grid-2" style="margin-top:1.2rem;">
+            <div class="img-card">
+                <img src="nerf/poignee2.png" alt="Détail poignée 2">
+                <div class="img-caption">Construction des surfaces de poignée</div>
+            </div>
+            <div class="img-card">
+                <img src="nerf/poignee3.png" alt="Détail poignée 3">
+                <div class="img-caption">Raccordements et finitions</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ── LUNETTE ── -->
+    <div class="fade-in">
+        <div class="section-eyebrow">Partie 2</div>
+        <h2>Lunette de visée</h2>
+        <div class="two-col flip">
+            <div class="img-card">
+                <img src="nerf/lunette.png" alt="Lunette de visée modélisée">
+                <div class="img-caption">Lunette de visée — rendu CATIA V5</div>
+            </div>
+            <div class="text-block">
+                <p>La <strong>lunette de visée</strong> ajoutée sur le Nerf modifié représentait également un défi notable : elle comporte de nombreux petits corps devant être intégrés via des <strong>opérations booléennes</strong> successives.</p>
+                <p>La réalisation des <strong>rainures complexes</strong> sur la surface grise épaisse a nécessité un processus multi-étapes :</p>
+                <ol style="color:var(--muted); padding-left:1.4rem; line-height:2;">
+                    <li>Création d'un corps auxiliaire + esquisse</li>
+                    <li>Extrusion surfacique</li>
+                    <li>Décalage et extrapolation de la surface épaisse</li>
+                    <li>Découpe par l'extrusion surfacique</li>
+                    <li>Extrusion de la surface découpée</li>
+                    <li>Soustraction booléenne du corps de la surface épaisse</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ── CHARGEUR & TAMBOUR ── -->
+    <div class="fade-in">
+        <div class="section-eyebrow">Partie 3</div>
+        <h2>Chargeur & Tambour</h2>
+        <p>Le chargeur circulaire a été traité comme un <strong>sous-ensemble indépendant</strong> en raison de sa complexité : il est composé de <strong>quatre pièces distinctes</strong>, dont le tambour rotatif. Nous avons donc décidé de lui créer son propre squelette afin de faciliter et d'organiser sa conception.</p>
+        <div class="img-grid-2">
+            <div class="img-card">
+                <img src="nerf/chargeur.png" alt="Chargeur circulaire">
+                <div class="img-caption">Chargeur circulaire — assemblage 4 pièces</div>
+            </div>
+            <div class="img-card">
+                <img src="nerf/tambour.png" alt="Tambour rotatif">
+                <div class="img-caption">Tambour rotatif — modélisation détaillée</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ── CORPS BLEU ── -->
+    <div class="fade-in">
+        <div class="section-eyebrow">Partie 4</div>
+        <h2>Corps principal</h2>
+        <div class="two-col">
+            <div class="text-block">
+                <p>Le corps bleu principal du Nerf concentre l'essentiel de la <strong>modélisation volumique</strong> du projet. Sa géométrie générale est plus accessible que les pièces détaillées, mais certains détails de surface ont posé des difficultés spécifiques.</p>
+                <p>La réalisation d'une <strong>"poche surfacique"</strong> — n'étant pas une opération native dans CATIA V5 — a demandé une approche détournée :</p>
+                <div class="callout">
+                    <p>Création d'un corps + esquisse → extrusion → extrapolation de la surface bleue → découpe → extrusion de la découpe → <strong>opération booléenne de soustraction</strong>, puis addition pour la partie orange.</p>
+                </div>
+            </div>
+            <div class="img-grid-2" style="gap:0.75rem;">
+                <div class="img-card">
+                    <img src="nerf/corps1.png" alt="Corps bleu 1">
+                    <div class="img-caption">Corps principal</div>
+                </div>
+                <div class="img-card">
+                    <img src="nerf/corps2.png" alt="Corps bleu 2">
+                    <div class="img-caption">Détail poche surfacique</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ── RENDU FINAL ── -->
+    <div class="fade-in">
+        <div class="section-eyebrow">Résultat</div>
+        <h2>Modélisation finale</h2>
+        <p>Pour assurer la précision dimensionnelle de l'ensemble, nous avons emprunté un <strong>pied à coulisse</strong> pour relever les cotes réelles du Nerf — ce qui a permis d'obtenir un rendu fidèle à l'objet physique.</p>
+        <div class="img-grid-2" style="margin-top:1.2rem;">
+            <div class="img-card">
+                <img src="nerf/final1.png" alt="Rendu final 1">
+                <div class="img-caption">Vue 3/4 avant gauche</div>
+            </div>
+            <div class="img-card">
+                <img src="nerf/final2.png" alt="Rendu final 2">
+                <div class="img-caption">Vue latérale droite</div>
+            </div>
+            <div class="img-card">
+                <img src="nerf/final3.png" alt="Rendu final 3">
+                <div class="img-caption">Vue 3/4 arrière</div>
+            </div>
+            <div class="img-card">
+                <img src="nerf/final4.png" alt="Rendu final 4">
+                <div class="img-caption">Vue de dessus</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ── CONCLUSION ── -->
+    <div class="fade-in">
+        <div class="section-eyebrow">Bilan</div>
+        <h2>Conclusion</h2>
+        <p>Ce projet TN20 a été riche en apprentissages techniques et méthodologiques. La comparaison entre <strong>CATIA V5</strong> et CREO Parametric — que nous avions utilisé auparavant — a révélé que CATIA V5 présente moins de bugs d'assemblage, facilitant grandement le travail collaboratif. En revanche, sa <strong>documentation en ligne</strong> est parfois insuffisante pour débloquer certains problèmes spécifiques.</p>
+        <div class="callout" style="margin-top:1.5rem;">
+            <p>TN20 nous a permis d'acquérir une <strong>maîtrise avancée de CATIA V5</strong> et des logiciels de CAO en général, tout en forgeant une véritable cohésion d'équipe et en démontrant la valeur du travail collaboratif structuré autour d'une méthodologie partagée.</p>
+        </div>
+        <div class="tags" style="margin-top:1.2rem;">
+            <span class="tag">CATIA V5</span>
+            <span class="tag">Modélisation surfacique</span>
+            <span class="tag">Opérations booléennes</span>
+            <span class="tag">Assemblage multi-pièces</span>
+            <span class="tag">Méthodologie squelette</span>
+            <span class="tag">Métrologie (pied à coulisse)</span>
+            <span class="tag">Travail collaboratif</span>
+        </div>
+        <a href="index.html" class="back-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+            Retour au portfolio
+        </a>
+    </div>
+
+</div>
+
+<script>
+    const obs = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
