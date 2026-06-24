@@ -1,0 +1,327 @@
+<details>
+<summary><strong>Clique ici pour voir le code HTML à copier</strong></summary>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clément Balcon — Ingénieur Mécanique</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg: #08080f; --bg2: #0f0f1a; --accent: #6366f1; --accent2: #a855f7;
+            --text: #e2e8f0; --muted: #94a3b8; --card: rgba(25ba(255,255,255,0.08);
+        }
+        html { scroll-behavior: smooth; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; line-height: 1.6; }
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            padding: 1.1rem 2.5rem; display: flex; justify-conems: center;
+            background: rgba(8,8,15,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border);
+        }
+        .nav-logo {
+            font-family: 'Space Grotesk', sans-serif; font-wei
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text; -webkit-text-fill-c-clip: text;
+        }
+        .nav-links { display: flex; gap: 2rem; list-style: non
+        .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.88rem; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--text); }
+        @media (max-width: 600px) { .nav-links { display: none; } }
+        #hero {
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            text-align: center; padding: 6rem 2rem 4rem; positen;
+        }
+        .hero-bg {
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse 80% 50% at 50%transparent),
+                        radial-gradient(ellipse 50% 40% at 85% 85%, rgba(168,85,247,0.12), transparent),
+                        radial-gradient(ellipse 40% 30% at 10%transparent);
+        }
+        .hero-content { position: relative; max-width: 720px;
+        .hero-tag {
+            display: inline-flex; align-items: center; gap: 0.
+            background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.3);
+            color: #a5b4fc; padding: 0.4rem 1.1rem; border-rad
+            font-size: 0.83rem; font-weight: 500; margin-bottom: 1.75rem;
+            animation: fadeUp 0.6s ease 0.1s both;
+        }
+        .hero-tag::before {
+            content: ''; width: 6px; height: 6px; background: #6366f1;
+            border-radius: 50%; animation: blink 2s infinite;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; transform: s; transform: scale(1.4); } }
+        h1 {
+            font-family: 'Space Grotesk', sans-serif; font-siz;
+            font-weight: 700; line-height: 1.1; margin-bottom: 1.25rem;
+            animation: fadeUp 0.6s ease 0.2s both;
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #818cf8, #a855f7, #ec4899);
+            -webkit-background-clip: text; -webkit-text-fill-c-clip: text;
+        }
+        .hero-sub { font-size: 1.1rem; color: var(--muted); mao 2.5rem; animation: fadeUp 0.6s ease 0.3s both; }
+        .hero-cta { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; animation: fadeUp 0.6s ease 0.4s both; }
+        .btn { padding: 0.75rem 1.75rem; border-radius: 999px;ght: 600; text-decoration: none; transition: all 0.2s; }
+        .btn-primary { background: linear-gradient(135deg, #6366f1, #a855f7); color: white; border: none; box-shadow: 0 0 20px rgba(99,102,241,0.3); }
+        .btn-primary:hover { opacity: 0.88; transform: transla24px rgba(99,102,241,0.4); }
+        .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+        .btn-outline:hover { border-color: rgba(99,102,241,0.5
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+        .section-wrap { max-width: 1000px; margin: 0 auto; pad
+        .divider { height: 1px; background: var(--border); max-width: 1000px; margin: 0 auto; }
+        .section-label {
+            display: inline-flex; align-items: center; gap: 0.6rem;
+            color: #a5b4fc; font-size: 0.78rem; font-weight: 6
+            text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.75rem;
+        }
+        .section-label::after { content: ''; display: inline-block; width: 40px; height: 1px; background: rgba(99,102,241,0.4); }
+        h2 { font-family: 'Space Grotesk', sans-serif; font-si); font-weight: 700; margin-bottom: 2.75rem; }
+        .about-grid { display: grid; grid-template-columns: 1fr auto; gap: 3rem; align-items: start; }
+        @media (max-width: 640px) { .about-grid { grid-templat
+        .about-text p { color: var(--muted); margin-bottom: 1rem; font-size: 1.05rem; }
+        .about-avatar {
+            width: 160px; height: 160px; border-radius: 1.25rem;
+            background: linear-gradient(135deg, rgba(99,102,24;
+            border: 1px solid rgba(99,102,241,0.25);
+            display: flex; align-items: center; justify-conten flex-shrink: 0;
+        }
+        .timeline { display: flex; flex-direction: column; gap
+        .timeline-item {
+            background: var(--card); border: 1px solid var(--b
+            padding: 1.5rem 1.5rem 1.5rem 2rem; position: relative; overflow: hidden; transition: border-color 0.25s, transform 0.25s;
+        }
+        .timeline-item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: linear-gradient(180deg, #6366f1,
+#a855f7); }
+        .timeline-item:hover { border-color: rgba(99,102,241,0.3); transform: translateX(4px); }
+        .timeline-header { display: flex; justify-content: spa-start; gap: 1rem; margin-bottom: 0.35rem; flex-wrap: wrap; }
+        .timeline-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 1.05rem; }
+        .timeline-date { color: #a5b4fc; font-size: 0.78rem; frgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.2);padding: 0.22rem 0.75rem; border-radius: 999px; white-space: nowrap; }
+        .timeline-company { color: #818cf8; font-weight: 500; ttom: 0.6rem; }
+        .timeline-desc { color: var(--muted); font-size: 0.93rem; }
+        .skills-grid { display: grid; grid-template-columns: r 1fr)); gap: 1.25rem; }
+        .skill-card { background: var(--card); border: 1px solid var(--border); border-radius: 1rem; padding: 1.4rem; transition: border-color 0.25s; }
+        .skill-card:hover { border-color: rgba(99,102,241,0.3)
+        .skill-card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 0.95rem; margin-bottom: 1rem; }
+        .tags { display: flex; flex-wrap: wrap; gap: 0.45rem;
+        .tag { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--muted); padding: 0.28rem 0.72rem; border-radius: 999px;
+font-size: 0.8rem; }
+        .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+        .project-card { background: var(--card); border: 1px sdius: 1rem; padding: 1.75rem; transition: border-color 0.25s,transform 0.25s; display: flex; flex-direction: column; }
+        .project-card:hover { border-color: rgba(99,102,241,0.x); }
+        .project-icon { font-size: 2rem; margin-bottom: 1rem; }
+        .project-title { font-family: 'Space Grotesk', sans-seize: 1.05rem; margin-bottom: 0.5rem; }
+        .project-context { color: #818cf8; font-size: 0.82rem; font-weight: 500; margin-bottom: 0.75rem; }
+        .project-desc { color: var(--muted); font-size: 0.91reex: 1; }
+        .project-link { display: inline-flex; align-items: center; gap: 0.4rem; color: #a5b4fc; font-size: 0.85rem; font-weight: 500; text-decoration:
+none; transition: color 0.2s; }
+        .project-link:hover { color: white; }
+        .project-link:hover svg { transform: translateX(3px);
+        .project-link svg { transition: transform 0.2s; }
+        #contact-section { text-align: center; }
+        .contact-card { background: var(--card); border: 1px solid var(--border); border-radius: 1.5rem; padding: 3rem 2rem; max-width: 520px; margin: 0
+auto; }
+        .contact-card p { color: var(--muted); margin-bottom: 2rem; font-size: 1.05rem; }
+        .contact-links { display: flex; justify-content: cente1.5rem; flex-wrap: wrap; }
+        .contact-link { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--muted); text-decoration: none; font-size: 0.88rem;
+font-weight: 500; padding: 0.5rem 1.1rem; border: 1px solid va99px; transition: all 0.2s; }
+        .contact-link:hover { border-color: rgba(99,102,241,0.4); color: #a5b4fc; background: rgba(99,102,241,0.06); }
+        footer { text-align: center; padding: 2rem; color: var; border-top: 1px solid var(--border); }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-logo">CB</div>
+    <ul class="nav-links">
+        <li><a href="#about">À propos</a></li>
+        <li><a href="#experience">Expérience</a></li>
+        <li><a href="#skills">Compétences</a></li>
+        <li><a href="#projects">Projets</a></li>
+        <li><a href="#contact">Contact</a></li>
+    </ul>
+</nav>
+
+<section id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+        <div class="hero-tag">Alternant Ingénieur · Safran Aircraft Engines</div>
+        <h1>Clément Balcon<br><span class="gradient-text">Ingé
+        <p class="hero-sub">Étudiant ingénieur en alternance à l'UTC · Passionné par la conception mécanique et l'aéronautique</p>
+        <div class="hero-cta">
+            <a href="#contact" class="btn btn-primary">Me contacter</a>
+            <a href="#projects" class="btn btn-outline">Voir m
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<div class="section-wrap" id="about">
+    <div class="section-label">À propos</div>
+    <h2>Qui suis-je ?</h2>
+    <div class="about-grid">
+        <div class="about-text">
+            <p>Étudiant en ingénierie mécanique à l'Université(UTC), je prépare mon diplôme d'ingénieur en alternance chez<strong style="color: var(--text);">Safran Aircraft Engines</strong>, leader mondial des moteurs d'avion.</p>
+            <p>Passionné par la conception mécanique, la simultechniques, je cherche à appliquer mes compétences sur desprojets à fort impact dans le secteur aéronautique et industriel.</p>
+            <p>Co-responsable de l'association de futsal de l' du collectif, du leadership et du dépassement de soi — sur leterrain comme dans les projets.</p>
+        </div>
+        <div class="about-avatar">👨‍🔧</div>
+    </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="section-wrap" id="experience">
+    <div class="section-label">Parcours</div>
+    <h2>Expérience & Formation</h2>
+    <div class="timeline">
+        <div class="timeline-item">
+            <div class="timeline-header">
+                <div class="timeline-title">Alternant Ingénieur</div>
+                <div class="timeline-date">2023 — 2026</div>
+            </div>
+            <div class="timeline-company">Safran Aircraft Engi>
+            <div class="timeline-desc">Participation à des projets de conception et d'optimisation de composants mécaniques pour moteurs d'avion. Travail
+au sein d'équipes pluridisciplinaires dans un environnement indiv>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-header">
+                <div class="timeline-title">Diplôme d'Ingénieu</div>
+                <div class="timeline-date">2021 — 2026</div>
+            </div>
+            <div class="timeline-company">Université de Technologie de Compiègne (UTC)</div>
+            <div class="timeline-desc">Formation d'ingénieur eIngénierie Mécanique. UV clés : mécanique des structures,dynamique des systèmes, fabrication, management de projet. Co-responsable de l'association Futsal UTC.</div>
+        </div>
+    </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="section-wrap" id="skills">
+    <div class="section-label">Compétences</div>
+    <h2>Ce que je maîtrise</h2>
+    <div class="skills-grid">
+        <div class="skill-card">
+            <div class="skill-card-title">⚙️ CAO & Simulation</div>
+            <div class="tags">
+                <span class="tag">CATIA V5</span>
+                <span class="tag">SolidWorks</span>
+                <span class="tag">Onshape</span>
+                <span class="tag">Abaqus</span>
+            </div>
+        </div>
+        <div class="skill-card">
+            <div class="skill-card-title">💻 Programmation</di
+            <div class="tags">
+                <span class="tag">MATLAB</span>
+                <span class="tag">Python</span>
+                <span class="tag">HTML / CSS</span>
+            </div>
+        </div>
+        <div class="skill-card">
+            <div class="skill-card-title">🌍 Langues</div>
+            <div class="tags">
+                <span class="tag">Français — Natif</span>
+                <span class="tag">Anglais — B2</span>
+            </div>
+        </div>
+        <div class="skill-card">
+            <div class="skill-card-title">🤝 Savoir-être</div>
+            <div class="tags">
+                <span class="tag">Gestion de projet</span>
+                <span class="tag">Travail en équipe</span>
+                <span class="tag">Leadership</span>
+                <span class="tag">Rigueur</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="section-wrap" id="projects">
+    <div class="section-label">Projets</div>
+    <h2>Réalisations</h2>
+    <div class="projects-grid">
+        <div class="project-card">
+            <div class="project-icon">🔫</div>
+            <div class="project-title">Rétro-modélisation Nerf
+            <div class="project-context">TN20 · UTC · P24 · Binôme</div>
+            <div class="project-desc">Rétro-modélisation compl sous CATIA V5. Application de la méthodologie squelette pourune conception collaborative, mesures au pied à coulisse, modélisation de géométries surfaciques complexes.</div>
+            <div class="tags" style="margin-bottom:1.25rem;">
+                <span class="tag">CATIA V5</span>
+                <span class="tag">CAO</span>
+                <span class="tag">Méthodologie squelette</span>
+            </div>
+            <a href="https://balconguichonridercf35.wordpress.com/2024/06/02/tn20-projet-nerf-rider-cs-35/" target="_blank" class="project-link">
+                Voir le projet
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7
+7"/></svg>
+            </a>
+        </div>
+        <div class="project-card">
+            <div class="project-icon">🤖</div>
+            <div class="project-title">RobAFIS</div>
+            <div class="project-context">Compétition nationale
+            <div class="project-desc">Conception et réalisation d'un système mécanique automatisé dans le cadre de la compétition RobAFIS organisée par
+l'AFIS. Travail en équipe projet avec contraintes de temps et
+            <div class="tags">
+                <span class="tag">Robotique</span>
+                <span class="tag">Mécanique</span>
+                <span class="tag">Gestion de projet</span>
+            </div>
+        </div>
+        <div class="project-card">
+            <div class="project-icon">⚽</div>
+            <div class="project-title">Association Futsal UTC</div>
+            <div class="project-context">Co-responsable · 2023
+            <div class="project-desc">Co-gestion de l'association de futsal de l'UTC : organisation des entraînements, engagement en compétitions
+universitaires FFSU, coordination avec les services de l'univetifs.</div>
+            <div class="tags">
+                <span class="tag">Leadership</span>
+                <span class="tag">Management</span>
+                <span class="tag">Sport universitaire</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="section-wrap" id="contact">
+    <div id="contact-section">
+        <div class="section-label">Contact</div>
+        <h2>Travaillons ensemble</h2>
+        <div class="contact-card">
+            <p>Ouvert aux opportunités dans le secteur aéronautique et industriel. N'hésitez pas à me contacter !</p>
+            <a href="mailto:clement.balcon29@gmail.com" class=con29@gmail.com</a>
+            <div class="contact-links">
+                <a href="https://github.com/clementbalcon" tarink">
+                    <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205
+11.385.6.105.825-.255.825-.570-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08
+1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475
+5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 . 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                    GitHub
+                </a>
+                <a href="https://www.linkedin.com/in/cl%C3%A9ment-balcon-456b31289/" target="_blank" class="contact-link">
+                    <svg width="15" height="15" fill="currentCth d="M20.44720.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0
+4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.03 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.7920 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                    LinkedIn
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    © 2025 Clément Balcon · Ingénieur Mécanique
+</footer>
+
+</body>
+</html>
+
+</details>
