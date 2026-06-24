@@ -288,6 +288,7 @@
             background: rgba(251,146,60,0.08); border-color: rgba(251,146,60,0.22);
         }
         .tl-company { font-weight: 500; font-size: 0.83rem; margin-bottom: 0.5rem; }
+        .tl-logo { width: 20px; height: 20px; border-radius: 4px; object-fit: contain; background: #fff; vertical-align: middle; margin-right: 6px; }
         .tl-col:first-child .tl-company { color: #38bdf8; }
         .tl-col:last-child  .tl-company { color: #fb923c; }
         .tl-desc { color: var(--muted); font-size: 0.86rem; line-height: 1.65; }
@@ -359,7 +360,7 @@
         }
         .vol-card:hover { border-color: var(--border-accent); background: var(--card-hover); }
         .vol-card-header { display: flex; align-items: flex-start; gap: 0.9rem; margin-bottom: 0.65rem; }
-        .vol-icon { font-size: 1.6rem; flex-shrink: 0; margin-top: 0.1rem; }
+        .vol-icon { width: 44px; height: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 8px; background: #fff; }
         .vol-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 0.97rem; margin-bottom: 0.15rem; }
         .vol-org { color: #38bdf8; font-size: 0.82rem; font-weight: 500; }
         .vol-date { color: var(--subtle); font-size: 0.76rem; margin-bottom: 0.6rem; }
@@ -510,7 +511,7 @@
                         <div class="tl-title">Diplôme d'Ingénieur · Filière PIL</div>
                         <div class="tl-date">Sep 2024 – Sep 2026</div>
                     </div>
-                    <div class="tl-company">UTC · Compiègne</div>
+                    <div class="tl-company"><img src="logo_utc.jpeg" class="tl-logo" alt="UTC"> UTC · Compiègne</div>
                     <div class="tl-desc">Production Intégrée et Logistique, en alternance. Lean management, gestion de production, méthodes statistiques, modélisation systèmes de performance industrielle.</div>
                 </div>
                 <div class="tl-item">
@@ -518,7 +519,7 @@
                         <div class="tl-title">Cycle Ingénieur — Conception Mécanique</div>
                         <div class="tl-date">Jan 2022 – Sep 2024</div>
                     </div>
-                    <div class="tl-company">UTC · Compiègne</div>
+                    <div class="tl-company"><img src="logo_utc.jpeg" class="tl-logo" alt="UTC"> UTC · Compiègne</div>
                     <div class="tl-desc">Tronc commun pluridisciplinaire puis spécialisation mécanique. RDM, conception mécanique 1&2, phénomènes électromagnétiques, transmission des efforts.</div>
                 </div>
                 <div class="tl-item">
@@ -526,7 +527,7 @@
                         <div class="tl-title">Baccalauréat Général</div>
                         <div class="tl-date">2021</div>
                     </div>
-                    <div class="tl-company">Lycée Molière · Rio de Janeiro, Brésil</div>
+                    <div class="tl-company"><img src="logo_lycee_moliere.jpeg" class="tl-logo" alt="Lycée Molière"> Lycée Molière · Rio de Janeiro, Brésil</div>
                     <div class="tl-desc">Spécialités Mathématiques & Physique-Chimie, option Mathématiques Expertes. École française homologuée, Rio de Janeiro.</div>
                 </div>
             </div>
@@ -541,7 +542,7 @@
                         <div class="tl-title">Apprenti Ingénieur — Production Aéronautique</div>
                         <div class="tl-date">Sep 2024 – Sep 2026</div>
                     </div>
-                    <div class="tl-company">Safran Aircraft Engines · Châtellerault</div>
+                    <div class="tl-company"><img src="logo_safran.jpeg" class="tl-logo" alt="Safran"> Safran Aircraft Engines · Châtellerault</div>
                     <div class="tl-desc">Division des Moteurs Militaires. Pilotage de la performance industrielle (KPI), amélioration continue, digitalisation des processus de production et déploiement de nouvelles technologies sur lignes de maintenance.</div>
                 </div>
                 <div class="tl-item">
@@ -557,7 +558,7 @@
                         <div class="tl-title">Stage Ouvrier — Construction Navale</div>
                         <div class="tl-date">Juil. – Août 2022</div>
                     </div>
-                    <div class="tl-company">ICN — Itaguaí Construções Navais · Brésil</div>
+                    <div class="tl-company"><img src="logo_icn.jpeg" class="tl-logo" alt="ICN"> ICN — Itaguaí Construções Navais · Brésil</div>
                     <div class="tl-desc">Immersion en production industrielle lourde au sein d'un chantier naval militaire brésilien. Intégration hiérarchique et compréhension des enjeux de construction.</div>
                 </div>
             </div>
@@ -727,7 +728,9 @@
     <div class="volunteer-grid fade-in">
         <div class="vol-card">
             <div class="vol-card-header">
-                <div class="vol-icon">⚽</div>
+                <div class="vol-icon">
+                    <img src="logo_utcfutsal.jpeg" alt="UTC Futsal" style="width:100%;height:100%;object-fit:contain;border-radius:6px;">
+                </div>
                 <div>
                     <div class="vol-title">Responsable & Coach</div>
                     <div class="vol-org">Futsal UTC</div>
@@ -738,7 +741,9 @@
         </div>
         <div class="vol-card">
             <div class="vol-card-header">
-                <div class="vol-icon">🎉</div>
+                <div class="vol-icon">
+                    <img src="logo_sdf.jpeg" alt="Soirée Des Finaux" style="width:100%;height:100%;object-fit:contain;border-radius:6px;">
+                </div>
                 <div>
                     <div class="vol-title">Secrétaire</div>
                     <div class="vol-org">Soirée Des Finaux (SDF)</div>
@@ -749,7 +754,9 @@
         </div>
         <div class="vol-card">
             <div class="vol-card-header">
-                <div class="vol-icon">🏅</div>
+                <div class="vol-icon">
+                    <img src="logo_utcsport.jpeg" alt="UTC Service des Sports" style="width:100%;height:100%;object-fit:contain;border-radius:6px;">
+                </div>
                 <div>
                     <div class="vol-title">Trésorier</div>
                     <div class="vol-org">UTC Service des Sports</div>
