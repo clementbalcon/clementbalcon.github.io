@@ -381,6 +381,31 @@
         }
         .social-link:hover { border-color: rgba(56,189,248,0.4); color: #7dd3fc; background: rgba(56,189,248,0.05); }
 
+        /* ── MON PROJET ── */
+        .projet-intro { max-width: 760px; font-size: 1.02rem; color: var(--muted); line-height: 1.75; margin-bottom: 2rem; }
+        .meca-card { background: var(--card); border: 1px solid var(--border); border-radius: 1rem; padding: 1.4rem 1.8rem; margin-bottom: 2rem; }
+        .meca-header { display: flex; align-items: baseline; gap: 0.9rem; margin-bottom: 1.2rem; flex-wrap: wrap; }
+        .meca-name { font-family: 'Space Grotesk', sans-serif; font-size: 1.25rem; font-weight: 700; color: var(--text); }
+        .meca-sub { font-size: 0.83rem; color: var(--muted); }
+        .meca-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; }
+        @media(max-width: 520px) { .meca-stats { grid-template-columns: repeat(2, 1fr); } }
+        .meca-stat { text-align: center; background: rgba(56,189,248,0.04); border: 1px solid var(--border); border-radius: 0.7rem; padding: 0.8rem 0.5rem; }
+        .meca-stat .sv { display: block; font-family: 'Space Grotesk', sans-serif; font-size: 1.4rem; font-weight: 700; color: var(--accent); line-height: 1; }
+        .meca-stat .sv.amber { color: var(--accent2); }
+        .meca-stat .sl { display: block; font-size: 0.68rem; color: var(--muted); margin-top: 0.3rem; line-height: 1.3; }
+        .phase-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
+        @media(max-width: 680px) { .phase-grid { grid-template-columns: 1fr; } }
+        .phase-card { background: var(--card); border: 1px solid var(--border); border-radius: 1rem; padding: 1.2rem; }
+        .phase-period { font-size: 0.68rem; color: var(--subtle); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.65rem; }
+        .phase-num { width: 28px; height: 28px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', sans-serif; font-size: 0.82rem; font-weight: 700; margin-bottom: 0.6rem; }
+        .phase-num.p1 { background: rgba(56,189,248,0.15); color: var(--accent); }
+        .phase-num.p2 { background: rgba(251,146,60,0.15); color: var(--accent2); }
+        .phase-num.p3 { background: rgba(52,211,153,0.15); color: #34d399; }
+        .phase-title { font-family: 'Space Grotesk', sans-serif; font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 0.45rem; }
+        .phase-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.55; }
+        .projet-callout { background: var(--card); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 0 0.75rem 0.75rem 0; padding: 1.1rem 1.4rem; }
+        .projet-callout p { color: var(--muted); font-size: 0.9rem; line-height: 1.75; margin: 0; }
+
         footer {
             text-align: center; padding: 2rem; color: var(--subtle); font-size: 0.8rem;
             border-top: 1px solid var(--border); position: relative; z-index: 1;
@@ -440,7 +465,7 @@
         <h1>Clément Balcon<br><span class="gradient-text">Ingénieur Mécanique</span></h1>
         <p class="hero-sub">Étudiant ingénieur à l'UTC · Filière PIL · Passionné par la production aéronautique et l'innovation industrielle</p>
         <div class="hero-cta">
-            <a href="#contact" class="btn btn-primary">Me contacter</a>
+            <a href="mailto:clement.balcon29@gmail.com" class="btn btn-primary">Me contacter</a>
             <a href="#projects" class="btn btn-outline">Voir mes projets</a>
         </div>
     </div>
@@ -757,10 +782,58 @@
     </div>
 </div>
 
+<div class="divider"></div>
+
 <!-- ─── MON PROJET ─── -->
+<div class="section-wrap" id="projet">
+    <div class="section-eyebrow">Projet professionnel</div>
+    <h2>Reprendre &amp; développer</h2>
+
+    <p class="projet-intro fade-in">
+        Mon objectif est entrepreneurial et s'inscrit dans le long terme : reprendre, en association avec mon oncle, <strong>MECA V.A</strong> — PME familiale de mécanique de précision implantée dans le Finistère, spécialisée dans le tournage et le fraisage de pièces en petites séries. Une entreprise fondée par mon grand-père, reprise par mon oncle, que j'ambitionne d'inscrire dans une troisième génération de direction familiale.
+    </p>
+
+    <div class="meca-card fade-in">
+        <div class="meca-header">
+            <span class="meca-name">MECA V.A</span>
+            <span class="meca-sub">Mécanique de précision · Finistère · Industrie, recherche scientifique, agroalimentaire</span>
+        </div>
+        <div class="meca-stats">
+            <div class="meca-stat"><span class="sv">4–5</span><span class="sl">Salariés</span></div>
+            <div class="meca-stat"><span class="sv">20–50</span><span class="sl">Pièces / série</span></div>
+            <div class="meca-stat"><span class="sv">3<sup style="font-size:0.65em">e</sup></span><span class="sl">Génération familiale</span></div>
+            <div class="meca-stat"><span class="sv amber">CN</span><span class="sl">Tournage · Fraisage</span></div>
+        </div>
+    </div>
+
+    <div class="phase-grid fade-in">
+        <div class="phase-card">
+            <div class="phase-period">Sept — Nov 2026</div>
+            <div class="phase-num p1">1</div>
+            <div class="phase-title">Transition &amp; Transmission</div>
+            <div class="phase-desc">Mission d'intérim chez Safran pour transmettre mes projets et ma connaissance des lignes de production à mon successeur — finir ce que j'ai commencé.</div>
+        </div>
+        <div class="phase-card">
+            <div class="phase-period">Nov 2026 — Mi-2027</div>
+            <div class="phase-num p2">2</div>
+            <div class="phase-title">Maîtrise du geste technique</div>
+            <div class="phase-desc">Formation Fraiseur · Tourneur (Titre Pro RNCP, Pôle Formation UIMM Bretagne). Acquérir la légitimité terrain indispensable pour diriger un atelier de mécanique de précision.</div>
+        </div>
+        <div class="phase-card">
+            <div class="phase-period">À partir de mi-2027</div>
+            <div class="phase-num p3">3</div>
+            <div class="phase-title">Intégration &amp; Développement</div>
+            <div class="phase-desc">Rejoindre MECA V.A aux côtés de mon oncle : apporter les méthodes industrielles acquises, digitaliser, automatiser les tâches répétitives, conquérir de nouveaux marchés.</div>
+        </div>
+    </div>
+
+    <div class="projet-callout fade-in">
+        <p>Chaque étape de mon parcours prépare la suivante. La formation d'ingénieur m'apporte la capacité à structurer et piloter une organisation industrielle ; l'apprentissage chez Safran met ces compétences en pratique à grande échelle ; la formation UIMM me donne la légitimité technique du terrain ; et les années aux côtés de mon oncle construiront la posture de dirigeant. L'ensemble forme un chemin cohérent au service d'un seul objectif.</p>
+    </div>
+</div>
 
 <footer>
-    © 2025 Clément Balcon · Ingénieur Mécanique · UTC
+    © 2026 Clément Balcon · Ingénieur Mécanique · UTC
 </footer>
 
 <script>
