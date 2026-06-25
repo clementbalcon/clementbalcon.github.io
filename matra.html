@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solder Pen — Matra Électronique · Clément Balcon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg: #060c15;
+            --accent: #38bdf8;
+            --accent2: #fb923c;
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+            --subtle: #64748b;
+            --card: rgba(56,189,248,0.04);
+            --border: rgba(56,189,248,0.1);
+        }
+        html { scroll-behavior: smooth; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; line-height: 1.65; overflow-x: hidden; }
+
+        body::before {
+            content: ''; position: fixed; inset: 0; z-index: -2; pointer-events: none;
+            background-image: linear-gradient(rgba(56,189,248,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(56,189,248,0.025) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+        body::after {
+            content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+            background: radial-gradient(ellipse 70% 45% at 50% 0%, rgba(56,189,248,0.09), transparent 60%);
+        }
+
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            padding: 1rem 2.5rem; display: flex; align-items: center; gap: 1.2rem;
+            background: rgba(6,12,21,0.88); backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+        .back-link { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--muted); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
+        .back-link:hover { color: #7dd3fc; }
+        .nav-sep { color: var(--subtle); font-size: 0.8rem; }
+        .nav-title { color: var(--text); font-size: 0.85rem; font-weight: 500; }
+
+        .hero { padding: 7rem 2rem 2.5rem; max-width: 1100px; margin: 0 auto; }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.2);
+            border-radius: 2rem; padding: 0.3rem 0.9rem;
+            font-size: 0.78rem; color: var(--accent); font-weight: 500; letter-spacing: 0.04em; margin-bottom: 1.2rem;
+        }
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.9rem, 4.5vw, 3rem); font-weight: 700; line-height: 1.1;
+            background: linear-gradient(135deg, #e2e8f0 30%, #38bdf8 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 1rem;
+        }
+        .hero p { font-size: 1rem; color: var(--muted); max-width: 700px; line-height: 1.7; margin-bottom: 1.6rem; }
+
+        .partner-banner {
+            display: inline-flex; align-items: center; gap: 0.9rem;
+            background: rgba(56,189,248,0.06); border: 1px solid rgba(56,189,248,0.15);
+            border-radius: 0.8rem; padding: 0.6rem 1rem; margin-bottom: 1.8rem;
+        }
+        .partner-banner img { width: 28px; height: 28px; object-fit: contain; filter: brightness(1.1); }
+        .partner-banner span { font-size: 0.82rem; color: var(--muted); }
+        .partner-banner strong { color: var(--text); }
+
+        .meta-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; max-width: 1100px; margin: 0 auto 2rem; padding: 0 2rem; }
+        @media(max-width: 680px) { .meta-row { grid-template-columns: 1fr; } }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; margin-bottom: 0.9rem; }
+        @media(max-width: 480px) { .stats-grid { grid-template-columns: 1fr 1fr; } }
+        .stat { background: var(--card); border: 1px solid var(--border); border-radius: 0.8rem; padding: 0.9rem; text-align: center; }
+        .stat .v { font-family: 'Space Grotesk', sans-serif; font-size: 1.4rem; font-weight: 700; color: var(--accent); line-height: 1; }
+        .stat .v.amber { color: var(--accent2); }
+        .stat .v.green { color: #34d399; }
+        .stat .l { font-size: 0.72rem; color: var(--muted); margin-top: 0.3rem; }
+
+        .team-block { background: var(--card); border: 1px solid var(--border); border-radius: 1rem; padding: 1.2rem; }
+        .team-block h3 { font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem; color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.9rem; }
+        .team-section { margin-bottom: 0.9rem; }
+        .team-section:last-child { margin-bottom: 0; }
+        .team-section-label { font-size: 0.73rem; color: var(--subtle); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.45rem; }
+        .tm { display: flex; align-items: baseline; gap: 0.5rem; margin-bottom: 0.3rem; }
+        .tm:last-child { margin-bottom: 0; }
+        .tm-name { font-size: 0.88rem; color: var(--text); font-weight: 500; }
+        .tm-role { font-size: 0.78rem; color: var(--muted); }
+        .tm-me .tm-name { color: var(--accent); }
+
+        .tags-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 2rem; padding: 0 2rem; max-width: 1100px; margin-left: auto; margin-right: auto; }
+        .tag { display: inline-block; background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.18); border-radius: 0.4rem; padding: 0.2rem 0.6rem; font-size: 0.75rem; color: var(--accent); font-weight: 500; }
+        .tag.amber { background: rgba(251,146,60,0.08); border-color: rgba(251,146,60,0.18); color: var(--accent2); }
+        .tag.green { background: rgba(52,211,153,0.08); border-color: rgba(52,211,153,0.18); color: #34d399; }
+
+        .content { max-width: 1100px; margin: 0 auto; padding: 0 2rem 4rem; }
+
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; font-weight: 600;
+            color: var(--muted); margin-bottom: 1.2rem;
+            display: flex; align-items: center; gap: 0.6rem;
+        }
+        .section-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(to right, var(--border), transparent); }
+
+        .phase-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2.5rem; }
+        @media(max-width: 680px) { .phase-grid { grid-template-columns: 1fr; } }
+        .phase-card { background: var(--card); border: 1px solid var(--border); border-radius: 1rem; padding: 1.3rem; }
+        .phase-num {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 28px; height: 28px; border-radius: 0.5rem;
+            font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+        .phase-num.p1 { background: rgba(56,189,248,0.15); color: var(--accent); }
+        .phase-num.p2 { background: rgba(251,146,60,0.15); color: var(--accent2); }
+        .phase-num.p3 { background: rgba(52,211,153,0.15); color: #34d399; }
+        .phase-title { font-family: 'Space Grotesk', sans-serif; font-size: 0.88rem; font-weight: 600; color: var(--text); margin-bottom: 0.5rem; }
+        .phase-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.55; }
+
+        .deliverables-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 2.5rem; }
+        @media(max-width: 680px) { .deliverables-grid { grid-template-columns: 1fr; } }
+        .deliv-card { background: var(--card); border: 1px solid var(--border); border-radius: 1rem; padding: 1.2rem; display: flex; gap: 0.8rem; align-items: flex-start; }
+        .deliv-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 0.05rem; }
+        .deliv-title { font-size: 0.88rem; font-weight: 600; color: var(--text); margin-bottom: 0.25rem; }
+        .deliv-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
+
+        .callout { background: var(--card); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 0 0.75rem 0.75rem 0; padding: 1.1rem 1.4rem; margin-bottom: 2.5rem; }
+        .callout p { color: var(--muted); font-size: 0.9rem; line-height: 1.75; margin: 0; }
+
+        footer { text-align: center; padding: 2rem; color: var(--subtle); font-size: 0.82rem; border-top: 1px solid var(--border); }
+        footer a { color: var(--muted); text-decoration: none; }
+        footer a:hover { color: var(--accent); }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="index.html" class="back-link">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Portfolio
+    </a>
+    <span class="nav-sep">/</span>
+    <span class="nav-title">Solder Pen — Matra Électronique</span>
+</nav>
+
+<div class="hero">
+    <div class="hero-badge">PR UTC · UTeam · Déc. 2025 – Mai 2026</div>
+    <h1>Solder Pen — Outillage de Brasage Ergonomique</h1>
+    <p>Conception d'un outil manuel assisté pour l'apport de fil d'alliage lors du brasage de cartes électroniques — un projet mené dans le cadre du Projet de Recherche UTC en partenariat avec Matra Électronique, spécialiste des ensembles électroniques aéronautiques et de défense.</p>
+    <div class="partner-banner">
+        <img src="logo_matra.png" alt="Matra Électronique">
+        <span>Partenaire : <strong>Matra Électronique (filiale MBDA)</strong> · via UTeam / Junior Entreprise UTC</span>
+    </div>
+</div>
+
+<div class="meta-row">
+    <div>
+        <div class="stats-grid">
+            <div class="stat"><div class="v">&lt;100g</div><div class="l">Masse cible</div></div>
+            <div class="stat"><div class="v amber">4</div><div class="l">Diamètres de fil</div></div>
+            <div class="stat"><div class="v green">3D</div><div class="l">Prototype imprimé</div></div>
+            <div class="stat"><div class="v">8h</div><div class="l">Utilisation journalière</div></div>
+        </div>
+        <p style="font-size:0.8rem; color:var(--subtle); margin-top:0.7rem; padding-left:0.2rem">
+            Équipe : <strong style="color:var(--muted)">Clément Balcon</strong> · Tristan Marquet — Encadrants : B. Eynard · J. Duligou (UTC)
+        </p>
+    </div>
+    <div class="team-block">
+        <h3>Équipe projet</h3>
+        <div class="team-section">
+            <div class="team-section-label">Étudiants UTC</div>
+            <div class="tm tm-me"><span class="tm-name">Clément Balcon</span><span class="tm-role">— IM05</span></div>
+            <div class="tm"><span class="tm-name">Tristan Marquet</span><span class="tm-role">— IM04</span></div>
+        </div>
+        <div class="team-section">
+            <div class="team-section-label">Encadrants UTC (MOE)</div>
+            <div class="tm"><span class="tm-name">Benoît Eynard</span></div>
+            <div class="tm"><span class="tm-name">Julien Duligou</span></div>
+        </div>
+        <div class="team-section">
+            <div class="team-section-label">Partenaire industriel (MOA)</div>
+            <div class="tm"><span class="tm-name">Jérémy Soares Correia</span><span class="tm-role">— Innovation & AC</span></div>
+            <div class="tm"><span class="tm-name">Benoît Bonnedame</span><span class="tm-role">— Innovation & AC</span></div>
+        </div>
+    </div>
+</div>
+
+<div class="tags-row">
+    <span class="tag">Analyse fonctionnelle</span>
+    <span class="tag">FAST</span>
+    <span class="tag">Conception mécanique 3D</span>
+    <span class="tag">Prototypage</span>
+    <span class="tag amber">Impression 3D</span>
+    <span class="tag">Ergonomie</span>
+    <span class="tag">Gestion de projet</span>
+    <span class="tag amber">Normes ESD</span>
+    <span class="tag green">État de l'art</span>
+</div>
+
+<div class="content">
+
+    <h2 class="section-title">Contexte & Problématique</h2>
+    <div class="callout">
+        <p>Lors du brasage manuel de cartes électroniques, l'opérateur tient d'une main le fer à braser et de l'autre le fil d'apport. Cette manipulation répétée sur des journées de 8 heures génère une fatigue importante et un risque de troubles musculo-squelettiques (TMS). Le projet SOLDER PEN vise à concevoir un outil en forme de stylo qui facilite l'alimentation contrôlée du fil, sans sacrifier la flexibilité du brasage manuel.</p>
+    </div>
+
+    <h2 class="section-title">Démarche</h2>
+    <div class="phase-grid">
+        <div class="phase-card">
+            <div class="phase-num p1">1</div>
+            <div class="phase-title">Cadrage & État de l'art</div>
+            <div class="phase-desc">Formalisation du besoin avec Matra Électronique, rédaction de la note de clarification. Revue bibliographique des technologies de brasage manuel, semi-automatisé et automatisé — identification des verrous technologiques à lever.</div>
+        </div>
+        <div class="phase-card">
+            <div class="phase-num p2">2</div>
+            <div class="phase-title">Analyse fonctionnelle & Choix techniques</div>
+            <div class="phase-desc">Élaboration du cahier des charges fonctionnel et analyse FAST. Étude comparative de plusieurs architectures mécaniques pour l'entraînement du fil et la gestion des différents diamètres. Sélection des matériaux (conformité ESD, résistance aux solvants, tenue thermique).</div>
+        </div>
+        <div class="phase-card">
+            <div class="phase-num p3">3</div>
+            <div class="phase-title">Conception 3D & Prototypage</div>
+            <div class="phase-desc">Modélisation 3D de l'ensemble des pièces constitutives de l'outil. Fabrication d'un prototype fonctionnel par impression 3D pour valider l'architecture, les interfaces mécaniques et la prise en main. Rédaction de la gamme de montage.</div>
+        </div>
+    </div>
+
+    <h2 class="section-title">Livrables</h2>
+    <div class="deliverables-grid">
+        <div class="deliv-card">
+            <div class="deliv-icon">📋</div>
+            <div>
+                <div class="deliv-title">Cahier des charges fonctionnel & FAST</div>
+                <div class="deliv-desc">Analyse fonctionnelle complète avec fonctions principales, contraintes, fonctions techniques et solutions retenues — formalisée selon la méthode FAST.</div>
+            </div>
+        </div>
+        <div class="deliv-card">
+            <div class="deliv-icon">📐</div>
+            <div>
+                <div class="deliv-title">Modèles 3D & fichiers STL</div>
+                <div class="deliv-desc">Modélisation 3D de l'ensemble des pièces (corps, roue d'entraînement, poussoir, ergogrip, coque). Fichiers STL prêts à imprimer, remis à Matra Électronique.</div>
+            </div>
+        </div>
+        <div class="deliv-card">
+            <div class="deliv-icon">🔧</div>
+            <div>
+                <div class="deliv-title">Prototype fonctionnel</div>
+                <div class="deliv-desc">Prototype assemblé par impression 3D pour valider la faisabilité de l'assemblage, l'ergonomie de la prise en main et le respect des cibles de masse et d'encombrement.</div>
+            </div>
+        </div>
+        <div class="deliv-card">
+            <div class="deliv-icon">📄</div>
+            <div>
+                <div class="deliv-title">Documentation industrielle</div>
+                <div class="deliv-desc">Gamme de montage, liste de fournisseurs pour les composants standards, devis tourneur-fraiseur pour la variante usinée à avance variable.</div>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="section-title">Résultat</h2>
+    <div class="callout">
+        <p>Les trois jalons contractuels UTeam sont atteints. L'architecture retenue — entraînement par molette, poussoir à ressort pour absorber la variabilité des diamètres, matériau PETG-ESD pour la conformité en zone EPA — constitue une réponse cohérente aux contraintes d'ergonomie, de robustesse et de conformité normative. Le prototype validé sur banc servira de base à la prochaine étape : validation par un panel d'opérateurs chez Matra Électronique en vue d'une éventuelle industrialisation.</p>
+    </div>
+
+</div>
+
+<footer>
+    <a href="index.html">← Retour au portfolio</a> &nbsp;&middot;&nbsp; Clément Balcon &copy; 2026
+</footer>
+
+</body>
+</html>
