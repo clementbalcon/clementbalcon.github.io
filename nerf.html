@@ -186,7 +186,7 @@
     </div>
     <h1>Nerf Rider CS-35<br><span class="gradient-text">Revue de Projet CAO</span></h1>
     <p class="hero-sub">Rétro-modélisation complète d'un pistolet NERF Rider CS-35 sous CATIA V5, réalisée en binôme avec <strong>Damien Guichon</strong> dans le cadre de l'UV TN20 à l'UTC.</p>
-    <img src="nerf/hero.png" alt="Rendu final CATIA V5 — Nerf Rider CS-35" class="hero-img">
+    <img src="nerf_hero.png" alt="Modélisation finale CATIA V5 — Nerf Rider CS-35 complet" class="hero-img">
 </div>
 
 <div class="wrap">
@@ -199,7 +199,7 @@
             <div class="text-block">
                 <p>Durant le semestre P24 à l'<strong>Université de Technologie de Compiègne</strong>, notre binôme — Damien Guichon et Clément Balcon — a eu l'opportunité de rétro-modéliser un pistolet NERF dans le cadre de l'UV TN20.</p>
                 <p>L'objet choisi est le <strong>Nerf Rider CS-35</strong>, légèrement modifié par rapport à son modèle d'origine : la crosse arrière a été retirée et une <strong>lunette de visée</strong> a été ajoutée.</p>
-                <p>Le projet visait à appliquer la <strong>méthodologie squelette</strong> pour une modélisation collaborative, en se répartissant les différentes pièces tout en conservant une cohérence d'ensemble.</p>
+                <p>Le projet visait à appliquer la <strong>méthodologie squelette</strong> pour une modélisation collaborative, en se répartissant les différentes pièces tout en conservant une cohérence d'ensemble. Toute la démarche est restée guidée par un objectif de <strong>fidélité à l'objet physique</strong> : les cotes ont été relevées directement sur le Nerf au <strong>pied à coulisse</strong> afin que la maquette numérique colle au plus près de la réalité.</p>
                 <div class="tags">
                     <span class="tag">CATIA V5</span>
                     <span class="tag">Modélisation surfacique</span>
@@ -209,8 +209,8 @@
                 </div>
             </div>
             <div class="img-card">
-                <img src="nerf/assemblage.png" alt="Arbre d'assemblage CATIA V5 — Nerf Rider CS-35">
-                <div class="img-caption">Arbre d'assemblage : SKL, corps Nerf, poignées, chargeur, lunette</div>
+                <img src="nerf_reel.jpeg" alt="Poignée réelle du Nerf Rider CS-35 modifié">
+                <div class="img-caption">L'objet réel — poignée du Nerf Rider CS-35 modifié</div>
             </div>
         </div>
     </div>
@@ -231,16 +231,16 @@
 
         <div class="img-grid-3" style="margin-top:1.5rem;">
             <div class="img-card">
-                <img src="nerf/squelette1.png" alt="Squelette CATIA">
-                <div class="img-caption">Vue d'ensemble assemblage</div>
+                <img src="nerf_squelette1.png" alt="Squelette axial — axes et repères de référence">
+                <div class="img-caption">Squelette initial — axes et repères de référence</div>
             </div>
             <div class="img-card">
-                <img src="nerf/squelette2.png" alt="Squelette détail">
-                <div class="img-caption">Structure squelette</div>
+                <img src="nerf_squelette2.png" alt="Squelette avec repère chargeur ajouté">
+                <div class="img-caption">Ajout du repère chargeur</div>
             </div>
             <div class="img-card">
-                <img src="nerf/squelette3.png" alt="Assemblage partiel">
-                <div class="img-caption">Assemblage partiel</div>
+                <img src="nerf_squelette3.png" alt="Structure squelette complète">
+                <div class="img-caption">Structure squelette complète</div>
             </div>
         </div>
     </div>
@@ -253,8 +253,8 @@
         <h2>Poignées</h2>
         <div class="two-col">
             <div class="img-card">
-                <img src="nerf/poignee.png" alt="Modélisation des poignées">
-                <div class="img-caption">Poignées avant et arrière modélisées</div>
+                <img src="nerf_poigneeav.png" alt="Poignée avant assemblée — rendu final">
+                <div class="img-caption">Poignée avant assemblée — rendu final</div>
             </div>
             <div class="text-block">
                 <p>La modélisation surfacique des <strong>poignées</strong> a constitué l'une des principales difficultés du projet. Les formes organiques et les raccordements complexes ont nécessité la création d'un grand nombre de <strong>courbes guides et de points de contrôle</strong> dont le positionnement n'était pas toujours évident.</p>
@@ -266,12 +266,12 @@
         </div>
         <div class="img-grid-2" style="margin-top:1.2rem;">
             <div class="img-card">
-                <img src="nerf/poignee2.png" alt="Détail poignée 2">
-                <div class="img-caption">Construction des surfaces de poignée</div>
+                <img src="nerf_poignee1.png" alt="Construction de la surface de poignée arrière">
+                <div class="img-caption">Construction de la surface de poignée arrière</div>
             </div>
             <div class="img-card">
-                <img src="nerf/poignee3.png" alt="Détail poignée 3">
-                <div class="img-caption">Raccordements et finitions</div>
+                <img src="nerf_poignee2.png" alt="Poignée avant et arrière — étape intermédiaire">
+                <div class="img-caption">Poignée avant et arrière — étape intermédiaire</div>
             </div>
         </div>
     </div>
@@ -282,22 +282,30 @@
     <div class="fade-in">
         <div class="section-eyebrow">Partie 2</div>
         <h2>Lunette de visée</h2>
-        <div class="two-col flip">
+        <div class="text-block">
+            <p>La <strong>lunette de visée</strong> ajoutée sur le Nerf modifié représentait également un défi notable : elle comporte de nombreux petits corps devant être intégrés via des <strong>opérations booléennes</strong> successives.</p>
+            <p>La réalisation des <strong>rainures complexes</strong> sur la surface grise épaisse a nécessité un processus multi-étapes :</p>
+            <ol style="color:var(--muted); padding-left:1.4rem; line-height:2;">
+                <li>Création d'un corps auxiliaire + esquisse</li>
+                <li>Extrusion surfacique</li>
+                <li>Décalage et extrapolation de la surface épaisse</li>
+                <li>Découpe par l'extrusion surfacique</li>
+                <li>Extrusion de la surface découpée</li>
+                <li>Soustraction booléenne du corps de la surface épaisse</li>
+            </ol>
+        </div>
+        <div class="img-grid-3" style="margin-top:1.5rem;">
             <div class="img-card">
-                <img src="nerf/lunette.png" alt="Lunette de visée modélisée">
-                <div class="img-caption">Lunette de visée — rendu CATIA V5</div>
+                <img src="nerf_lunette1.png" alt="Vue latérale — lunette assemblée">
+                <div class="img-caption">Vue latérale — lunette assemblée</div>
             </div>
-            <div class="text-block">
-                <p>La <strong>lunette de visée</strong> ajoutée sur le Nerf modifié représentait également un défi notable : elle comporte de nombreux petits corps devant être intégrés via des <strong>opérations booléennes</strong> successives.</p>
-                <p>La réalisation des <strong>rainures complexes</strong> sur la surface grise épaisse a nécessité un processus multi-étapes :</p>
-                <ol style="color:var(--muted); padding-left:1.4rem; line-height:2;">
-                    <li>Création d'un corps auxiliaire + esquisse</li>
-                    <li>Extrusion surfacique</li>
-                    <li>Décalage et extrapolation de la surface épaisse</li>
-                    <li>Découpe par l'extrusion surfacique</li>
-                    <li>Extrusion de la surface découpée</li>
-                    <li>Soustraction booléenne du corps de la surface épaisse</li>
-                </ol>
+            <div class="img-card">
+                <img src="nerf_lunette2.png" alt="Rail de fixation et surface grise épaisse">
+                <div class="img-caption">Rail de fixation et surface grise épaisse</div>
+            </div>
+            <div class="img-card">
+                <img src="nerf_lunette3.png" alt="Rainures et découpes booléennes">
+                <div class="img-caption">Rainures et découpes booléennes</div>
             </div>
         </div>
     </div>
@@ -309,14 +317,18 @@
         <div class="section-eyebrow">Partie 3</div>
         <h2>Chargeur & Tambour</h2>
         <p>Le chargeur circulaire a été traité comme un <strong>sous-ensemble indépendant</strong> en raison de sa complexité : il est composé de <strong>quatre pièces distinctes</strong>, dont le tambour rotatif. Nous avons donc décidé de lui créer son propre squelette afin de faciliter et d'organiser sa conception.</p>
-        <div class="img-grid-2">
+        <div class="img-grid-3">
             <div class="img-card">
-                <img src="nerf/chargeur.png" alt="Chargeur circulaire">
-                <div class="img-caption">Chargeur circulaire — assemblage 4 pièces</div>
+                <img src="nerf_chargeur.png" alt="Chargeur tambour — assemblage complet">
+                <div class="img-caption">Chargeur tambour — assemblage complet</div>
             </div>
             <div class="img-card">
-                <img src="nerf/tambour.png" alt="Tambour rotatif">
-                <div class="img-caption">Tambour rotatif — modélisation détaillée</div>
+                <img src="nerf_tambour.png" alt="Tambour rotatif — géométrie interne">
+                <div class="img-caption">Tambour rotatif — géométrie interne</div>
+            </div>
+            <div class="img-card">
+                <img src="nerf_surfchargeur.png" alt="Partie surfacique — couvercle du chargeur">
+                <div class="img-caption">Partie surfacique — couvercle du chargeur</div>
             </div>
         </div>
     </div>
@@ -335,15 +347,9 @@
                     <p>Création d'un corps + esquisse → extrusion → extrapolation de la surface bleue → découpe → extrusion de la découpe → <strong>opération booléenne de soustraction</strong>, puis addition pour la partie orange.</p>
                 </div>
             </div>
-            <div class="img-grid-2" style="gap:0.75rem;">
-                <div class="img-card">
-                    <img src="nerf/corps1.png" alt="Corps bleu 1">
-                    <div class="img-caption">Corps principal</div>
-                </div>
-                <div class="img-card">
-                    <img src="nerf/corps2.png" alt="Corps bleu 2">
-                    <div class="img-caption">Détail poche surfacique</div>
-                </div>
+            <div class="img-card">
+                <img src="nerf_corps.png" alt="Poche surfacique orange — corps principal bleu">
+                <div class="img-caption">Poche surfacique orange — corps principal bleu</div>
             </div>
         </div>
     </div>
@@ -354,23 +360,15 @@
     <div class="fade-in">
         <div class="section-eyebrow">Résultat</div>
         <h2>Modélisation finale</h2>
-        <p>Pour assurer la précision dimensionnelle de l'ensemble, nous avons emprunté un <strong>pied à coulisse</strong> pour relever les cotes réelles du Nerf — ce qui a permis d'obtenir un rendu fidèle à l'objet physique.</p>
+        <p>Pour assurer la précision dimensionnelle de l'ensemble, nous avons emprunté un <strong>pied à coulisse</strong> pour relever les cotes réelles du Nerf — ce qui a permis d'obtenir un rendu fidèle à l'objet physique. Les deux vues ci-dessous montrent le résultat final de la <strong>rétro-modélisation</strong>, avec et sans le chargeur tambour.</p>
         <div class="img-grid-2" style="margin-top:1.2rem;">
             <div class="img-card">
-                <img src="nerf/final1.png" alt="Rendu final 1">
-                <div class="img-caption">Vue 3/4 avant gauche</div>
+                <img src="nerf_hero.png" alt="Vue 3/4 — Nerf complet avec chargeur tambour">
+                <div class="img-caption">Vue 3/4 — Nerf complet avec chargeur tambour</div>
             </div>
             <div class="img-card">
-                <img src="nerf/final2.png" alt="Rendu final 2">
-                <div class="img-caption">Vue latérale droite</div>
-            </div>
-            <div class="img-card">
-                <img src="nerf/final3.png" alt="Rendu final 3">
-                <div class="img-caption">Vue 3/4 arrière</div>
-            </div>
-            <div class="img-card">
-                <img src="nerf/final4.png" alt="Rendu final 4">
-                <div class="img-caption">Vue de dessus</div>
+                <img src="nerf_final2.png" alt="Vue profil — sans chargeur">
+                <div class="img-caption">Vue profil — sans chargeur</div>
             </div>
         </div>
     </div>
