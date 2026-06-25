@@ -81,6 +81,19 @@
         .fr { animation: fly-r linear infinite; }
         .fl { animation: fly-l linear infinite; }
 
+        /* Rafale contrail — twin-engine fighter only, not the A400M turboprop */
+        .rafale::after {
+            content: ''; position: absolute;
+            top: 50%; transform: translateY(-50%);
+            height: 2px; border-radius: 1px;
+            mix-blend-mode: screen; pointer-events: none;
+        }
+        .rafale.p-sm::after { width: 70px; }
+        .rafale.p-md::after { width: 110px; }
+        .rafale.p-lg::after { width: 155px; }
+        .rafale.fr::after { right: 100%; background: linear-gradient(to right, transparent, rgba(56,189,248,0.32)); }
+        .rafale.fl::after { left:  100%; background: linear-gradient(to left,  transparent, rgba(56,189,248,0.32)); }
+
         @keyframes fly-r {
             from { left: -280px; }
             to   { left: calc(100vw + 280px); }
@@ -425,7 +438,7 @@
         <img src="A400M.png" class="plane-img" alt="">
     </div>
     <!-- Rafale flying left (nose already faces left) -->
-    <div class="plane p-sm fl p2">
+    <div class="plane rafale p-sm fl p2">
         <img src="Rafale.png" class="plane-img" alt="">
     </div>
     <!-- A400M flying right, amber, large -->
@@ -433,7 +446,7 @@
         <img src="A400M.png" class="plane-img amber" alt="">
     </div>
     <!-- Rafale flying left, small, fast -->
-    <div class="plane p-sm fl p4">
+    <div class="plane rafale p-sm fl p4">
         <img src="Rafale.png" class="plane-img" alt="">
     </div>
     <!-- A400M flying left, amber -->
@@ -441,7 +454,7 @@
         <img src="A400M.png" class="plane-img amber" alt="">
     </div>
     <!-- Rafale flying right (nose flipped) -->
-    <div class="plane p-lg fr p6">
+    <div class="plane rafale p-lg fr p6">
         <img src="Rafale.png" class="plane-img" alt="">
     </div>
 </div>
