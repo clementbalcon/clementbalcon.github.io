@@ -1463,10 +1463,12 @@ let allExercices = [];
 let currentSport = 'Course à pied';
 let currentStatView = 'analyse';
 let selectedYear = 'Tout';
-let chartLevel = 'months'; // 'months' | 'weeks' | 'days'
-let drillMonth = null; // 'YYYY-MM' when drilling into weeks
-let drillWeek = null;  // { year, week } when drilling into days
+let chartLevel = 'months';
+let drillMonth = null;
+let drillWeek = null;
 let statsChart = null;
+let chartMonthKeys = [];
+let manualRecords = JSON.parse(localStorage.getItem('records_manuels') || '[]');
 
 async function loadStats() {
     const [{ data: s }, { data: e }] = await Promise.all([
@@ -1580,18 +1582,29 @@ function renderChart(sport, allFiltered) {
 
     if (chartLevel === 'months') {
         if (selectedYear === 'Tout') {
-            const monthMap = {};
-            seances.forEach(s => { const k = s.date?.slice(0,7); if (k) monthMap[k] = (monthMap[k]||0) + val(s); });
-            const keys = Object.keys(monthMap).sort();
-            labels = keys.map(k => { const d = new Date(k+'-01'); return d.toLocaleDateString('fr-FR',{month:'short',year:'2-digit'}); });
+            const firstDate = seances[0]?.date;
+            const now = new Date();
+            const keys = [];
+            if (firstDate) {
+                let y = parseInt(firstDate.slice(0,4)), m = 1;
+                while (y < now.getFullYear() || (y === now.getFullYear() && m <= now.getMonth()+1)) {
+                    keys.push(`${y}-${String(m).padStart(2,'0')}`);
+                    if (++m > 12) { m = 1; y++; }
+                }
+            }
+            const monthMap = Object.fromEntries(keys.map(k => [k, 0]));
+            seances.forEach(s => { const k = s.date?.slice(0,7); if (k && k in monthMap) monthMap[k] += val(s); });
+            chartMonthKeys = keys;
+            labels = keys.map(k => { const [yr, mn] = k.split('-').map(Number); return new Date(yr, mn-1, 1).toLocaleDateString('fr-FR',{month:'short',year:'2-digit'}); });
             values = keys.map(k => monthMap[k]);
             title = isRun ? 'Kilomètres par mois' : 'Séances par mois';
         } else {
-            const monthMap = {};
-            for (let m = 1; m <= 12; m++) { monthMap[String(m).padStart(2,'0')] = 0; }
-            seances.forEach(s => { const m = s.date?.slice(5,7); if (m) monthMap[m] = (monthMap[m]||0) + val(s); });
-            labels = Object.keys(monthMap).map(m => new Date(`${selectedYear}-${m}-01`).toLocaleDateString('fr-FR',{month:'short'}));
-            values = Object.values(monthMap);
+            const keys = Array.from({length:12}, (_, i) => String(i+1).padStart(2,'0'));
+            const monthMap = Object.fromEntries(keys.map(k => [k, 0]));
+            seances.forEach(s => { const m = s.date?.slice(5,7); if (m && m in monthMap) monthMap[m] += val(s); });
+            chartMonthKeys = keys.map(k => `${selectedYear}-${k}`);
+            labels = keys.map(k => new Date(parseInt(selectedYear), parseInt(k)-1, 1).toLocaleDateString('fr-FR',{month:'short'}));
+            values = keys.map(k => monthMap[k]);
             title = isRun ? `Km en ${selectedYear}` : `Séances en ${selectedYear}`;
         }
         breadcrumb = '';
@@ -1613,7 +1626,8 @@ function renderChart(sport, allFiltered) {
         const keys = Object.keys(weekMap).sort();
         labels = keys.map(k => `Sem. ${k.split('-W')[1]}`);
         values = keys.map(k => weekMap[k]);
-        title = isRun ? `Km — ${new Date(drillMonth+'-01').toLocaleDateString('fr-FR',{month:'long',year:'numeric'})}` : `Séances — ${new Date(drillMonth+'-01').toLocaleDateString('fr-FR',{month:'long',year:'numeric'})}`;
+        const [dmY, dmM] = drillMonth.split('-').map(Number);
+        title = isRun ? `Km — ${new Date(dmY, dmM-1, 1).toLocaleDateString('fr-FR',{month:'long',year:'numeric'})}` : `Séances — ${new Date(dmY, dmM-1, 1).toLocaleDateString('fr-FR',{month:'long',year:'numeric'})}`;
         breadcrumb = `← <a href="#" onclick="drillUp(event)" style="color:#38bdf8;text-decoration:none">Retour aux mois</a>`;
     } else if (chartLevel === 'days') {
         const { year: wy, week: wn } = drillWeek;
@@ -1628,7 +1642,7 @@ function renderChart(sport, allFiltered) {
         }
         seances.forEach(s => { if (dayMap.hasOwnProperty(s.date)) dayMap[s.date] += val(s); });
         const keys = Object.keys(dayMap).sort();
-        labels = keys.map(k => new Date(k).toLocaleDateString('fr-FR',{weekday:'short',day:'numeric'}));
+        labels = keys.map(k => { const [yr,mn,dd] = k.split('-').map(Number); return new Date(yr, mn-1, dd).toLocaleDateString('fr-FR',{weekday:'short',day:'numeric'}); });
         values = keys.map(k => dayMap[k]);
         title = isRun ? `Km — Semaine ${wn}` : `Séances — Semaine ${wn}`;
         breadcrumb = `← <a href="#" onclick="drillUp(event)" style="color:#38bdf8;text-decoration:none">Retour aux semaines</a>`;
@@ -1655,16 +1669,8 @@ function renderChart(sport, allFiltered) {
                 if (!elements.length) return;
                 const idx = elements[0].index;
                 if (chartLevel === 'months') {
-                    let monthKey;
-                    if (selectedYear === 'Tout') {
-                        const seancesFiltered = selectedYear === 'Tout' ? allFiltered : allFiltered.filter(s => s.date?.startsWith(selectedYear));
-                        const monthMap = {};
-                        seancesFiltered.forEach(s => { const k = s.date?.slice(0,7); if (k) monthMap[k] = (monthMap[k]||0) + val(s); });
-                        monthKey = Object.keys(monthMap).sort()[idx];
-                    } else {
-                        const m = String(idx+1).padStart(2,'0');
-                        monthKey = `${selectedYear}-${m}`;
-                    }
+                    const monthKey = chartMonthKeys[idx];
+                    if (!monthKey) return;
                     drillMonth = monthKey;
                     chartLevel = 'weeks';
                     renderChart(sport, allFiltered);
@@ -1703,64 +1709,156 @@ function drillUp(e) {
 
 // ── RECORDS ──────────────────────────────────────────────────────────────────
 
-async function renderRecords() {
+function parseTimeToSec(t) {
+    const p = String(t).split(':').map(Number);
+    if (p.length === 3) return p[0]*3600 + p[1]*60 + p[2];
+    if (p.length === 2) return p[0]*60 + p[1];
+    return Infinity;
+}
+
+function fmtTimeSec(sec) {
+    const h = Math.floor(sec/3600), m = Math.floor((sec%3600)/60), s = Math.round(sec%60);
+    return h > 0 ? `${h}h${String(m).padStart(2,'0')}` : `${m}:${String(s).padStart(2,'0')}`;
+}
+
+function renderRecords() {
     const el = document.getElementById('stats-records');
-    el.innerHTML = `<div class="stat-card wide"><div class="stat-label">Chargement…</div></div>`;
-    const fmtPace = sec => `${Math.floor(sec/60)}:${String(Math.round(sec%60)).padStart(2,'0')}`;
+    const header = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem">
+        <span style="font-size:0.8rem;color:var(--muted)">Records personnels</span>
+        <button class="btn btn-secondary" style="padding:0.35rem 0.75rem;font-size:0.8rem" onclick="openRecordModal()">+ Ajouter</button>
+    </div>`;
 
     if (currentSport === 'Course à pied') {
         const ranges = [
-            { label: 'RP 5 km', min: 4.5, max: 5.5, distLabel: '5 km' },
-            { label: 'RP 10 km', min: 9.0, max: 11.0, distLabel: '10 km' },
-            { label: 'RP Semi', min: 20.0, max: 22.5, distLabel: 'Semi-marathon' },
+            { label: 'RP 5 km', typeKey: '5 km', min: 4.5, max: 5.5 },
+            { label: 'RP 10 km', typeKey: '10 km', min: 9.0, max: 11.0 },
+            { label: 'RP Semi', typeKey: 'Semi', min: 20.0, max: 22.5 },
         ];
         const cards = ranges.map(r => {
+            // Supabase best
             const matches = allSeances.filter(s => s.sport === 'Course à pied' && s.distance_km >= r.min && s.distance_km <= r.max && s.pace);
-            if (!matches.length) return `<div class="stat-card"><div class="stat-label">${r.label}</div><div class="stat-value" style="color:#94a3b8">—</div><div class="stat-sub">${r.distLabel}</div></div>`;
-            const best = matches.reduce((b, s) => {
-                const toSec = p => { const [m,sc]=p.split(':').map(Number); return m*60+sc; };
-                return toSec(s.pace) < toSec(b.pace) ? s : b;
-            });
-            const [m,sc] = best.pace.split(':').map(Number);
-            const totalSec = (best.distance_km * (m*60+sc));
-            const hh = Math.floor(totalSec/3600), mm = Math.floor((totalSec%3600)/60), ss = Math.round(totalSec%60);
-            const timeStr = hh > 0 ? `${hh}h${String(mm).padStart(2,'0')}` : `${mm}:${String(ss).padStart(2,'0')}`;
-            return `<div class="stat-card"><div class="stat-label">${r.label}</div><div class="stat-value orange">${best.pace} <span style="font-size:1rem">/km</span></div><div class="stat-sub">${timeStr} — ${best.date}</div></div>`;
+            let bestSec = Infinity, bestSub = '';
+            if (matches.length) {
+                const best = matches.reduce((b, s) => parseTimeToSec(s.pace) < parseTimeToSec(b.pace) ? s : b);
+                const [pm, ps] = best.pace.split(':').map(Number);
+                bestSec = best.distance_km * (pm*60 + ps);
+                bestSub = `${best.pace}/km — ${best.date}`;
+            }
+            // Manual best
+            const manMatches = manualRecords.filter(rec => rec.sport === 'Course à pied' && rec.type === r.typeKey && rec.time);
+            let manBestSec = Infinity, manBestSub = '';
+            if (manMatches.length) {
+                const best = manMatches.reduce((b, rec) => parseTimeToSec(rec.time) < parseTimeToSec(b.time) ? rec : b);
+                manBestSec = parseTimeToSec(best.time);
+                manBestSub = best.date + ' ✏️';
+            }
+            if (bestSec === Infinity && manBestSec === Infinity)
+                return `<div class="stat-card"><div class="stat-label">${r.label}</div><div class="stat-value" style="color:#94a3b8">—</div><div class="stat-sub">${r.typeKey}</div></div>`;
+            const winSec = manBestSec < bestSec ? manBestSec : bestSec;
+            const winSub = manBestSec < bestSec ? manBestSub : bestSub;
+            return `<div class="stat-card"><div class="stat-label">${r.label}</div><div class="stat-value orange">${fmtTimeSec(winSec)}</div><div class="stat-sub">${winSub}</div></div>`;
         });
-        el.innerHTML = `<div class="stats-grid">${cards.join('')}</div>`;
+        el.innerHTML = header + `<div class="stats-grid">${cards.join('')}</div>`;
 
     } else if (currentSport === 'Musculation') {
-        const devCouche = allExercices.filter(e => e.nom && e.nom.toLowerCase().includes('développé couché') && e.poids_kg);
-        if (!devCouche.length) {
-            el.innerHTML = `<div class="stat-card wide"><div class="stat-label">Aucune donnée développé couché</div></div>`;
-            return;
+        const supaEx = allExercices.filter(e => e.nom && e.nom.toLowerCase().includes('développé couché') && e.poids_kg);
+        const manEx  = manualRecords.filter(r => r.sport === 'Musculation' && r.nom && r.nom.toLowerCase().includes('développé couché') && r.poids_kg);
+        let bestPoids = 0, bestSub = '';
+        if (supaEx.length) {
+            const b = supaEx.reduce((x, e) => e.poids_kg > x.poids_kg ? e : x);
+            if (b.poids_kg > bestPoids) { bestPoids = b.poids_kg; const seance = allSeances.find(s => s.id === b.seance_id); bestSub = `${b.reps} rep${b.reps > 1 ? 's' : ''}${seance ? ' — ' + seance.date : ''}`; }
         }
-        const best = devCouche.reduce((b, e) => e.poids_kg > b.poids_kg ? e : b);
-        const seance = allSeances.find(s => s.id === best.seance_id);
-        el.innerHTML = `<div class="stats-grid">
-            <div class="stat-card wide">
-                <div class="stat-label">Max Développé couché</div>
-                <div class="stat-value orange">${best.poids_kg} <span style="font-size:1rem">kg</span></div>
-                <div class="stat-sub">${best.reps} rep${best.reps > 1 ? 's' : ''}${seance ? ' — ' + seance.date : ''}</div>
-            </div>
-        </div>`;
+        if (manEx.length) {
+            const b = manEx.reduce((x, e) => e.poids_kg > x.poids_kg ? e : x);
+            if (b.poids_kg > bestPoids) { bestPoids = b.poids_kg; bestSub = `${b.reps || '?'} reps — ${b.date} ✏️`; }
+        }
+        el.innerHTML = header + `<div class="stats-grid"><div class="stat-card wide">
+            <div class="stat-label">Max Développé couché</div>
+            ${bestPoids > 0 ? `<div class="stat-value orange">${bestPoids} <span style="font-size:1rem">kg</span></div><div class="stat-sub">${bestSub}</div>` : `<div class="stat-value" style="color:#94a3b8">—</div>`}
+        </div></div>`;
 
     } else if (currentSport === 'Street Workout') {
-        const muscleUp = allExercices.filter(e => e.nom && e.nom.toLowerCase().includes('muscle up') && e.reps);
-        if (!muscleUp.length) {
-            el.innerHTML = `<div class="stat-card wide"><div class="stat-label">Aucune donnée Muscle Up</div></div>`;
-            return;
+        const supaEx = allExercices.filter(e => e.nom && e.nom.toLowerCase().includes('muscle up') && e.reps);
+        const manEx  = manualRecords.filter(r => r.sport === 'Street Workout' && r.nom && r.nom.toLowerCase().includes('muscle up') && r.reps);
+        let bestReps = 0, bestSub = '';
+        if (supaEx.length) {
+            const b = supaEx.reduce((x, e) => e.reps > x.reps ? e : x);
+            if (b.reps > bestReps) { bestReps = b.reps; const seance = allSeances.find(s => s.id === b.seance_id); bestSub = seance?.date || ''; }
         }
-        const best = muscleUp.reduce((b, e) => e.reps > b.reps ? e : b);
-        const seance = allSeances.find(s => s.id === best.seance_id);
-        el.innerHTML = `<div class="stats-grid">
-            <div class="stat-card wide">
-                <div class="stat-label">Max Muscle Ups d'affilée</div>
-                <div class="stat-value orange">${best.reps}</div>
-                <div class="stat-sub">${seance ? seance.date : ''}</div>
-            </div>
-        </div>`;
+        if (manEx.length) {
+            const b = manEx.reduce((x, e) => e.reps > x.reps ? e : x);
+            if (b.reps > bestReps) { bestReps = b.reps; bestSub = `${b.date} ✏️`; }
+        }
+        el.innerHTML = header + `<div class="stats-grid"><div class="stat-card wide">
+            <div class="stat-label">Max Muscle Ups d'affilée</div>
+            ${bestReps > 0 ? `<div class="stat-value orange">${bestReps}</div><div class="stat-sub">${bestSub}</div>` : `<div class="stat-value" style="color:#94a3b8">—</div>`}
+        </div></div>`;
     }
+}
+
+const INP = `width:100%;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.6rem;color:var(--text);font-family:inherit;font-size:0.9rem;margin-top:0.25rem`;
+
+function openRecordModal() {
+    document.getElementById('record-modal').style.display = 'block';
+    const body = document.getElementById('record-modal-body');
+    if (currentSport === 'Course à pied') {
+        body.innerHTML = `
+            <label style="font-size:0.8rem;color:var(--muted)">Distance</label>
+            <div class="sport-filter" style="margin:0.4rem 0 0.75rem">
+                <button class="filter-btn active" id="rtype-5k" onclick="document.querySelectorAll('#rtype-5k,#rtype-10k,#rtype-semi').forEach(b=>b.classList.remove('active'));this.classList.add('active')">5 km</button>
+                <button class="filter-btn" id="rtype-10k" onclick="document.querySelectorAll('#rtype-5k,#rtype-10k,#rtype-semi').forEach(b=>b.classList.remove('active'));this.classList.add('active')">10 km</button>
+                <button class="filter-btn" id="rtype-semi" onclick="document.querySelectorAll('#rtype-5k,#rtype-10k,#rtype-semi').forEach(b=>b.classList.remove('active'));this.classList.add('active')">Semi</button>
+            </div>
+            <label style="font-size:0.8rem;color:var(--muted)">Temps (mm:ss ou h:mm:ss)</label>
+            <input type="text" id="rec-time" placeholder="22:30 ou 1:45:00" style="${INP}">
+            <label style="font-size:0.8rem;color:var(--muted);margin-top:0.75rem;display:block">Date</label>
+            <input type="date" id="rec-date" value="${new Date().toISOString().slice(0,10)}" style="${INP}">`;
+    } else if (currentSport === 'Musculation') {
+        body.innerHTML = `
+            <label style="font-size:0.8rem;color:var(--muted)">Exercice</label>
+            <input type="text" id="rec-nom" value="Développé couché barre" style="${INP}">
+            <label style="font-size:0.8rem;color:var(--muted);margin-top:0.75rem;display:block">Poids (kg)</label>
+            <input type="number" id="rec-poids" placeholder="100" step="2.5" min="0" style="${INP}">
+            <label style="font-size:0.8rem;color:var(--muted);margin-top:0.75rem;display:block">Répétitions</label>
+            <input type="number" id="rec-reps" placeholder="3" min="1" style="${INP}">
+            <label style="font-size:0.8rem;color:var(--muted);margin-top:0.75rem;display:block">Date</label>
+            <input type="date" id="rec-date" value="${new Date().toISOString().slice(0,10)}" style="${INP}">`;
+    } else {
+        body.innerHTML = `
+            <label style="font-size:0.8rem;color:var(--muted)">Exercice</label>
+            <input type="text" id="rec-nom" value="Muscle Up" style="${INP}">
+            <label style="font-size:0.8rem;color:var(--muted);margin-top:0.75rem;display:block">Répétitions</label>
+            <input type="number" id="rec-reps" placeholder="12" min="1" style="${INP}">
+            <label style="font-size:0.8rem;color:var(--muted);margin-top:0.75rem;display:block">Date</label>
+            <input type="date" id="rec-date" value="${new Date().toISOString().slice(0,10)}" style="${INP}">`;
+    }
+}
+
+function saveManualRecord() {
+    const date = document.getElementById('rec-date')?.value || new Date().toISOString().slice(0,10);
+    let record = { id: Date.now().toString(), sport: currentSport, date };
+    if (currentSport === 'Course à pied') {
+        const active = document.querySelector('#rtype-5k.active, #rtype-10k.active, #rtype-semi.active');
+        const type = active?.textContent?.trim() || '5 km';
+        const time = document.getElementById('rec-time')?.value?.trim();
+        if (!time) return;
+        record = { ...record, type, time };
+    } else if (currentSport === 'Musculation') {
+        const nom = document.getElementById('rec-nom')?.value?.trim();
+        const poids_kg = parseFloat(document.getElementById('rec-poids')?.value);
+        const reps = parseInt(document.getElementById('rec-reps')?.value);
+        if (!nom || isNaN(poids_kg)) return;
+        record = { ...record, nom, poids_kg, reps };
+    } else {
+        const nom = document.getElementById('rec-nom')?.value?.trim();
+        const reps = parseInt(document.getElementById('rec-reps')?.value);
+        if (!nom || isNaN(reps)) return;
+        record = { ...record, nom, reps };
+    }
+    manualRecords.push(record);
+    localStorage.setItem('records_manuels', JSON.stringify(manualRecords));
+    document.getElementById('record-modal').style.display = 'none';
+    renderRecords();
 }
 
 async function loadHistorique() {
@@ -1965,6 +2063,17 @@ function closeMap() {
         <button id="map-close" onclick="closeMap()">✕</button>
     </div>
     <div id="map"></div>
+</div>
+
+<div id="record-modal" style="display:none;position:fixed;inset:0;background:rgba(6,12,21,0.92);z-index:900;padding:1rem;overflow-y:auto">
+    <div class="card" style="max-width:400px;margin:2rem auto">
+        <div class="card-title">Ajouter un record</div>
+        <div id="record-modal-body" style="margin-bottom:1rem"></div>
+        <div style="display:flex;gap:0.5rem">
+            <button class="btn" style="flex:1" onclick="saveManualRecord()">Enregistrer</button>
+            <button class="btn btn-secondary" style="flex:1" onclick="document.getElementById('record-modal').style.display='none'">Annuler</button>
+        </div>
+    </div>
 </div>
 
 </body>
