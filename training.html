@@ -610,7 +610,7 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const EXERCISE_REPO = 'https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/';
+const EXERCISE_REPO = '';
 let allExercises = null;
 
 const BODY_PART_FR = {
@@ -632,7 +632,7 @@ const RUNNING_SESSIONS = [
 
 async function loadExercises() {
     if (allExercises) return allExercises;
-    const res = await fetch(EXERCISE_REPO + 'data/exercises.json');
+    const res = await fetch('/data/exercises.json');
     allExercises = await res.json();
     return allExercises;
 }
@@ -773,11 +773,11 @@ async function addExercice() {
     const firstCat = categories[0];
     const firstExercises = grouped[firstCat] || [];
     const firstEx = firstExercises[0];
-    const firstImg = firstEx?.gif_url ? EXERCISE_REPO + firstEx.gif_url : null;
+    const firstImg = firstEx?.gif_url ? '/gifs/' + firstEx.gif_url.split('/').pop() : null;
 
     const catOptions = categories.map(c => `<option value="${c}">${c}</option>`).join('');
     const exOptions = firstExercises.map(e =>
-        `<option value="${e.name}" data-img="${e.gif_url ? EXERCISE_REPO + e.gif_url : ''}">${e.name}</option>`
+        `<option value="${e.name}" data-img="${e.gif_url ? '/gifs/' + e.gif_url.split('/').pop() : ''}">${e.name}</option>`
     ).join('');
 
     div.innerHTML = `
@@ -805,7 +805,7 @@ async function updateExerciceList(categorySelect) {
     const exs = grouped[categorySelect.value] || [];
     const exSelect = form.querySelector('.ex-nom-select');
     exSelect.innerHTML = exs.map(e =>
-        `<option value="${e.name}" data-img="${e.gif_url ? EXERCISE_REPO + e.gif_url : ''}">${e.name}</option>`
+        `<option value="${e.name}" data-img="${e.gif_url ? '/gifs/' + e.gif_url.split('/').pop() : ''}">${e.name}</option>`
     ).join('');
     updateExercicePreview(exSelect);
 }
