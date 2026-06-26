@@ -410,6 +410,47 @@
         }
 
         .empty-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+
+        /* ─── CHRONO ─── */
+        .chrono-wrap {
+            background: var(--subtle);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.25rem;
+            text-align: center;
+        }
+
+        #chrono-display {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+        }
+
+        .chrono-btns {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+        }
+
+        .chrono-btn {
+            background: var(--accent);
+            border: none;
+            border-radius: 7px;
+            color: #060c15;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 0.5rem 1.25rem;
+            transition: opacity 0.2s;
+        }
+
+        .chrono-btn:hover { opacity: 0.85; }
+        .chrono-reset { background: transparent; color: var(--muted); border: 1px solid var(--border); }
     </style>
 </head>
 <body>
@@ -463,8 +504,14 @@
             <label>Date</label>
             <input type="date" id="seance-date">
 
-            <label>Durée (minutes)</label>
-            <input type="number" id="seance-duree" placeholder="60" min="1">
+            <label>Durée</label>
+            <div class="chrono-wrap">
+                <div id="chrono-display">00:00:00</div>
+                <div class="chrono-btns">
+                    <button class="chrono-btn" id="chrono-toggle" onclick="chronoToggle()">Démarrer</button>
+                    <button class="chrono-btn chrono-reset" onclick="chronoReset()">Réinitialiser</button>
+                </div>
+            </div>
 
             <label>Notes</label>
             <textarea id="seance-notes" placeholder="Ressenti, conditions, objectifs..."></textarea>
@@ -530,6 +577,36 @@ const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let selectedSport = null;
 let exerciceCount = 0;
+let chronoSeconds = 0;
+let chronoInterval = null;
+let chronoRunning = false;
+
+function chronoToggle() {
+    const btn = document.getElementById('chrono-toggle');
+    if (chronoRunning) {
+        clearInterval(chronoInterval);
+        chronoRunning = false;
+        btn.textContent = 'Reprendre';
+    } else {
+        chronoInterval = setInterval(() => {
+            chronoSeconds++;
+            const h = String(Math.floor(chronoSeconds / 3600)).padStart(2, '0');
+            const m = String(Math.floor((chronoSeconds % 3600) / 60)).padStart(2, '0');
+            const s = String(chronoSeconds % 60).padStart(2, '0');
+            document.getElementById('chrono-display').textContent = `${h}:${m}:${s}`;
+        }, 1000);
+        chronoRunning = true;
+        btn.textContent = 'Pause';
+    }
+}
+
+function chronoReset() {
+    clearInterval(chronoInterval);
+    chronoRunning = false;
+    chronoSeconds = 0;
+    document.getElementById('chrono-display').textContent = '00:00:00';
+    document.getElementById('chrono-toggle').textContent = 'Démarrer';
+}
 
 // ─── AUTH ───
 async function login() {
@@ -645,7 +722,7 @@ async function saveSeance() {
     }
 
     const date = document.getElementById('seance-date').value;
-    const duree = parseInt(document.getElementById('seance-duree').value) || null;
+    const duree = chronoSeconds > 0 ? Math.round(chronoSeconds / 60) : null;
     const notes = document.getElementById('seance-notes').value;
 
     const { data: { user } } = await db.auth.getUser();
@@ -677,7 +754,7 @@ async function saveSeance() {
     showMsg(msg, 'success', 'Séance enregistrée !');
     setTimeout(() => {
         document.getElementById('seance-notes').value = '';
-        document.getElementById('seance-duree').value = '';
+        chronoReset();
         document.getElementById('exercices-container').innerHTML = '';
         document.getElementById('seance-date').value = new Date().toISOString().split('T')[0];
         document.querySelectorAll('.sport-btn').forEach(b => b.classList.remove('selected'));
