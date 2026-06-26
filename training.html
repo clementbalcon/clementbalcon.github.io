@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Training">
+    <title>Training — Clément Balcon</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --bg: #060c15;
+            --accent: #38bdf8;
+            --accent2: #fb923c;
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+            --subtle: #1e293b;
+            --card: #0f1c2e;
+            --border: rgba(56,189,248,0.15);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(56,189,248,0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(56,189,248,0.025) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ─── LOGIN ─── */
+        #login-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.25rem;
+        }
+
+        .login-sub {
+            color: var(--muted);
+            font-size: 0.875rem;
+            margin-bottom: 2rem;
+        }
+
+        /* ─── FORM ELEMENTS ─── */
+        label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--muted);
+            margin-bottom: 0.4rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            background: var(--subtle);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1.25rem;
+            outline: none;
+            transition: border-color 0.2s;
+            -webkit-appearance: none;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--accent);
+        }
+
+        select option { background: var(--card); }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background: var(--accent);
+            color: #060c15;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            width: 100%;
+        }
+
+        .btn:hover { opacity: 0.85; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-secondary { background: transparent; color: var(--accent); border: 1px solid var(--border); }
+        .btn-orange { background: var(--accent2); }
+
+        /* ─── APP ─── */
+        #app-screen {
+            display: none;
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 1.5rem 1rem 4rem;
+        }
+
+        .app-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .app-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .logout-btn {
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--muted);
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            padding: 0.4rem 0.8rem;
+        }
+
+        .logout-btn:hover { color: var(--text); }
+
+        /* ─── TABS ─── */
+        .tabs {
+            display: flex;
+            gap: 0.4rem;
+            margin-bottom: 1.5rem;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0.3rem;
+        }
+
+        .tab {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--muted);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 500;
+            padding: 0.6rem;
+            border-radius: 7px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            background: var(--subtle);
+            color: var(--accent);
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* ─── CARDS ─── */
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 1.25rem;
+        }
+
+        /* ─── SPORT PICKER ─── */
+        .sport-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .sport-btn {
+            background: var(--subtle);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--muted);
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            padding: 0.75rem 0.5rem;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .sport-emoji { font-size: 1.5rem; display: block; margin-bottom: 0.3rem; }
+
+        .sport-btn:hover, .sport-btn.selected {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(56,189,248,0.08);
+        }
+
+        /* ─── EXERCICE FORM ─── */
+        .exercice-form {
+            background: var(--subtle);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .exercice-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+
+        .exercice-num {
+            font-size: 0.75rem;
+            color: var(--accent);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .remove-btn {
+            background: none;
+            border: none;
+            color: var(--muted);
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0.2rem 0.4rem;
+        }
+
+        .remove-btn:hover { color: #f87171; }
+
+        .exercice-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+        .exercice-row input { margin-bottom: 0; }
+
+        /* ─── HISTORIQUE ─── */
+        .seance-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .seance-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+
+        .seance-sport {
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .seance-date { font-size: 0.8rem; color: var(--muted); }
+
+        .seance-meta {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.75rem;
+        }
+
+        .meta-chip {
+            background: var(--subtle);
+            border-radius: 6px;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.6rem;
+            color: var(--muted);
+        }
+
+        .exercice-list {
+            border-top: 1px solid var(--border);
+            padding-top: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .exercice-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .exercice-name { font-size: 0.85rem; color: var(--text); }
+        .exercice-detail { font-size: 0.8rem; color: var(--muted); }
+
+        /* ─── ANALYSE ─── */
+        .analyse-output {
+            background: var(--subtle);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.25rem;
+            margin-top: 1rem;
+            font-size: 0.875rem;
+            line-height: 1.75;
+            white-space: pre-wrap;
+            display: none;
+        }
+
+        .loading {
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--muted);
+            font-size: 0.875rem;
+            margin-top: 1rem;
+        }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            flex-shrink: 0;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ─── MESSAGES ─── */
+        .msg {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .msg.error { background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); color: #f87171; }
+        .msg.success { background: rgba(56,189,248,0.1); border: 1px solid rgba(56,189,248,0.3); color: var(--accent); }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .empty-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+    </style>
+</head>
+<body>
+
+<!-- ─── LOGIN ─── -->
+<div id="login-screen">
+    <div class="login-card">
+        <div class="login-title">Training</div>
+        <div class="login-sub">Espace privé — Clément Balcon</div>
+        <div id="login-msg" class="msg error"></div>
+        <label>Email</label>
+        <input type="email" id="email" placeholder="ton@email.com" autocomplete="email">
+        <label>Mot de passe</label>
+        <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
+        <button class="btn" onclick="login()">Connexion</button>
+    </div>
+</div>
+
+<!-- ─── APP ─── -->
+<div id="app-screen">
+    <div class="app-header">
+        <div class="app-title">Training</div>
+        <button class="logout-btn" onclick="logout()">Déconnexion</button>
+    </div>
+
+    <div class="tabs">
+        <button class="tab active" onclick="switchTab('nouvelle')">Séance</button>
+        <button class="tab" onclick="switchTab('historique')">Historique</button>
+        <button class="tab" onclick="switchTab('analyse')">IA</button>
+    </div>
+
+    <!-- TAB: NOUVELLE SÉANCE -->
+    <div id="tab-nouvelle" class="tab-content active">
+        <div class="card">
+            <div class="card-title">Nouvelle séance</div>
+            <div id="seance-msg" class="msg"></div>
+
+            <label>Sport</label>
+            <div class="sport-grid">
+                <button class="sport-btn" onclick="selectSport('Course à pied', this)">
+                    <span class="sport-emoji">🏃</span>Course
+                </button>
+                <button class="sport-btn" onclick="selectSport('Musculation', this)">
+                    <span class="sport-emoji">🏋️</span>Muscu
+                </button>
+                <button class="sport-btn" onclick="selectSport('Street Workout', this)">
+                    <span class="sport-emoji">💪</span>Street
+                </button>
+            </div>
+
+            <label>Date</label>
+            <input type="date" id="seance-date">
+
+            <label>Durée (minutes)</label>
+            <input type="number" id="seance-duree" placeholder="60" min="1">
+
+            <label>Notes</label>
+            <textarea id="seance-notes" placeholder="Ressenti, conditions, objectifs..."></textarea>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Exercices</div>
+            <div id="exercices-container"></div>
+            <button class="btn btn-secondary" onclick="addExercice()" style="margin-bottom:0">+ Ajouter un exercice</button>
+        </div>
+
+        <div style="margin-top:1rem">
+            <button class="btn" onclick="saveSeance()">Enregistrer la séance</button>
+        </div>
+    </div>
+
+    <!-- TAB: HISTORIQUE -->
+    <div id="tab-historique" class="tab-content">
+        <div id="historique-list">
+            <div class="empty-state">
+                <div class="empty-icon">📋</div>
+                Chargement...
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB: ANALYSE IA -->
+    <div id="tab-analyse" class="tab-content">
+        <div class="card">
+            <div class="card-title">Clé API Claude</div>
+            <label>Clé API Anthropic</label>
+            <input type="password" id="claude-key" placeholder="sk-ant-..." autocomplete="off">
+            <div id="key-msg" class="msg" style="margin-bottom:0"></div>
+            <button class="btn btn-secondary" onclick="saveApiKey()" style="margin-top:0.75rem">Enregistrer la clé</button>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Analyse de tes entraînements</div>
+            <label>Période</label>
+            <select id="analyse-periode">
+                <option value="7">7 derniers jours</option>
+                <option value="14">14 derniers jours</option>
+                <option value="30" selected>30 derniers jours</option>
+                <option value="90">3 derniers mois</option>
+            </select>
+            <label>Question ou focus (optionnel)</label>
+            <textarea id="analyse-question" placeholder="Ex : Suis-je en progression sur le squat ? Comment améliorer ma récupération ?"></textarea>
+            <button class="btn btn-orange" onclick="analyser()">Analyser avec Claude</button>
+            <div id="analyse-loading" class="loading">
+                <div class="spinner"></div> Claude analyse tes données...
+            </div>
+            <div id="analyse-output" class="analyse-output"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://mpnekbhlprupqydjobjt.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1wbmVrYmhscHJ1cHF5ZGpvYmp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0NzM4MjIsImV4cCI6MjA5ODA0OTgyMn0.UoaG0h9TiI8sEtHeAnu1-iIdNzdhJR3MtXorenvG7zg';
+
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let selectedSport = null;
+let exerciceCount = 0;
+
+// ─── AUTH ───
+async function login() {
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const msg = document.getElementById('login-msg');
+
+    const { error } = await db.auth.signInWithPassword({ email, password });
+    if (error) {
+        showMsg(msg, 'error', 'Email ou mot de passe incorrect.');
+    } else {
+        showApp();
+    }
+}
+
+async function logout() {
+    await db.auth.signOut();
+    document.getElementById('app-screen').style.display = 'none';
+    document.getElementById('login-screen').style.display = 'flex';
+}
+
+async function checkSession() {
+    const { data: { session } } = await db.auth.getSession();
+    if (session) showApp();
+}
+
+function showApp() {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app-screen').style.display = 'block';
+    document.getElementById('seance-date').value = new Date().toISOString().split('T')[0];
+    const key = localStorage.getItem('claude_api_key');
+    if (key) document.getElementById('claude-key').value = key;
+    loadHistorique();
+}
+
+// ─── TABS ───
+function switchTab(name) {
+    const names = ['nouvelle', 'historique', 'analyse'];
+    document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', names[i] === name));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    if (name === 'historique') loadHistorique();
+}
+
+// ─── SPORT ───
+function selectSport(sport, el) {
+    selectedSport = sport;
+    document.querySelectorAll('.sport-btn').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+}
+
+// ─── EXERCICES ───
+const SPORT_FIELDS = {
+    'Musculation':    ['series', 'reps', 'poids'],
+    'Street Workout': ['series', 'reps'],
+    'Course à pied':  ['distance', 'temps'],
+};
+
+const PLACEHOLDERS = {
+    'Musculation':    'Squat',
+    'Street Workout': 'Tractions',
+    'Course à pied':  'Sortie endurance',
+};
+
+function addExercice() {
+    exerciceCount++;
+    const sport = selectedSport || 'Musculation';
+    const fields = SPORT_FIELDS[sport] || ['series', 'reps', 'poids'];
+    const placeholder = PLACEHOLDERS[sport] || 'Exercice';
+
+    let fieldsHTML = '';
+    if (fields.includes('distance')) {
+        fieldsHTML = `
+            <div class="exercice-row">
+                <div><label>Distance (km)</label><input type="number" class="ex-distance" placeholder="10" min="0" step="0.1"></div>
+                <div><label>Temps (min)</label><input type="number" class="ex-temps" placeholder="50" min="0"></div>
+            </div>`;
+    } else {
+        fieldsHTML = `
+            <div class="exercice-row">
+                <div><label>Séries</label><input type="number" class="ex-series" placeholder="4" min="1"></div>
+                <div><label>Reps</label><input type="number" class="ex-reps" placeholder="10" min="1"></div>
+            </div>`;
+        if (fields.includes('poids')) {
+            fieldsHTML += `<div><label>Poids (kg)</label><input type="number" class="ex-poids" placeholder="80" min="0" step="0.5"></div>`;
+        }
+    }
+
+    const div = document.createElement('div');
+    div.className = 'exercice-form';
+    div.innerHTML = `
+        <div class="exercice-header">
+            <span class="exercice-num">Exercice ${exerciceCount}</span>
+            <button class="remove-btn" onclick="this.closest('.exercice-form').remove()">✕</button>
+        </div>
+        <label>Nom</label>
+        <input type="text" class="ex-nom" placeholder="${placeholder}" style="margin-bottom:0.75rem">
+        ${fieldsHTML}
+        <label>Notes</label>
+        <input type="text" class="ex-notes" placeholder="Optionnel" style="margin-bottom:0">
+    `;
+
+    document.getElementById('exercices-container').appendChild(div);
+}
+
+// ─── SAVE SÉANCE ───
+async function saveSeance() {
+    const msg = document.getElementById('seance-msg');
+
+    if (!selectedSport) {
+        showMsg(msg, 'error', 'Sélectionne un sport.');
+        return;
+    }
+
+    const date = document.getElementById('seance-date').value;
+    const duree = parseInt(document.getElementById('seance-duree').value) || null;
+    const notes = document.getElementById('seance-notes').value;
+
+    const { data: { user } } = await db.auth.getUser();
+
+    const { data: seance, error } = await db.from('seances').insert({
+        sport: selectedSport, date, duree_min: duree, notes, user_id: user.id
+    }).select().single();
+
+    if (error) { showMsg(msg, 'error', 'Erreur lors de l\'enregistrement.'); return; }
+
+    const exercices = [];
+    document.querySelectorAll('.exercice-form').forEach(form => {
+        const nom = form.querySelector('.ex-nom')?.value?.trim();
+        if (!nom) return;
+        exercices.push({
+            seance_id: seance.id,
+            nom,
+            series:      parseInt(form.querySelector('.ex-series')?.value)    || null,
+            reps:        parseInt(form.querySelector('.ex-reps')?.value)       || null,
+            poids_kg:    parseFloat(form.querySelector('.ex-poids')?.value)    || null,
+            distance_km: parseFloat(form.querySelector('.ex-distance')?.value) || null,
+            temps_min:   parseFloat(form.querySelector('.ex-temps')?.value)    || null,
+            notes:       form.querySelector('.ex-notes')?.value                || null,
+        });
+    });
+
+    if (exercices.length > 0) await db.from('exercices').insert(exercices);
+
+    showMsg(msg, 'success', 'Séance enregistrée !');
+    setTimeout(() => {
+        document.getElementById('seance-notes').value = '';
+        document.getElementById('seance-duree').value = '';
+        document.getElementById('exercices-container').innerHTML = '';
+        document.getElementById('seance-date').value = new Date().toISOString().split('T')[0];
+        document.querySelectorAll('.sport-btn').forEach(b => b.classList.remove('selected'));
+        selectedSport = null;
+        exerciceCount = 0;
+        msg.style.display = 'none';
+    }, 2000);
+}
+
+// ─── HISTORIQUE ───
+async function loadHistorique() {
+    const container = document.getElementById('historique-list');
+
+    const { data: seances } = await db.from('seances')
+        .select('*, exercices(*)')
+        .order('date', { ascending: false })
+        .limit(50);
+
+    if (!seances?.length) {
+        container.innerHTML = `<div class="empty-state"><div class="empty-icon">🏁</div>Aucune séance enregistrée.</div>`;
+        return;
+    }
+
+    const emoji = { 'Course à pied': '🏃', 'Musculation': '🏋️', 'Street Workout': '💪' };
+
+    container.innerHTML = seances.map(s => {
+        const dateStr = new Date(s.date + 'T00:00:00').toLocaleDateString('fr-FR', {
+            weekday: 'short', day: 'numeric', month: 'short'
+        });
+
+        const exHTML = s.exercices?.length ? s.exercices.map(e => {
+            let detail = '';
+            if (e.series && e.reps) detail += `${e.series}×${e.reps}`;
+            if (e.poids_kg)   detail += ` · ${e.poids_kg}kg`;
+            if (e.distance_km) detail += `${e.distance_km}km`;
+            if (e.temps_min)  detail += ` · ${e.temps_min}min`;
+            return `<div class="exercice-item">
+                <span class="exercice-name">${e.nom}</span>
+                <span class="exercice-detail">${detail}</span>
+            </div>`;
+        }).join('') : '';
+
+        return `<div class="seance-card">
+            <div class="seance-header">
+                <div class="seance-sport">${emoji[s.sport] || '🏋️'} ${s.sport}</div>
+                <div class="seance-date">${dateStr}</div>
+            </div>
+            <div class="seance-meta">
+                ${s.duree_min ? `<span class="meta-chip">⏱ ${s.duree_min} min</span>` : ''}
+                ${s.exercices?.length ? `<span class="meta-chip">${s.exercices.length} exercice${s.exercices.length > 1 ? 's' : ''}</span>` : ''}
+            </div>
+            ${s.notes ? `<div style="font-size:0.85rem;color:var(--muted);margin-bottom:0.75rem">${s.notes}</div>` : ''}
+            ${exHTML ? `<div class="exercice-list">${exHTML}</div>` : ''}
+        </div>`;
+    }).join('');
+}
+
+// ─── ANALYSE IA ───
+function saveApiKey() {
+    const key = document.getElementById('claude-key').value.trim();
+    const msg = document.getElementById('key-msg');
+    if (!key.startsWith('sk-ant-')) {
+        showMsg(msg, 'error', 'Clé invalide (doit commencer par sk-ant-).');
+        return;
+    }
+    localStorage.setItem('claude_api_key', key);
+    showMsg(msg, 'success', 'Clé enregistrée localement.');
+}
+
+async function analyser() {
+    const key = localStorage.getItem('claude_api_key');
+    const output = document.getElementById('analyse-output');
+    const loading = document.getElementById('analyse-loading');
+
+    if (!key) {
+        output.textContent = 'Renseigne ta clé API Claude dans la section ci-dessus.';
+        output.style.display = 'block';
+        return;
+    }
+
+    const jours = parseInt(document.getElementById('analyse-periode').value);
+    const question = document.getElementById('analyse-question').value.trim();
+    const dateMin = new Date(Date.now() - jours * 86400000).toISOString().split('T')[0];
+
+    const { data: seances } = await db.from('seances')
+        .select('*, exercices(*)')
+        .gte('date', dateMin)
+        .order('date', { ascending: true });
+
+    if (!seances?.length) {
+        output.textContent = 'Aucune séance enregistrée sur cette période.';
+        output.style.display = 'block';
+        return;
+    }
+
+    const prompt = `Tu es un coach sportif expert en musculation, course à pied et street workout. Voici les données d'entraînement de Clément sur les ${jours} derniers jours :
+
+${JSON.stringify(seances, null, 2)}
+
+${question
+    ? `Question : ${question}`
+    : 'Fais une analyse globale : volume, progression, équilibre entre les sports, points forts, axes d\'amélioration. Donne des conseils concrets et personnalisés, basés uniquement sur ces données.'}`;
+
+    loading.style.display = 'flex';
+    output.style.display = 'none';
+
+    try {
+        const res = await fetch('https://api.anthropic.com/v1/messages', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': key,
+                'anthropic-version': '2023-06-01',
+                'anthropic-dangerous-direct-browser-access': 'true'
+            },
+            body: JSON.stringify({
+                model: 'claude-opus-4-8',
+                max_tokens: 1024,
+                messages: [{ role: 'user', content: prompt }]
+            })
+        });
+
+        const json = await res.json();
+        output.textContent = json.content?.[0]?.text || 'Erreur dans la réponse de l\'API.';
+    } catch {
+        output.textContent = 'Erreur de connexion à l\'API Claude.';
+    }
+
+    loading.style.display = 'none';
+    output.style.display = 'block';
+}
+
+// ─── UTILS ───
+function showMsg(el, type, text) {
+    el.textContent = text;
+    el.className = `msg ${type}`;
+    el.style.display = 'block';
+}
+
+document.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && document.getElementById('login-screen').style.display !== 'none') login();
+});
+
+checkSession();
+</script>
+</body>
+</html>

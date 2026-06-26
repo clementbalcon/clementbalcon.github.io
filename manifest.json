@@ -1,0 +1,9 @@
+{
+  "name": "Training — Clément Balcon",
+  "short_name": "Training",
+  "start_url": "/training.html",
+  "display": "standalone",
+  "background_color": "#060c15",
+  "theme_color": "#060c15",
+  "icons": []
+}
