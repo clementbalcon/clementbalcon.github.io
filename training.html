@@ -436,6 +436,7 @@
 
         .msg.error { background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); color: #f87171; }
         .msg.success { background: rgba(56,189,248,0.1); border: 1px solid rgba(56,189,248,0.3); color: var(--accent); }
+        .msg.info { background: rgba(251,146,60,0.1); border: 1px solid rgba(251,146,60,0.3); color: var(--accent2); }
 
         .empty-state {
             text-align: center;
@@ -565,6 +566,13 @@
 
     <!-- TAB: HISTORIQUE -->
     <div id="tab-historique" class="tab-content">
+        <div style="padding:1rem 1rem 0">
+            <input type="file" id="apple-health-input" accept=".xml" style="display:none" onchange="handleAppleHealthImport(event)">
+            <button class="btn btn-secondary" onclick="document.getElementById('apple-health-input').click()" style="width:100%;margin-bottom:0.75rem">
+                ↑ Importer Apple Health (export.xml)
+            </button>
+            <div id="import-msg" class="msg"></div>
+        </div>
         <div id="historique-list">
             <div class="empty-state">
                 <div class="empty-icon">📋</div>
@@ -947,6 +955,80 @@ async function saveSeance() {
 }
 
 // ─── HISTORIQUE ───
+// ─── IMPORT APPLE HEALTH ───
+async function handleAppleHealthImport(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    event.target.value = '';
+
+    const importMsg = document.getElementById('import-msg');
+    showMsg(importMsg, 'info', 'Lecture du fichier en cours...');
+
+    const text = await file.text();
+    const parser = new DOMParser();
+    const xml = parser.parseFromString(text, 'text/xml');
+
+    const workouts = Array.from(xml.querySelectorAll('Workout[workoutActivityType="HKWorkoutActivityTypeRunning"]'));
+    if (!workouts.length) {
+        showMsg(importMsg, 'error', 'Aucune course à pied trouvée dans ce fichier.');
+        return;
+    }
+
+    showMsg(importMsg, 'info', `${workouts.length} courses trouvées, import en cours...`);
+
+    const userId = (await db.auth.getUser()).data.user.id;
+
+    const { data: existing } = await db.from('seances')
+        .select('external_id')
+        .eq('user_id', userId)
+        .not('external_id', 'is', null);
+    const existingIds = new Set(existing?.map(r => r.external_id) || []);
+
+    const toInsert = [];
+    for (const w of workouts) {
+        const startDate = w.getAttribute('startDate');
+        if (existingIds.has(startDate)) continue;
+
+        const duration = parseFloat(w.getAttribute('duration'));
+        const date = startDate.substring(0, 10);
+
+        let distanceKm = null, calories = null;
+        for (const s of w.querySelectorAll('WorkoutStatistics')) {
+            const type = s.getAttribute('type');
+            if (type === 'HKQuantityTypeIdentifierDistanceWalkingRunning')
+                distanceKm = Math.round(parseFloat(s.getAttribute('sum')) * 100) / 100;
+            if (type === 'HKQuantityTypeIdentifierActiveEnergyBurned')
+                calories = Math.round(parseFloat(s.getAttribute('sum')));
+        }
+
+        toInsert.push({
+            user_id: userId,
+            sport: 'Course à pied',
+            date,
+            duree_min: Math.round(duration),
+            distance_km: distanceKm,
+            calories,
+            source: 'apple_health',
+            external_id: startDate
+        });
+    }
+
+    if (!toInsert.length) {
+        showMsg(importMsg, 'success', 'Toutes les courses sont déjà importées.');
+        return;
+    }
+
+    let inserted = 0;
+    for (let i = 0; i < toInsert.length; i += 50) {
+        const { error } = await db.from('seances').insert(toInsert.slice(i, i + 50));
+        if (!error) inserted += Math.min(50, toInsert.length - i);
+    }
+
+    const skipped = workouts.length - toInsert.length;
+    showMsg(importMsg, 'success', `✓ ${inserted} courses importées${skipped ? `, ${skipped} déjà présentes` : ''}.`);
+    loadHistorique();
+}
+
 async function loadHistorique() {
     const container = document.getElementById('historique-list');
 
@@ -989,6 +1071,8 @@ async function loadHistorique() {
             </div>
             <div class="seance-meta">
                 ${s.duree_min ? `<span class="meta-chip">⏱ ${s.duree_min} min</span>` : ''}
+                ${s.distance_km ? `<span class="meta-chip">📍 ${s.distance_km} km</span>` : ''}
+                ${s.calories ? `<span class="meta-chip">🔥 ${s.calories} kcal</span>` : ''}
                 ${s.exercices?.length ? `<span class="meta-chip">${s.exercices.length} exercice${s.exercices.length > 1 ? 's' : ''}</span>` : ''}
             </div>
             ${s.notes ? `<div style="font-size:0.85rem;color:var(--muted);margin-bottom:0.75rem">${s.notes}</div>` : ''}
