@@ -965,27 +965,31 @@ async function handleAppleHealthImport(event) {
     showMsg(importMsg, 'info', 'Lecture du fichier en cours...');
 
     const text = await file.text();
-    const parser = new DOMParser();
 
-    // Strip DOCTYPE block (browser XML parser can't handle Apple Health's internal DTD)
-    const doctypeEnd = text.indexOf(']>');
-    const cleanText = doctypeEnd !== -1
-        ? '<?xml version="1.0" encoding="UTF-8"?>' + text.substring(doctypeEnd + 2)
-        : text;
-    const xml = parser.parseFromString(cleanText, 'text/xml');
+    // Parse with regex — avoids browser XML parser issues with Apple Health DOCTYPE
+    const workouts = [];
+    const workoutRe = /<Workout workoutActivityType="HKWorkoutActivityTypeRunning"([^>]*)>([\s\S]*?)<\/Workout>/g;
+    let m;
+    while ((m = workoutRe.exec(text)) !== null) {
+        const attrs = m[1], content = m[2];
+        const startDate = (attrs.match(/startDate="([^"]+)"/) || [])[1];
+        const duration  = parseFloat((attrs.match(/duration="([^"]+)"/) || [])[1]);
+        if (!startDate || isNaN(duration)) continue;
 
-    // Check for parse error
-    const parseErr = xml.querySelector('parsererror');
-    if (parseErr) {
-        showMsg(importMsg, 'error', 'Erreur de lecture XML : ' + parseErr.textContent.substring(0, 100));
-        return;
+        const distM = content.match(/type="HKQuantityTypeIdentifierDistanceWalkingRunning"[^>]*sum="([^"]+)"/);
+        const calM  = content.match(/type="HKQuantityTypeIdentifierActiveEnergyBurned"[^>]*sum="([^"]+)"/);
+
+        workouts.push({
+            startDate,
+            date: startDate.substring(0, 10),
+            duration,
+            distanceKm: distM ? Math.round(parseFloat(distM[1]) * 100) / 100 : null,
+            calories:   calM  ? Math.round(parseFloat(calM[1]))              : null
+        });
     }
 
-    const allWorkouts = Array.from(xml.getElementsByTagName('Workout'));
-    const workouts = allWorkouts.filter(w => w.getAttribute('workoutActivityType') === 'HKWorkoutActivityTypeRunning');
-
     if (!workouts.length) {
-        showMsg(importMsg, 'error', `Aucune course trouvée (${allWorkouts.length} séances au total dans le fichier).`);
+        showMsg(importMsg, 'error', 'Aucune course à pied trouvée dans ce fichier.');
         return;
     }
 
@@ -999,35 +1003,18 @@ async function handleAppleHealthImport(event) {
         .not('external_id', 'is', null);
     const existingIds = new Set(existing?.map(r => r.external_id) || []);
 
-    const toInsert = [];
-    for (const w of workouts) {
-        const startDate = w.getAttribute('startDate');
-        if (existingIds.has(startDate)) continue;
-
-        const duration = parseFloat(w.getAttribute('duration'));
-        const date = startDate.substring(0, 10);
-
-        let distanceKm = null, calories = null;
-        const stats = Array.from(w.getElementsByTagName('WorkoutStatistics'));
-        for (const s of stats) {
-            const type = s.getAttribute('type');
-            if (type === 'HKQuantityTypeIdentifierDistanceWalkingRunning')
-                distanceKm = Math.round(parseFloat(s.getAttribute('sum')) * 100) / 100;
-            if (type === 'HKQuantityTypeIdentifierActiveEnergyBurned')
-                calories = Math.round(parseFloat(s.getAttribute('sum')));
-        }
-
-        toInsert.push({
-            user_id: userId,
-            sport: 'Course à pied',
-            date,
-            duree_min: Math.round(duration),
-            distance_km: distanceKm,
-            calories,
-            source: 'apple_health',
-            external_id: startDate
-        });
-    }
+    const toInsert = workouts
+        .filter(w => !existingIds.has(w.startDate))
+        .map(w => ({
+            user_id:     userId,
+            sport:       'Course à pied',
+            date:        w.date,
+            duree_min:   Math.round(w.duration),
+            distance_km: w.distanceKm,
+            calories:    w.calories,
+            source:      'apple_health',
+            external_id: w.startDate
+        }));
 
     if (!toInsert.length) {
         showMsg(importMsg, 'success', 'Toutes les courses sont déjà importées.');
