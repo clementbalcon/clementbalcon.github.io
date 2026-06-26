@@ -6,630 +6,443 @@
     <title>Clément Balcon — Ingénieur Mécanique</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
-            --bg: #060c15;
-            --accent: #38bdf8;
-            --accent2: #fb923c;
-            --text: #e2e8f0;
-            --muted: #94a3b8;
-            --subtle: #64748b;
-            --card: rgba(56,189,248,0.04);
-            --card-hover: rgba(56,189,248,0.075);
-            --border: rgba(56,189,248,0.1);
-            --border-accent: rgba(56,189,248,0.32);
+            --bg: #00A86B;
+            --white: #ffffff;
+            --w70: rgba(255,255,255,0.70);
+            --w40: rgba(255,255,255,0.40);
+            --w20: rgba(255,255,255,0.18);
         }
 
         html { scroll-behavior: smooth; }
+
         body {
-            background: var(--bg);
-            color: var(--text);
+            background: #00A86B;
+            background-image: radial-gradient(ellipse at 15% 0%, #00c97e 0%, transparent 60%);
+            color: var(--white);
             font-family: 'Inter', sans-serif;
+            font-weight: 400;
             line-height: 1.65;
-            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* ── BLUEPRINT GRID ── */
-        body::before {
-            content: '';
-            position: fixed; inset: 0; z-index: -2; pointer-events: none;
-            background-image:
-                linear-gradient(rgba(56,189,248,0.028) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(56,189,248,0.028) 1px, transparent 1px);
-            background-size: 50px 50px;
-        }
-        body::after {
-            content: '';
-            position: fixed; inset: 0; z-index: -1; pointer-events: none;
-            background:
-                radial-gradient(ellipse 80% 55% at 50% 0%, rgba(56,189,248,0.1), transparent 65%),
-                radial-gradient(ellipse 40% 35% at 90% 90%, rgba(251,146,60,0.08), transparent 55%);
+        /* ── Layout ── */
+        .wrap { max-width: 860px; margin: 0 auto; padding: 0 2rem; }
+
+        /* ── Section ── */
+        .section { padding: 5rem 0; border-top: 1px solid var(--w40); }
+        .section:first-of-type { border-top: none; }
+
+        /* ── Section title ── */
+        .section-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(2.8rem, 7vw, 4.5rem);
+            letter-spacing: 0.04em;
+            line-height: 1;
+            margin-bottom: 2.5rem;
         }
 
-        /* ── FLYING PLANES ── */
-        .planes-layer {
-            position: fixed; inset: 0; z-index: 0;
-            pointer-events: none; overflow: hidden;
-            /* screen on the whole layer: black areas → transparent, lines → visible */
-            mix-blend-mode: screen;
-        }
-        .plane { position: absolute; }
+        /* ── Hero ── */
+        #hero { padding: 6rem 0 5rem; }
 
-        /* double-brightness trick: dims background to near-black, then boosts lines bright
-           hue-rotate(190deg) shifts sepia yellow (~40°) → 230° = sky blue */
-        .plane-img {
-            display: block;
-            filter: invert(1) brightness(0.45) sepia(1) saturate(4) hue-rotate(190deg) brightness(2.5);
-            opacity: 0.28;
-        }
-        .plane-img.amber {
-            filter: invert(1) sepia(1) saturate(3) brightness(1.6);
-            opacity: 0.22;
+        .hero-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(4.5rem, 16vw, 9.5rem);
+            line-height: 0.88;
+            letter-spacing: 0.02em;
+            margin-bottom: 1.2rem;
         }
 
-        .p-sm .plane-img { width: 90px; }
-        .p-md .plane-img { width: 150px; }
-        .p-lg .plane-img { width: 210px; }
-
-        /* Both images have nose pointing LEFT.
-           Flip for right-flying so nose faces the direction of travel. */
-        .fr .plane-img { transform: scaleX(-1); }
-        /* .fl: no transform — nose already points left ✓ */
-
-        .fr { animation: fly-r linear infinite; }
-        .fl { animation: fly-l linear infinite; }
-
-        /* Rafale smoke — two engines, diffuse smoky trail */
-        .rafale::before, .rafale::after {
-            content: ''; position: absolute;
-            border-radius: 999px;
-            mix-blend-mode: screen; pointer-events: none;
-            filter: blur(3px);
+        .hero-role {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(1.4rem, 4vw, 2.2rem);
+            letter-spacing: 0.08em;
+            color: var(--w70);
+            margin-bottom: 0.4rem;
         }
-        /* upper engine */ .rafale::before { top: 38%; transform: translateY(-50%); }
-        /* lower engine */ .rafale::after  { top: 62%; transform: translateY(-50%); }
-
-        .rafale.p-sm::before, .rafale.p-sm::after { width: 72px;  height: 5px; }
-        .rafale.p-md::before, .rafale.p-md::after { width: 110px; height: 6px; }
-        .rafale.p-lg::before, .rafale.p-lg::after { width: 152px; height: 8px; }
-
-        /* fr = flying right, tail on left → smoke extends left */
-        .rafale.fr::before, .rafale.fr::after {
-            right: 100%;
-            background: linear-gradient(to right, transparent 0%, rgba(56,189,248,0.18) 50%, rgba(56,189,248,0.42) 100%);
-        }
-        /* fl = flying left, tail on right → smoke extends right */
-        .rafale.fl::before, .rafale.fl::after {
-            left: 100%;
-            background: linear-gradient(to left, transparent 0%, rgba(56,189,248,0.18) 50%, rgba(56,189,248,0.42) 100%);
-        }
-
-        @keyframes fly-r {
-            from { left: -280px; }
-            to   { left: calc(100vw + 280px); }
-        }
-        @keyframes fly-l {
-            from { left: calc(100vw + 280px); }
-            to   { left: -280px; }
-        }
-
-        .p1 { top: 8%;  animation-duration: 45s; animation-delay: 0s; }
-        .p2 { top: 30%; animation-duration: 32s; animation-delay: -16s; }
-        .p3 { top: 55%; animation-duration: 62s; animation-delay: -25s; }
-        .p4 { top: 19%; animation-duration: 26s; animation-delay: -9s; }
-        .p5 { top: 74%; animation-duration: 52s; animation-delay: -40s; }
-        .p6 { top: 43%; animation-duration: 38s; animation-delay: -6s; }
-
-        /* ── NAV ── */
-        nav {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-            padding: 1rem 2.5rem;
-            display: flex; justify-content: space-between; align-items: center;
-            background: rgba(6,12,21,0.85);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
-        }
-        .nav-logo {
-            font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1rem;
-            background: linear-gradient(135deg, #38bdf8, #fb923c);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-            letter-spacing: 0.06em;
-        }
-        .nav-links { display: flex; gap: 1.75rem; list-style: none; }
-        .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
-        .nav-links a:hover { color: #7dd3fc; }
-        @media (max-width: 640px) { .nav-links { display: none; } nav { padding: 1rem 1.5rem; } }
-
-        /* ── HERO ── */
-        #hero {
-            min-height: 100vh; display: flex; align-items: center; justify-content: center;
-            text-align: center; padding: 7rem 2rem 5rem; position: relative;
-        }
-        .hero-content { position: relative; z-index: 1; max-width: 780px; }
 
         .hero-tag {
-            display: inline-flex; align-items: center; gap: 0.5rem;
-            background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.25);
-            color: #7dd3fc; padding: 0.38rem 1.1rem; border-radius: 999px;
-            font-size: 0.8rem; font-weight: 500; margin-bottom: 1.75rem;
-            animation: fadeUp 0.7s ease 0.05s both;
-        }
-        .hero-tag::before {
-            content: ''; width: 6px; height: 6px; background: #38bdf8;
-            border-radius: 50%; flex-shrink: 0;
-            animation: blink 2.5s ease-in-out infinite;
-        }
-        @keyframes blink { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.3;transform:scale(1.6)} }
-
-        h1 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(2.8rem, 6.5vw, 5rem);
-            font-weight: 700; line-height: 1.08; margin-bottom: 1.25rem;
-            animation: fadeUp 0.7s ease 0.15s both;
-        }
-        .gradient-text {
-            background: linear-gradient(135deg, #38bdf8 0%, #60a5fa 45%, #fb923c 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-        }
-        .hero-sub {
-            font-size: 1.1rem; color: var(--muted); max-width: 520px; margin: 0 auto 2.75rem;
-            animation: fadeUp 0.7s ease 0.25s both;
-        }
-        .hero-cta {
-            display: flex; gap: 0.9rem; justify-content: center; flex-wrap: wrap;
-            animation: fadeUp 0.7s ease 0.35s both;
-        }
-        .btn {
-            padding: 0.72rem 1.7rem; border-radius: 999px;
-            font-size: 0.9rem; font-weight: 600; text-decoration: none;
-            transition: all 0.22s; display: inline-flex; align-items: center; gap: 0.4rem;
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #0ea5e9, #38bdf8); color: #060c15; border: none;
-            box-shadow: 0 0 28px rgba(56,189,248,0.3);
-        }
-        .btn-primary:hover { opacity: 0.88; transform: translateY(-2px); box-shadow: 0 6px 30px rgba(56,189,248,0.42); }
-        .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
-        .btn-outline:hover { border-color: rgba(56,189,248,0.4); color: #7dd3fc; background: rgba(56,189,248,0.05); }
-
-        .hero-flags {
-            display: flex; justify-content: center; gap: 1.5rem; margin-top: 2.5rem;
-            animation: fadeUp 0.7s ease 0.45s both;
-        }
-        .flag-item { display: flex; align-items: center; gap: 0.4rem; color: var(--muted); font-size: 0.83rem; }
-        .flag-item strong { color: var(--text); font-weight: 600; }
-
-        @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
-
-        /* ── LAYOUT ── */
-        section, .section-wrap { position: relative; z-index: 1; }
-        .section-wrap { max-width: 1020px; margin: 0 auto; padding: 5.5rem 2rem; }
-        .divider { height: 1px; background: var(--border); max-width: 1020px; margin: 0 auto; }
-
-        .section-eyebrow {
-            display: inline-flex; align-items: center; gap: 0.55rem;
-            color: #7dd3fc; font-size: 0.75rem; font-weight: 600;
-            text-transform: uppercase; letter-spacing: 0.13em; margin-bottom: 0.7rem;
-        }
-        .section-eyebrow::after { content:''; display:inline-block; width:36px; height:1px; background:rgba(56,189,248,0.35); }
-
-        h2 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(2rem, 4.5vw, 2.75rem); font-weight: 700; margin-bottom: 3rem;
+            font-size: 0.88rem;
+            color: var(--w70);
+            letter-spacing: 0.02em;
+            margin-bottom: 2rem;
         }
 
-        /* ── STATS BAR ── */
-        .stats-bar {
-            display: grid; grid-template-columns: repeat(4, 1fr);
-            border: 1px solid var(--border); border-radius: 1rem;
-            overflow: hidden; margin-bottom: 5.5rem;
-        }
-        @media(max-width:640px){ .stats-bar{ grid-template-columns: 1fr 1fr; } }
-        .stat-item {
-            padding: 1.4rem 1.25rem; text-align: center;
-            border-right: 1px solid var(--border); background: var(--card);
-        }
-        .stat-item:last-child { border-right: none; }
-        @media(max-width:640px){
-            .stat-item:nth-child(2){ border-right:none; }
-            .stat-item:nth-child(3){ border-top:1px solid var(--border); }
-            .stat-item:nth-child(4){ border-top:1px solid var(--border); border-right:none; }
-        }
-        .stat-value {
-            font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.9rem;
-            background: linear-gradient(135deg, #38bdf8, #fb923c);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-        }
-        .stat-label { color: var(--muted); font-size: 0.78rem; margin-top: 0.2rem; }
-
-        /* ── ABOUT ── */
-        .about-grid { display: grid; grid-template-columns: 1fr 200px; gap: 3.5rem; align-items: start; }
-        @media(max-width:640px){ .about-grid{ grid-template-columns:1fr; } }
-        .about-text p { color: var(--muted); margin-bottom: 1rem; font-size: 1.02rem; line-height: 1.75; }
-        .about-text p:last-child { margin-bottom: 0; }
-        .about-text strong { color: var(--text); font-weight: 600; }
-        .about-avatar {
-            width: 200px; height: 200px; border-radius: 1.5rem;
-            border: 1px solid rgba(56,189,248,0.28);
-            object-fit: cover; object-position: center 5%; display: block; flex-shrink: 0;
-            box-shadow: 0 0 0 4px rgba(56,189,248,0.07), 0 20px 40px rgba(0,0,0,0.5);
-        }
-        @media(max-width:640px){ .about-avatar{ width:130px; height:130px; border-radius:1rem; } }
-
-        .lang-chips { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.4rem; }
-        .lang-chip {
-            display: inline-flex; align-items: center; gap: 0.45rem;
-            background: rgba(56,189,248,0.05); border: 1px solid rgba(56,189,248,0.15);
-            padding: 0.35rem 0.85rem; border-radius: 999px; font-size: 0.82rem; color: var(--text);
-        }
-        .lang-chip .flag { font-size: 1rem; }
-        .lang-chip .level {
-            font-size: 0.72rem; color: #38bdf8; font-weight: 600;
-            background: rgba(56,189,248,0.1); border: 1px solid rgba(56,189,248,0.2);
-            padding: 0.1rem 0.45rem; border-radius: 999px;
+        .hero-bio {
+            font-size: 1rem;
+            color: var(--w70);
+            max-width: 520px;
+            line-height: 1.8;
+            margin-bottom: 1.75rem;
         }
 
-        /* ── DUAL TIMELINE ── */
-        .dual-timeline {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 2.2rem; align-items: start;
-        }
-        @media(max-width: 760px) { .dual-timeline { grid-template-columns: 1fr; } }
+        .hero-bio strong { color: var(--white); font-weight: 600; }
 
-        .tl-col-head {
-            display: flex; align-items: center; gap: 0.6rem;
-            font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 0.88rem;
-            margin-bottom: 1.2rem; padding-bottom: 0.9rem;
-            border-bottom: 1px solid var(--border);
+        .hero-langs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--w70);
         }
-        .tl-col-head.cyan { color: #7dd3fc; }
-        .tl-col-head.amber { color: #fdba74; }
 
-        .timeline { display: flex; flex-direction: column; gap: 1rem; }
-        .tl-item {
-            background: var(--card); border: 1px solid var(--border); border-radius: 1rem;
-            padding: 1.25rem 1.25rem 1.25rem 1.75rem; position: relative; overflow: hidden;
-            transition: border-color 0.25s, transform 0.25s, background 0.25s;
+        /* ── Buttons ── */
+        .btn-outline {
+            display: inline-block;
+            padding: 0.55rem 1.4rem;
+            border: 1.5px solid var(--white);
+            color: var(--white);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.11em;
+            text-decoration: none;
+            transition: background 0.18s, color 0.18s;
         }
-        .tl-item::before {
-            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
-        }
-        .tl-col:first-child .tl-item::before { background: #38bdf8; }
-        .tl-col:last-child  .tl-item::before { background: #fb923c; }
-        .tl-col:first-child .tl-item:hover { border-color: rgba(56,189,248,0.35); }
-        .tl-col:last-child  .tl-item:hover { border-color: rgba(251,146,60,0.35); }
-        .tl-item:hover { transform: translateX(4px); background: var(--card-hover); }
+        .btn-outline:hover { background: var(--white); color: var(--bg); }
 
-        .tl-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.75rem; margin-bottom: 0.25rem; flex-wrap: wrap; }
-        .tl-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 0.95rem; }
-        .tl-date {
-            color: #7dd3fc; font-size: 0.72rem; font-weight: 600;
-            background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.2);
-            padding: 0.18rem 0.65rem; border-radius: 999px; white-space: nowrap; flex-shrink: 0;
-        }
-        .tl-col:last-child .tl-date {
-            color: #fdba74;
-            background: rgba(251,146,60,0.08); border-color: rgba(251,146,60,0.22);
-        }
-        .tl-company { font-weight: 500; font-size: 0.83rem; margin-bottom: 0.5rem; }
-        .tl-logo { width: 32px; height: 32px; border-radius: 5px; object-fit: contain; background: #fff; vertical-align: middle; margin-right: 8px; flex-shrink: 0; }
-        .tl-col:first-child .tl-company { color: #38bdf8; }
-        .tl-col:last-child  .tl-company { color: #fb923c; }
-        .tl-desc { color: var(--muted); font-size: 0.86rem; line-height: 1.65; }
+        .btn-group { display: flex; flex-wrap: wrap; gap: 0.75rem; }
 
-        /* ── SKILLS ── */
-        .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 1.2rem; }
-        .skill-card {
-            background: var(--card); border: 1px solid var(--border); border-radius: 1rem; padding: 1.4rem;
-            transition: border-color 0.25s, background 0.25s;
+        /* ── Badge ── */
+        .badge {
+            display: inline-block;
+            border: 1px solid var(--w40);
+            color: var(--w70);
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 0.18rem 0.6rem;
         }
-        .skill-card:hover { border-color: var(--border-accent); background: var(--card-hover); }
-        .skill-card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 0.93rem; margin-bottom: 0.9rem; }
-        .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+        .badge.gold { border-color: #ffe066; color: #ffe066; }
+
+        /* ── Entry (expérience / formation) ── */
+        .entry { margin-bottom: 2.8rem; }
+        .entry:last-child { margin-bottom: 0; }
+
+        .entry-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(1.35rem, 3vw, 1.85rem);
+            letter-spacing: 0.04em;
+            margin-bottom: 0.35rem;
+        }
+
+        .entry-meta {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .entry-sub {
+            font-size: 0.85rem;
+            color: var(--w70);
+        }
+
+        .entry-desc {
+            font-size: 0.9rem;
+            color: var(--w70);
+            max-width: 600px;
+            line-height: 1.75;
+            margin-top: 0.4rem;
+        }
+
+        /* ── Projects ── */
+        .project { margin-bottom: 2.6rem; padding-bottom: 2.6rem; border-bottom: 1px solid var(--w20); }
+        .project:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+
+        .project-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(1.5rem, 4vw, 2.1rem);
+            letter-spacing: 0.04em;
+            margin-bottom: 0.4rem;
+        }
+
+        .project-desc {
+            font-size: 0.9rem;
+            color: var(--w70);
+            max-width: 600px;
+            line-height: 1.75;
+            margin: 0.5rem 0 0.9rem;
+        }
+
+        .arrow-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: var(--white);
+            text-decoration: none;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--w40);
+            padding-bottom: 1px;
+            transition: border-color 0.18s;
+        }
+        .arrow-link:hover { border-color: var(--white); }
+
+        /* ── Skills ── */
+        .skills-group { margin-bottom: 2rem; }
+        .skills-group:last-child { margin-bottom: 0; }
+
+        .skills-group-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.25rem;
+            letter-spacing: 0.06em;
+            color: var(--w70);
+            margin-bottom: 0.75rem;
+        }
+
+        .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
         .tag {
-            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09);
-            color: var(--muted); padding: 0.25rem 0.68rem; border-radius: 999px; font-size: 0.78rem;
-            transition: border-color 0.2s, color 0.2s;
+            border: 1px solid var(--w40);
+            color: var(--white);
+            font-size: 0.78rem;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            padding: 0.3rem 0.8rem;
         }
-        .skill-card:hover .tag { border-color: rgba(56,189,248,0.15); }
 
-        /* ── PROJECTS ── */
-        .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(295px, 1fr)); gap: 1.5rem; }
-        .project-card {
-            background: var(--card); border: 1px solid var(--border); border-radius: 1.1rem; overflow: hidden;
-            transition: border-color 0.25s, transform 0.25s, background 0.25s;
-            display: flex; flex-direction: column;
+        /* ── Volunteer ── */
+        .vol-entry { margin-bottom: 2.2rem; }
+        .vol-entry:last-child { margin-bottom: 0; }
+        .vol-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(1.3rem, 2.5vw, 1.7rem);
+            letter-spacing: 0.04em;
+            margin-bottom: 0.3rem;
         }
-        .project-card:hover { border-color: var(--border-accent); transform: translateY(-6px); background: var(--card-hover); }
-        .project-card-img-placeholder {
-            width: 100%; aspect-ratio: 16/9;
-            background: linear-gradient(135deg, rgba(56,189,248,0.1), rgba(251,146,60,0.1));
-            display: flex; align-items: center; justify-content: center; font-size: 3.5rem;
-        }
-        .project-card-body { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; }
-        .project-badge {
-            display: inline-flex; align-items: center; gap: 0.3rem;
-            background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.22);
-            color: #7dd3fc; font-size: 0.74rem; font-weight: 600;
-            padding: 0.18rem 0.65rem; border-radius: 999px; margin-bottom: 0.75rem;
-        }
-        .project-badge.amber {
-            background: rgba(251,146,60,0.1); border-color: rgba(251,146,60,0.28); color: #fdba74;
-        }
-        .project-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 1.05rem; margin-bottom: 0.45rem; }
-        .project-context { color: var(--subtle); font-size: 0.8rem; margin-bottom: 0.75rem; }
-        .project-desc { color: var(--muted); font-size: 0.9rem; line-height: 1.68; margin-bottom: 1.1rem; flex: 1; }
-        .project-link {
-            display: inline-flex; align-items: center; gap: 0.35rem;
-            color: #7dd3fc; font-size: 0.83rem; font-weight: 500; text-decoration: none;
-            transition: all 0.2s; margin-top: auto;
-        }
-        .project-link:hover { color: white; gap: 0.55rem; }
-        .project-link svg { transition: transform 0.2s; }
-        .project-link:hover svg { transform: translateX(3px); }
 
-        /* Nerf photo gallery */
-        .nerf-gallery {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px;
-            width: 100%; aspect-ratio: 16/7; overflow: hidden;
+        /* ── Mon projet phases ── */
+        .phase-list { margin-top: 2rem; }
+        .phase {
+            display: grid;
+            grid-template-columns: 140px 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.75rem;
+            padding-bottom: 1.75rem;
+            border-bottom: 1px solid var(--w20);
         }
-        .nerf-gallery img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .nerf-gallery .main-img { grid-column: span 2; }
-
-        /* ── VOLUNTEER ── */
-        .volunteer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.2rem; }
-        .vol-card {
-            background: var(--card); border: 1px solid var(--border); border-radius: 1rem; padding: 1.4rem;
-            transition: border-color 0.25s, background 0.25s;
+        .phase:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+        .phase-period {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: var(--w40);
+            padding-top: 0.15rem;
         }
-        .vol-card:hover { border-color: var(--border-accent); background: var(--card-hover); }
-        .vol-card-header { display: flex; align-items: flex-start; gap: 0.9rem; margin-bottom: 0.65rem; }
-        .vol-icon { width: 44px; height: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 8px; background: #fff; }
-        .vol-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 0.97rem; margin-bottom: 0.15rem; }
-        .vol-org { color: #38bdf8; font-size: 0.82rem; font-weight: 500; }
-        .vol-date { color: var(--subtle); font-size: 0.76rem; margin-bottom: 0.6rem; }
-        .vol-desc { color: var(--muted); font-size: 0.88rem; line-height: 1.65; }
-
-        /* ── CONTACT ── */
-        #contact-wrap { text-align: center; }
-        .contact-card {
-            background: var(--card); border: 1px solid var(--border); border-radius: 1.5rem;
-            padding: 3rem 2rem; max-width: 520px; margin: 0 auto;
+        .phase-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.25rem;
+            letter-spacing: 0.04em;
+            margin-bottom: 0.35rem;
         }
-        .contact-card p { color: var(--muted); margin-bottom: 2rem; font-size: 1.02rem; }
-        .contact-socials { display: flex; justify-content: center; gap: 0.7rem; margin-top: 1.5rem; flex-wrap: wrap; }
-        .social-link {
-            display: inline-flex; align-items: center; gap: 0.45rem;
-            color: var(--muted); text-decoration: none; font-size: 0.86rem; font-weight: 500;
-            padding: 0.48rem 1.1rem; border: 1px solid var(--border); border-radius: 999px; transition: all 0.22s;
+        .phase-desc { font-size: 0.88rem; color: var(--w70); line-height: 1.7; }
+
+        /* ── Callout ── */
+        .callout {
+            border-left: 2px solid var(--w40);
+            padding: 1rem 1.4rem;
+            font-size: 0.9rem;
+            color: var(--w70);
+            line-height: 1.8;
+            margin-top: 2rem;
         }
-        .social-link:hover { border-color: rgba(56,189,248,0.4); color: #7dd3fc; background: rgba(56,189,248,0.05); }
 
-        /* ── MON PROJET ── */
-        .projet-intro { max-width: 760px; font-size: 1.02rem; color: var(--muted); line-height: 1.75; margin-bottom: 2rem; }
-        .meca-card { background: var(--card); border: 1px solid var(--border); border-radius: 1rem; padding: 1.4rem 1.8rem; margin-bottom: 2rem; }
-        .meca-header { display: flex; align-items: baseline; gap: 0.9rem; margin-bottom: 1.2rem; flex-wrap: wrap; }
-        .meca-name { font-family: 'Space Grotesk', sans-serif; font-size: 1.25rem; font-weight: 700; color: var(--text); }
-        .meca-sub { font-size: 0.83rem; color: var(--muted); }
-        .meca-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; }
-        @media(max-width: 520px) { .meca-stats { grid-template-columns: repeat(2, 1fr); } }
-        .meca-stat { text-align: center; background: rgba(56,189,248,0.04); border: 1px solid var(--border); border-radius: 0.7rem; padding: 0.8rem 0.5rem; }
-        .meca-stat .sv { display: block; font-family: 'Space Grotesk', sans-serif; font-size: 1.4rem; font-weight: 700; color: var(--accent); line-height: 1; }
-        .meca-stat .sv.amber { color: var(--accent2); }
-        .meca-stat .sl { display: block; font-size: 0.68rem; color: var(--muted); margin-top: 0.3rem; line-height: 1.3; }
-        .phase-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
-        @media(max-width: 680px) { .phase-grid { grid-template-columns: 1fr; } }
-        .phase-card { background: var(--card); border: 1px solid var(--border); border-radius: 1rem; padding: 1.2rem; }
-        .phase-period { font-size: 0.68rem; color: var(--subtle); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.65rem; }
-        .phase-num { width: 28px; height: 28px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', sans-serif; font-size: 0.82rem; font-weight: 700; margin-bottom: 0.6rem; }
-        .phase-num.p1 { background: rgba(56,189,248,0.15); color: var(--accent); }
-        .phase-num.p2 { background: rgba(251,146,60,0.15); color: var(--accent2); }
-        .phase-num.p3 { background: rgba(52,211,153,0.15); color: #34d399; }
-        .phase-title { font-family: 'Space Grotesk', sans-serif; font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 0.45rem; }
-        .phase-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.55; }
-        .projet-callout { background: var(--card); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 0 0.75rem 0.75rem 0; padding: 1.1rem 1.4rem; }
-        .projet-callout p { color: var(--muted); font-size: 0.9rem; line-height: 1.75; margin: 0; }
-
+        /* ── Footer ── */
         footer {
-            text-align: center; padding: 2rem; color: var(--subtle); font-size: 0.8rem;
-            border-top: 1px solid var(--border); position: relative; z-index: 1;
+            border-top: 1px solid var(--w40);
+            padding: 2.5rem 0;
+            font-size: 0.78rem;
+            color: var(--w40);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
         }
 
-        /* ── FADE IN ── */
-        .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+        /* ── Fade in ── */
+        .fade-in { opacity: 0; transform: translateY(18px); transition: opacity 0.55s ease, transform 0.55s ease; }
         .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+        /* ── Responsive ── */
+        @media (max-width: 600px) {
+            .wrap { padding: 0 1.2rem; }
+            #hero { padding: 4rem 0 3.5rem; }
+            .section { padding: 3.5rem 0; }
+            .phase { grid-template-columns: 1fr; gap: 0.4rem; }
+            .phase-period { padding-top: 0; }
+        }
     </style>
 </head>
 <body>
 
-<!-- ─── FLYING AIRCRAFT ─── -->
-<div class="planes-layer" aria-hidden="true">
-    <!-- A400M flying right (nose flipped to face right) -->
-    <div class="plane p-md fr p1">
-        <img src="A400M.png" class="plane-img" alt="">
-    </div>
-    <!-- Rafale flying left (nose already faces left) -->
-    <div class="plane rafale p-sm fl p2">
-        <img src="Rafale.png" class="plane-img" alt="">
-    </div>
-    <!-- A400M flying right, amber, large -->
-    <div class="plane p-lg fr p3">
-        <img src="A400M.png" class="plane-img amber" alt="">
-    </div>
-    <!-- Rafale flying left, small, fast -->
-    <div class="plane rafale p-sm fl p4">
-        <img src="Rafale.png" class="plane-img" alt="">
-    </div>
-    <!-- A400M flying left, amber -->
-    <div class="plane p-md fl p5">
-        <img src="A400M.png" class="plane-img amber" alt="">
-    </div>
-    <!-- Rafale flying right (nose flipped) -->
-    <div class="plane rafale p-lg fr p6">
-        <img src="Rafale.png" class="plane-img" alt="">
-    </div>
-</div>
+<div class="wrap">
 
-<!-- ─── NAV ─── -->
-<nav>
-    <div class="nav-logo">CB</div>
-    <ul class="nav-links">
-        <li><a href="#about">À propos</a></li>
-        <li><a href="#experience">Expérience</a></li>
-        <li><a href="#skills">Compétences</a></li>
-        <li><a href="#projects">Projets</a></li>
-        <li><a href="#projet">Mon projet</a></li>
-    </ul>
-</nav>
+    <!-- ─── HERO ─── -->
+    <section id="hero">
+        <div class="hero-name fade-in">CLÉMENT<br>BALCON</div>
+        <div class="hero-role fade-in">Ingénieur Mécanique · PIL</div>
+        <div class="hero-tag fade-in">Apprenti Ingénieur · Safran Aircraft Engines · Châtellerault</div>
+        <p class="hero-bio fade-in">
+            Étudiant ingénieur à l'<strong>UTC</strong> en filière <strong>PIL — Production Intégrée et Logistique</strong>, en alternance chez <strong>Safran Aircraft Engines</strong>. Passionné par la mécanique de précision, la production aéronautique et l'innovation industrielle.
+        </p>
+        <div class="hero-langs fade-in">
+            <span>🇫🇷 Français — natif</span>
+            <span>🇧🇷 Português — C1</span>
+            <span>🇬🇧 English — C1 · IELTS</span>
+        </div>
+    </section>
 
-<!-- ─── HERO ─── -->
-<section id="hero">
-    <div class="hero-content">
-        <div class="hero-tag">Apprenti Ingénieur · Safran Aircraft Engines · Châtellerault</div>
-        <h1>Clément Balcon<br><span class="gradient-text">Ingénieur Mécanique</span></h1>
-        <p class="hero-sub">Étudiant ingénieur à l'UTC · Filière PIL · Passionné par la production aéronautique et l'innovation industrielle</p>
-        <div class="hero-cta">
-            <a href="mailto:clement.balcon29@gmail.com" class="btn btn-primary">Me contacter</a>
-            <a href="#projects" class="btn btn-outline">Voir mes projets</a>
+    <!-- ─── CONTACT ─── -->
+    <section class="section fade-in">
+        <div class="section-title">Contact</div>
+        <div class="btn-group">
+            <a href="https://www.linkedin.com/in/cl%C3%A9ment-balcon" class="btn-outline" target="_blank" rel="noopener">LinkedIn</a>
+            <a href="https://github.com/clementbalcon" class="btn-outline" target="_blank" rel="noopener">GitHub</a>
+            <a href="mailto:clement.balcon29@gmail.com" class="btn-outline">clement.balcon29@gmail.com</a>
         </div>
-    </div>
-</section>
+    </section>
 
-<div class="divider"></div>
+    <!-- ─── EXPÉRIENCE ─── -->
+    <section class="section fade-in" id="experience">
+        <div class="section-title">Expérience</div>
 
-<!-- ─── STATS + ABOUT ─── -->
-<div class="section-wrap">
-    <div class="stats-bar fade-in">
-        <div class="stat-item">
-            <div class="stat-value">3</div>
-            <div class="stat-label">Langues C1+</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-value">Prix</div>
-            <div class="stat-label">Innovation RobAFIS</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-value">1 400</div>
-            <div class="stat-label">Étudiants — SDF 2025</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-value">3</div>
-            <div class="stat-label">Pays d'étude</div>
-        </div>
-    </div>
-
-    <div id="about" class="fade-in">
-        <div class="section-eyebrow">À propos</div>
-        <h2>Qui suis-je ?</h2>
-        <div class="about-grid">
-            <div class="about-text">
-                <p>Étudiant en ingénierie mécanique à l'<strong>Université de Technologie de Compiègne (UTC)</strong>, je prépare mon diplôme d'ingénieur en alternance chez <strong>Safran Aircraft Engines</strong> (Châtellerault), dans la filière <strong>PIL — Production Intégrée et Logistique</strong>.</p>
-                <p>Mon parcours est marqué par une forte dimension internationale : scolarisé à la <strong>Sayfol International School</strong> puis au <strong>Lycée Molière de Rio de Janeiro</strong>, j'ai développé une aisance naturelle dans trois langues et une capacité à m'adapter à des environnements multiculturels.</p>
-                <p>Rigoureux et impliqué, je m'engage aussi bien dans mes projets académiques que dans la vie associative — responsable du Futsal UTC, secrétaire de la Soirée des Finaux, trésorier du service des sports.</p>
-                <div class="lang-chips">
-                    <div class="lang-chip"><span class="flag">🇫🇷</span> Français <span class="level">Natif</span></div>
-                    <div class="lang-chip"><span class="flag">🇬🇧</span> English <span class="level">C1 — IELTS</span></div>
-                    <div class="lang-chip"><span class="flag">🇧🇷</span> Português <span class="level">C1</span></div>
-                </div>
+        <div class="entry">
+            <div class="entry-name">Safran Aircraft Engines</div>
+            <div class="entry-meta">
+                <span class="badge">Sep 2024 — Sep 2026</span>
+                <span class="entry-sub">Apprenti Ingénieur · Division des Moteurs Militaires, Châtellerault</span>
             </div>
-            <img src="photo.png" alt="Clément Balcon" class="about-avatar">
+            <p class="entry-desc">Pilotage de la performance industrielle (KPI), amélioration continue, digitalisation des processus de production et déploiement de nouvelles technologies sur lignes de maintenance.</p>
         </div>
-    </div>
-</div>
 
-<div class="divider"></div>
+        <div class="entry">
+            <div class="entry-name">Matra Électronique — filiale MBDA</div>
+            <div class="entry-meta">
+                <span class="badge">2026</span>
+                <span class="entry-sub">Conception Outillage · Prestation JE UTC (UTeam)</span>
+            </div>
+            <p class="entry-desc">Conception d'un nouvel outillage de brasage et implémentation dans la ligne de production, en partenariat industriel avec un équipementier de défense.</p>
+        </div>
 
-<!-- ─── EXPERIENCE ─── -->
-<div class="section-wrap" id="experience">
-    <div class="section-eyebrow">Parcours</div>
-    <h2>Formation & Expériences</h2>
+        <div class="entry">
+            <div class="entry-name">ICN — Itaguaí Construções Navais</div>
+            <div class="entry-meta">
+                <span class="badge">Juil — Août 2022</span>
+                <span class="entry-sub">Stage Ouvrier · Construction Navale, Brésil</span>
+            </div>
+            <p class="entry-desc">Immersion en production industrielle lourde au sein d'un chantier naval militaire brésilien spécialisé dans la fabrication de sous-marins.</p>
+        </div>
+    </section>
 
-    <div class="dual-timeline fade-in">
+    <!-- ─── FORMATION ─── -->
+    <section class="section fade-in" id="formation">
+        <div class="section-title">Formation</div>
 
-        <!-- ── FORMATION ACADÉMIQUE ── -->
-        <div class="tl-col">
-            <div class="tl-col-head cyan">🎓 Formation Académique</div>
-            <div class="timeline">
-                <div class="tl-item">
-                    <div class="tl-header">
-                        <div class="tl-title">Diplôme d'Ingénieur · Filière PIL</div>
-                        <div class="tl-date">Fév 2024 – Sept 2026</div>
-                    </div>
-                    <div class="tl-company"><img src="logo_utc.jpeg" class="tl-logo" alt="UTC"> UTC · Compiègne</div>
-                    <div class="tl-desc">Production Intégrée et Logistique, en alternance. Lean management, gestion de production, méthodes statistiques, modélisation systèmes de performance industrielle.</div>
-                </div>
-                <div class="tl-item">
-                    <div class="tl-header">
-                        <div class="tl-title">Cycle Ingénieur — Conception Mécanique</div>
-                        <div class="tl-date">Fév 2022 – Fév 2024</div>
-                    </div>
-                    <div class="tl-company"><img src="logo_utc.jpeg" class="tl-logo" alt="UTC"> UTC · Compiègne</div>
-                    <div class="tl-desc">Tronc commun pluridisciplinaire puis spécialisation mécanique. RDM, conception mécanique 1&2, phénomènes électromagnétiques, transmission des efforts.</div>
-                </div>
-                <div class="tl-item">
-                    <div class="tl-header">
-                        <div class="tl-title">Baccalauréat Général</div>
-                        <div class="tl-date">Août 2018 – Nov 2021</div>
-                    </div>
-                    <div class="tl-company"><img src="logo_lycee_moliere.jpeg" class="tl-logo" alt="Lycée Molière"> Lycée Molière · Rio de Janeiro, Brésil</div>
-                    <div class="tl-desc">Spécialités Mathématiques & Physique-Chimie, option Mathématiques Expertes. École française homologuée, Rio de Janeiro.</div>
-                </div>
-                <div class="tl-item">
-                    <div class="tl-header">
-                        <div class="tl-title">Lycée International</div>
-                        <div class="tl-date">Sept 2017 – Juin 2018</div>
-                    </div>
-                    <div class="tl-company"><img src="logo_sayfol.jpeg" class="tl-logo" alt="Sayfol International School"> Sayfol International School · Kota Kinabalu</div>
-                    <div class="tl-desc">Année scolaire en lycée international anglophone à Kota Kinabalu, Malaisie.</div>
-                </div>
+        <div class="entry">
+            <div class="entry-name">UTC — Diplôme d'Ingénieur · PIL</div>
+            <div class="entry-meta">
+                <span class="badge">Fév 2024 — Sept 2026</span>
+                <span class="entry-sub">Production Intégrée et Logistique · Compiègne</span>
+            </div>
+            <p class="entry-desc">Lean management, gestion de production, méthodes statistiques, modélisation des systèmes de performance industrielle. En alternance.</p>
+        </div>
+
+        <div class="entry">
+            <div class="entry-name">UTC — Cycle Ingénieur · Conception Mécanique</div>
+            <div class="entry-meta">
+                <span class="badge">Fév 2022 — Fév 2024</span>
+            </div>
+            <p class="entry-desc">Tronc commun pluridisciplinaire puis spécialisation mécanique — RDM, conception, phénomènes électromagnétiques, transmission des efforts.</p>
+        </div>
+
+        <div class="entry">
+            <div class="entry-name">Lycée Molière · Rio de Janeiro</div>
+            <div class="entry-meta">
+                <span class="badge">Août 2018 — Nov 2021</span>
+                <span class="entry-sub">Baccalauréat · Maths & Physique-Chimie, option Maths Expertes</span>
             </div>
         </div>
 
-        <!-- ── EXPÉRIENCE PROFESSIONNELLE ── -->
-        <div class="tl-col">
-            <div class="tl-col-head amber">💼 Expérience Professionnelle</div>
-            <div class="timeline">
-                <div class="tl-item">
-                    <div class="tl-header">
-                        <div class="tl-title">Apprenti Ingénieur — Production Aéronautique</div>
-                        <div class="tl-date">Sep 2024 – Sep 2026</div>
-                    </div>
-                    <div class="tl-company"><img src="logo_safran.jpeg" class="tl-logo" alt="Safran"> Safran Aircraft Engines · Châtellerault</div>
-                    <div class="tl-desc">Division des Moteurs Militaires. Pilotage de la performance industrielle (KPI), amélioration continue, digitalisation des processus de production et déploiement de nouvelles technologies sur lignes de maintenance.</div>
-                </div>
-                <div class="tl-item">
-                    <div class="tl-header">
-                        <div class="tl-title">Conception Outillage — Prestation JE</div>
-                        <div class="tl-date">2026</div>
-                    </div>
-                    <div class="tl-company"><img src="logo_matra.png" class="tl-logo" alt="Matra Electronique"> Matra Electronique (filiale MBDA) · Compiègne</div>
-                    <div class="tl-desc">Prestation via la Junior Entreprise de l'UTC pour un équipementier de défense. Conception d'un nouvel outillage et implémentation dans la ligne de production.</div>
-                </div>
-                <div class="tl-item">
-                    <div class="tl-header">
-                        <div class="tl-title">Stage Ouvrier — Construction Navale</div>
-                        <div class="tl-date">Juil. – Août 2022</div>
-                    </div>
-                    <div class="tl-company"><img src="logo_icn.jpeg" class="tl-logo" alt="ICN"> ICN — Itaguaí Construções Navais · Brésil</div>
-                    <div class="tl-desc">Immersion en production industrielle lourde au sein d'un chantier naval militaire brésilien spécialisé dans la fabrication de sous-marins. Intégration hiérarchique et compréhension des enjeux de construction.</div>
-                </div>
+        <div class="entry">
+            <div class="entry-name">Sayfol International School · Kota Kinabalu</div>
+            <div class="entry-meta">
+                <span class="badge">Sept 2017 — Juin 2018</span>
+                <span class="entry-sub">Lycée International Anglophone · Malaisie</span>
             </div>
         </div>
+    </section>
 
-    </div>
-</div>
+    <!-- ─── PROJETS ─── -->
+    <section class="section fade-in" id="projects">
+        <div class="section-title">Projets</div>
 
-<div class="divider"></div>
+        <div class="project">
+            <div class="project-name">Solder Pen — Outillage de Brasage</div>
+            <div class="entry-meta">
+                <span class="badge">PR UTC · 2026</span>
+                <span class="entry-sub">Clément Balcon · Tristan Marquet · Matra Électronique × UTC</span>
+            </div>
+            <p class="project-desc">Conception d'un outil ergonomique d'apport de fil d'alliage pour le brasage manuel de cartes électroniques. Analyse fonctionnelle (FAST), modélisation 3D CATIA et prototype imprimé.</p>
+            <a href="matra.html" class="arrow-link">Voir le projet →</a>
+        </div>
 
-<!-- ─── SKILLS ─── -->
-<div class="section-wrap" id="skills">
-    <div class="section-eyebrow">Compétences</div>
-    <h2>Ce que je maîtrise</h2>
-    <div class="skills-grid fade-in">
-        <div class="skill-card">
-            <div class="skill-card-title">⚙️ CAO & Simulation</div>
+        <div class="project">
+            <div class="project-name">RobAFIS — Robot Mobile Autonome</div>
+            <div class="entry-meta">
+                <span class="badge gold">🏆 Prix de l'Innovation</span>
+                <span class="entry-sub">Équipe BACAR · UTC · Sept 2025 — Janv 2026 · 13 écoles</span>
+            </div>
+            <p class="project-desc">Concours national RobAFIS (AFIS, Toulouse). Rôle de coordinateur Intégration, Vérification &amp; Validation. L'UTC a décroché le Prix de l'Innovation.</p>
+            <a href="robafis.html" class="arrow-link">Voir la revue →</a>
+        </div>
+
+        <div class="project">
+            <div class="project-name">Cric Hydraulique — Étude de Statique</div>
+            <div class="entry-meta">
+                <span class="badge">UV TN06 · UTC 2023</span>
+                <span class="entry-sub">Lucas Arulnadin · Clément Balcon · Damien Guichon</span>
+            </div>
+            <p class="project-desc">Analyse statique complète d'un cric hydraulique (7 solides) — schéma cinématique, PFS 3D analytique et graphique, démultiplication hydraulique ×17, validation expérimentale.</p>
+            <a href="tn06.html" class="arrow-link">Voir l'étude →</a>
+        </div>
+
+        <div class="project">
+            <div class="project-name">Rétro-modélisation Nerf Rider CS-35</div>
+            <div class="entry-meta">
+                <span class="badge">CATIA V5 · UTC P24</span>
+                <span class="entry-sub">Clément Balcon · Damien Guichon</span>
+            </div>
+            <p class="project-desc">Rétro-modélisation complète d'un pistolet NERF sous CATIA V5. Méthodologie squelette, modélisation surfacique complexe, assemblages multi-pièces.</p>
+            <a href="nerf.html" class="arrow-link">Voir la revue →</a>
+        </div>
+
+        <div class="project">
+            <div class="project-name">Training Tracker — Web App</div>
+            <div class="entry-meta">
+                <span class="badge">Projet personnel · En cours</span>
+                <span class="entry-sub">Supabase · JavaScript · PWA</span>
+            </div>
+            <p class="project-desc">Application web de suivi d'entraînements (course à pied, musculation, street workout). Saisie des séances, historique, statistiques et records personnels.</p>
+            <a href="training.html" class="arrow-link">Ouvrir l'app →</a>
+        </div>
+    </section>
+
+    <!-- ─── COMPÉTENCES ─── -->
+    <section class="section fade-in" id="skills">
+        <div class="section-title">Compétences</div>
+
+        <div class="skills-group">
+            <div class="skills-group-title">CAO &amp; Simulation</div>
             <div class="tags">
                 <span class="tag">CATIA V5</span>
                 <span class="tag">CREO</span>
@@ -638,271 +451,129 @@
                 <span class="tag">Abaqus</span>
             </div>
         </div>
-        <div class="skill-card">
-            <div class="skill-card-title">🏭 Production & Industriel</div>
+
+        <div class="skills-group">
+            <div class="skills-group-title">Production &amp; Industriel</div>
             <div class="tags">
                 <span class="tag">Pilotage industriel</span>
                 <span class="tag">Amélioration continue</span>
-                <span class="tag">DMAIC / Lean</span>
-                <span class="tag">ERP (SAP)</span>
+                <span class="tag">DMAIC · Lean</span>
+                <span class="tag">ERP · SAP</span>
+                <span class="tag">AMDEC</span>
+                <span class="tag">Analyse fonctionnelle</span>
             </div>
         </div>
-        <div class="skill-card">
-            <div class="skill-card-title">💻 Programmation & Data</div>
+
+        <div class="skills-group">
+            <div class="skills-group-title">Programmation &amp; Data</div>
             <div class="tags">
                 <span class="tag">Python</span>
                 <span class="tag">MATLAB</span>
                 <span class="tag">VBA</span>
                 <span class="tag">Power BI</span>
                 <span class="tag">Power Query</span>
-                <span class="tag">HTML / CSS</span>
+                <span class="tag">HTML · CSS · JS</span>
             </div>
         </div>
-        <div class="skill-card">
-            <div class="skill-card-title">🤝 Savoir-être</div>
+
+        <div class="skills-group">
+            <div class="skills-group-title">Ingénierie Système</div>
             <div class="tags">
                 <span class="tag">Conduite de projet</span>
+                <span class="tag">IVV</span>
+                <span class="tag">V&amp;V</span>
                 <span class="tag">Leadership</span>
-                <span class="tag">Travail en équipe</span>
-                <span class="tag">Rigueur</span>
                 <span class="tag">Adaptabilité</span>
             </div>
         </div>
-    </div>
-</div>
+    </section>
 
-<div class="divider"></div>
+    <!-- ─── ENGAGEMENT ─── -->
+    <section class="section fade-in">
+        <div class="section-title">Engagement</div>
 
-<!-- ─── PROJECTS ─── -->
-<div class="section-wrap" id="projects">
-    <div class="section-eyebrow">Projets</div>
-    <h2>Réalisations</h2>
-    <div class="projects-grid fade-in">
-
-        <div class="project-card">
-            <div style="width:100%;aspect-ratio:16/7;background:#dde6ef;border-bottom:1px solid var(--border);overflow:hidden;display:flex;align-items:center;justify-content:center;">
-                <img src="solder_pen.png" alt="Solder Pen — modèle 3D" style="width:88%;height:100%;object-fit:contain;">
+        <div class="vol-entry">
+            <div class="vol-name">Futsal UTC</div>
+            <div class="entry-meta">
+                <span class="badge">Févr 2024 — Févr 2026</span>
+                <span class="entry-sub">Responsable &amp; Coach · 2 ans</span>
             </div>
-            <div class="project-card-body">
-                <div class="project-badge">PR UTC · 2026</div>
-                <div class="project-title">Solder Pen — Outillage de Brasage</div>
-                <div class="project-context">Clément Balcon · Tristan Marquet · UTC × Matra Électronique · Déc. 2025 – Mai 2026</div>
-                <div class="project-desc">Conception d'un outil ergonomique d'apport de fil d'alliage pour le brasage manuel de cartes électroniques, en partenariat industriel avec Matra Électronique via UTeam. Analyse fonctionnelle (FAST), modélisation 3D et prototype imprimé.</div>
-                <div class="tags" style="margin-bottom:1rem;">
-                    <span class="tag">Conception mécanique</span>
-                    <span class="tag">Analyse fonctionnelle</span>
-                    <span class="tag">Prototypage 3D</span>
-                </div>
-                <a href="matra.html" class="project-link">
-                    Voir le projet
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                </a>
-            </div>
+            <p class="entry-desc">Organisation des entraînements, gestion des engagements en compétitions universitaires (FFSU), coordination avec le service des sports.</p>
         </div>
 
-        <div class="project-card">
-            <div class="nerf-gallery">
-                <img class="main-img" src="robafis_img3.png" alt="Mécanisme pince RobAFIS" style="object-position: center center;">
-                <div style="display:flex;flex-direction:column;gap:3px;height:100%;">
-                    <img src="robafis_img1.png" alt="Bras et pince du robot" style="flex:1;width:100%;height:100%;object-fit:cover;object-position:center 20%;">
-                    <img src="robafis_img2.png" alt="Robot vue complète" style="flex:1;width:100%;height:100%;object-fit:cover;object-position:center center;">
-                </div>
+        <div class="vol-entry">
+            <div class="vol-name">Soirée Des Finaux — SDF</div>
+            <div class="entry-meta">
+                <span class="badge">Janv 2025 — Févr 2026</span>
+                <span class="entry-sub">Secrétaire · 1 400 étudiants en 2025</span>
             </div>
-            <div class="project-card-body">
-                <div class="project-badge amber">🏆 Prix de l'Innovation</div>
-                <div class="project-title">RobAFIS — Robot Mobile Autonome</div>
-                <div class="project-context">Équipe BACAR · UTC · Sept. 2025 – Janv. 2026 · 13 écoles</div>
-                <div class="project-desc">Concours national RobAFIS (AFIS, Toulouse) représentant l'UTC au sein de l'équipe BACAR. Objectif : concevoir, intégrer et valider un robot mobile autonome capable d'évoluer sur terrain normé. Rôle de coordinateur Intégration, Vérification & Validation (IVV). L'UTC a décroché le Prix de l'Innovation.</div>
-                <div class="tags">
-                    <span class="tag">Robotique</span>
-                    <span class="tag">IVV</span>
-                    <span class="tag">Ingénierie Système</span>
-                    <span class="tag">V&V</span>
-                </div>
-                <a href="robafis.html" class="project-link">
-                    Voir la revue de projet
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                </a>
-            </div>
+            <p class="entry-desc">Gestion administrative et coordination logistique d'une des plus grandes soirées étudiantes de l'UTC.</p>
         </div>
 
-        <div class="project-card">
-            <div class="nerf-gallery">
-                <img class="main-img" src="tn06_img1.png" alt="Cric hydraulique en TP" style="object-position: center center;">
-                <div style="display:flex;flex-direction:column;gap:3px;height:100%;">
-                    <img src="tn06_img2.png" alt="Mesure ressort au pied à coulisse" style="flex:1;width:100%;height:100%;object-fit:cover;object-position:center center;">
-                    <img src="tn06_img2.png" alt="Mesure ressort au pied à coulisse" style="flex:1;width:100%;height:100%;object-fit:cover;object-position:center bottom;">
-                </div>
+        <div class="vol-entry">
+            <div class="vol-name">UTC Service des Sports</div>
+            <div class="entry-meta">
+                <span class="badge">Juil 2025 — Aujourd'hui</span>
+                <span class="entry-sub">Trésorier</span>
             </div>
-            <div class="project-card-body">
-                <div class="project-badge">UV TN06 · A23</div>
-                <div class="project-title">Cric Hydraulique — Étude de Statique</div>
-                <div class="project-context">Lucas Arulnadin · Clément Balcon · Damien Guichon · UTC · 2023</div>
-                <div class="project-desc">Analyse statique complète d'un cric hydraulique (7 solides) : schéma cinématique, résolution graphique et analytique 3D du PFS, étude de la démultiplication hydraulique (×17) et validation expérimentale. Rapport 43 pages.</div>
-                <div class="tags">
-                    <span class="tag">Statique</span>
-                    <span class="tag">PFS</span>
-                    <span class="tag">Mécanique</span>
-                    <span class="tag">Incertitudes</span>
-                </div>
-                <a href="tn06.html" class="project-link">
-                    Voir l'étude de cas
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                </a>
-            </div>
+            <p class="entry-desc">Gestion d'un budget associatif à 5 chiffres — suivi des flux financiers, décisions stratégiques en bureau, relations partenaires.</p>
+        </div>
+    </section>
+
+    <!-- ─── MON PROJET ─── -->
+    <section class="section fade-in" id="projet">
+        <div class="section-title">Mon Projet</div>
+
+        <p class="entry-desc" style="max-width:620px; margin-bottom:0.5rem">
+            Mon objectif s'inscrit dans le long terme : rejoindre <strong style="color:var(--white)">MECA V.A</strong> — PME familiale de mécanique de précision implantée dans le Finistère, spécialisée dans le tournage et le fraisage de pièces en petites séries. Une entreprise fondée par mon grand-père, aujourd'hui dirigée par mon oncle, aux côtés duquel je veux apporter mes compétences industrielles.
+        </p>
+
+        <div class="entry-meta" style="margin: 1rem 0 2rem">
+            <span class="badge">Mécanique de précision · Finistère</span>
+            <span class="entry-sub">Industrie · Recherche scientifique · Agroalimentaire</span>
         </div>
 
-        <div class="project-card">
-            <div class="nerf-gallery">
-                <img class="main-img" src="https://balconguichonridercf35.wordpress.com/wp-content/uploads/2024/06/image-5.jpeg" alt="Nerf Rider CS-35" onerror="this.style.display='none'">
-                <div style="display:flex;flex-direction:column;gap:3px;">
-                    <img src="https://balconguichonridercf35.wordpress.com/wp-content/uploads/2024/06/image-6.jpeg" alt="Détail" style="flex:1;width:100%;object-fit:cover;" onerror="this.style.display='none'">
-                    <img src="https://balconguichonridercf35.wordpress.com/wp-content/uploads/2024/06/image-4.jpeg" alt="Détail 2" style="flex:1;width:100%;object-fit:cover;" onerror="this.style.display='none'">
-                </div>
-            </div>
-            <div class="project-card-body">
-                <div class="project-badge">CATIA V5 · CAO</div>
-                <div class="project-title">Rétro-modélisation Nerf Rider CS-35</div>
-                <div class="project-context">UV TN20 · UTC P24 · Binôme avec Damien Guichon</div>
-                <div class="project-desc">Rétro-modélisation complète d'un pistolet NERF Rider CS-35 sous CATIA V5. Application de la méthodologie squelette pour une conception collaborative : mesures au pied à coulisse, modélisation surfacique complexe, gestion d'assemblages multi-pièces.</div>
-                <div class="tags" style="margin-bottom:1rem;">
-                    <span class="tag">CATIA V5</span>
-                    <span class="tag">Méthodologie squelette</span>
-                    <span class="tag">Rétro-conception</span>
-                </div>
-                <a href="nerf.html" class="project-link">
-                    Voir la revue de projet
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                </a>
-            </div>
-        </div>
-
-        <div class="project-card">
-            <div class="project-card-img-placeholder" style="background:linear-gradient(135deg,rgba(56,189,248,0.08),rgba(251,146,60,0.08));display:flex;align-items:center;justify-content:center;font-size:3rem;">
-                🏋️
-            </div>
-            <div class="project-card-body">
-                <div class="project-badge amber">Web App · En cours</div>
-                <div class="project-title">Training Tracker</div>
-                <div class="project-context">Projet personnel · Supabase + Claude API</div>
-                <div class="project-desc">Application web de suivi d'entraînements (course à pied, musculation, street workout). Saisie des séances, historique, et analyse personnalisée par IA sur demande.</div>
-                <div class="tags" style="margin-bottom:1rem;">
-                    <span class="tag">Supabase</span>
-                    <span class="tag">JavaScript</span>
-                    <span class="tag">Claude API</span>
-                    <span class="tag">PWA</span>
-                </div>
-                <a href="training.html" class="project-link">
-                    Ouvrir l'app
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                </a>
-            </div>
-        </div>
-
-    </div>
-</div>
-
-<div class="divider"></div>
-
-<!-- ─── VOLUNTEER ─── -->
-<div class="section-wrap">
-    <div class="section-eyebrow">Engagement</div>
-    <h2>Bénévolat & Associations</h2>
-    <div class="volunteer-grid fade-in">
-        <div class="vol-card">
-            <div class="vol-card-header">
-                <div class="vol-icon">
-                    <img src="logo_utcfutsal.jpeg" alt="UTC Futsal" style="width:100%;height:100%;object-fit:contain;border-radius:6px;">
-                </div>
+        <div class="phase-list">
+            <div class="phase">
+                <div class="phase-period">Sept — Nov 2026</div>
                 <div>
-                    <div class="vol-title">Responsable & Coach</div>
-                    <div class="vol-org">Futsal UTC</div>
+                    <div class="phase-title">Transition &amp; Transmission</div>
+                    <p class="phase-desc">Mission d'intérim chez Safran pour transmettre mes projets et ma connaissance des lignes de production à mon successeur.</p>
                 </div>
             </div>
-            <div class="vol-date">Févr. 2024 — Févr. 2026 · 2 ans</div>
-            <div class="vol-desc">Responsable et coach de l'équipe de futsal de l'UTC. Organisation des entraînements, gestion des engagements en compétitions universitaires (FFSU), coordination avec le service des sports.</div>
-        </div>
-        <div class="vol-card">
-            <div class="vol-card-header">
-                <div class="vol-icon">
-                    <img src="logo_sdf.jpeg" alt="Soirée Des Finaux" style="width:100%;height:100%;object-fit:contain;border-radius:6px;">
-                </div>
+            <div class="phase">
+                <div class="phase-period">Nov 2026 — mi-2027</div>
                 <div>
-                    <div class="vol-title">Secrétaire</div>
-                    <div class="vol-org">Soirée Des Finaux (SDF)</div>
+                    <div class="phase-title">Maîtrise du Geste Technique</div>
+                    <p class="phase-desc">Formation Fraiseur · Tourneur (Titre Pro RNCP, Pôle Formation UIMM Bretagne). Acquérir la légitimité terrain indispensable en atelier de mécanique de précision.</p>
                 </div>
             </div>
-            <div class="vol-date">Janv. 2025 — Févr. 2026 · 1 an</div>
-            <div class="vol-desc">Secrétaire de la Soirée des Finaux, soirée étudiante de fin de semestre ayant rassemblé <strong>1 400 étudiants</strong> lors de l'édition 2025. Gestion administrative et coordination logistique.</div>
-        </div>
-        <div class="vol-card">
-            <div class="vol-card-header">
-                <div class="vol-icon">
-                    <img src="logo_utcsport.jpeg" alt="UTC Service des Sports" style="width:100%;height:100%;object-fit:contain;border-radius:6px;">
-                </div>
+            <div class="phase">
+                <div class="phase-period">À partir de mi-2027</div>
                 <div>
-                    <div class="vol-title">Trésorier</div>
-                    <div class="vol-org">UTC Service des Sports</div>
+                    <div class="phase-title">Intégration &amp; Développement</div>
+                    <p class="phase-desc">Rejoindre MECA V.A aux côtés de mon oncle — apporter les méthodes industrielles acquises, digitaliser, automatiser les tâches répétitives, conquérir de nouveaux marchés.</p>
                 </div>
             </div>
-            <div class="vol-date">Juil. 2025 — Aujourd'hui</div>
-            <div class="vol-desc">Gestion d'un budget associatif à 5 chiffres. Suivi des flux financiers (virements, remboursements, factures), décisions stratégiques en bureau restreint, relations partenaires (banque, entreprises, associations).</div>
         </div>
-    </div>
-</div>
 
-<div class="divider"></div>
-
-<!-- ─── MON PROJET ─── -->
-<div class="section-wrap" id="projet">
-    <div class="section-eyebrow">Projet professionnel</div>
-    <h2>Rejoindre &amp; développer</h2>
-
-    <p class="projet-intro fade-in">
-        Mon objectif s'inscrit dans le long terme : rejoindre <strong>MECA V.A</strong> — PME familiale de mécanique de précision implantée dans le Finistère, spécialisée dans le tournage et le fraisage de pièces en petites séries. Une entreprise fondée par mon grand-père et aujourd'hui dirigée par mon oncle, aux côtés duquel je souhaite apporter mes compétences industrielles.
-    </p>
-
-    <div class="meca-card fade-in">
-        <div class="meca-header">
-            <span class="meca-name">MECA V.A</span>
-            <span class="meca-sub">Mécanique de précision · Finistère · Industrie, recherche scientifique, agroalimentaire</span>
+        <div class="callout">
+            Chaque étape prépare la suivante. La formation d'ingénieur structure et pilote ; l'apprentissage chez Safran la met en pratique à grande échelle ; la formation UIMM donne la légitimité du terrain ; les années aux côtés de mon oncle construiront la maîtrise du métier. Un chemin cohérent au service d'un seul objectif.
         </div>
-    </div>
+    </section>
 
-    <div class="phase-grid fade-in">
-        <div class="phase-card">
-            <div class="phase-period">Sept — Nov 2026</div>
-            <div class="phase-num p1">1</div>
-            <div class="phase-title">Transition &amp; Transmission</div>
-            <div class="phase-desc">Mission d'intérim chez Safran pour transmettre mes projets et ma connaissance des lignes de production à mon successeur — finir ce que j'ai commencé.</div>
-        </div>
-        <div class="phase-card">
-            <div class="phase-period">Nov 2026 — Mi-2027</div>
-            <div class="phase-num p2">2</div>
-            <div class="phase-title">Maîtrise du geste technique</div>
-            <div class="phase-desc">Formation Fraiseur · Tourneur (Titre Pro RNCP, Pôle Formation UIMM Bretagne). Acquérir la légitimité terrain indispensable pour travailler dans un atelier de mécanique de précision.</div>
-        </div>
-        <div class="phase-card">
-            <div class="phase-period">À partir de mi-2027</div>
-            <div class="phase-num p3">3</div>
-            <div class="phase-title">Intégration &amp; Développement</div>
-            <div class="phase-desc">Rejoindre MECA V.A aux côtés de mon oncle : apporter les méthodes industrielles acquises, digitaliser, automatiser les tâches répétitives, conquérir de nouveaux marchés.</div>
-        </div>
-    </div>
-
-    <div class="projet-callout fade-in">
-        <p>Chaque étape de mon parcours prépare la suivante. La formation d'ingénieur m'apporte la capacité à structurer et piloter une organisation industrielle ; l'apprentissage chez Safran met ces compétences en pratique à grande échelle ; la formation UIMM me donne la légitimité technique du terrain ; et les années aux côtés de mon oncle construiront ma maîtrise du métier. L'ensemble forme un chemin cohérent au service d'un seul objectif.</p>
-    </div>
 </div>
 
 <footer>
-    © 2026 Clément Balcon · Ingénieur Mécanique · UTC
+    <div class="wrap">© 2026 Clément Balcon · Ingénieur Mécanique · UTC</div>
 </footer>
 
 <script>
     const observer = new IntersectionObserver((entries) => {
-        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
-    }, { threshold: 0.1 });
+        entries.forEach(e => {
+            if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+        });
+    }, { threshold: 0.08 });
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 </script>
 
