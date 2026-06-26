@@ -610,45 +610,130 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const EXERCISE_REPO = '';
-let allExercises = null;
-
-const BODY_PART_FR = {
-    'chest':       'Pectoraux',
-    'back':        'Dos',
-    'shoulders':   'Épaules',
-    'upper arms':  'Bras',
-    'lower arms':  'Avant-bras',
-    'upper legs':  'Jambes',
-    'lower legs':  'Mollets',
-    'waist':       'Abdominaux',
+const EXERCISE_DB = {
+    'Musculation': {
+        'Pectoraux': [
+            { nom: 'Développé couché barre', gif: '/gifs/0025-EIeI8Vf.gif' },
+            { nom: 'Développé couché haltères', gif: '/gifs/0289-SpYC0Kp.gif' },
+            { nom: 'Développé incliné barre', gif: '/gifs/0047-3TZduzM.gif' },
+            { nom: 'Écarté haltères', gif: '/gifs/0308-yz9nUhF.gif' },
+            { nom: 'Dips pectoraux', gif: '/gifs/0251-9WTm7dq.gif' },
+            { nom: 'Pompes', gif: '/gifs/0662-I4hDWkc.gif' },
+            { nom: 'Cable Fly', gif: '/gifs/0179-FVmZVhk.gif' },
+            { nom: 'Développé décliné', gif: '/gifs/0753-ETZfAbZ.gif' },
+            { nom: 'Pec Deck', gif: null },
+            { nom: 'Push-up incliné', gif: '/gifs/0493-B1EVP9F.gif' },
+        ],
+        'Dos': [
+            { nom: 'Tractions pronation', gif: '/gifs/0652-lBDjFxJ.gif' },
+            { nom: 'Tractions supination', gif: '/gifs/1326-T2mxWqc.gif' },
+            { nom: 'Rowing barre', gif: '/gifs/0027-eZyBC3j.gif' },
+            { nom: 'Rowing haltère', gif: '/gifs/0293-BJ0Hz5L.gif' },
+            { nom: 'Tirage vertical', gif: '/gifs/0673-ecpY0rH.gif' },
+            { nom: 'Soulevé de terre', gif: '/gifs/1010-KUaoUV8.gif' },
+            { nom: 'Tirage poulie basse', gif: '/gifs/0861-fUBheHs.gif' },
+            { nom: 'Pull-over haltère', gif: '/gifs/2285-4U7iLb5.gif' },
+            { nom: 'T-Bar Row', gif: '/gifs/1349-BgljGjd.gif' },
+            { nom: 'Shrug', gif: '/gifs/1018-trmte8s.gif' },
+        ],
+        'Épaules': [
+            { nom: 'Développé militaire barre', gif: '/gifs/0091-kTbSH9h.gif' },
+            { nom: 'Développé militaire haltères', gif: '/gifs/0405-znQUdHY.gif' },
+            { nom: 'Élévations latérales', gif: '/gifs/0178-goJ6ezq.gif' },
+            { nom: 'Élévations frontales', gif: '/gifs/0310-3eGE2JC.gif' },
+            { nom: 'Arnold Press', gif: '/gifs/2137-Xy4jlWA.gif' },
+            { nom: 'Reverse Fly haltères', gif: '/gifs/0383-EAs3xL9.gif' },
+            { nom: 'Upright Row', gif: '/gifs/0246-cALKspW.gif' },
+            { nom: 'Machine Press épaules', gif: '/gifs/0603-67n3r98.gif' },
+            { nom: 'Shrug', gif: '/gifs/1018-trmte8s.gif' },
+            { nom: 'Oiseau (Rear Delt)', gif: '/gifs/0993-sTfvVsG.gif' },
+        ],
+        'Biceps': [
+            { nom: 'Curl barre', gif: '/gifs/0031-25GPyDY.gif' },
+            { nom: 'Curl haltères alterné', gif: '/gifs/0285-BU15nH4.gif' },
+            { nom: 'Curl marteau', gif: '/gifs/0313-slDvUAU.gif' },
+            { nom: 'Curl concentré', gif: '/gifs/0297-gvsWLQw.gif' },
+            { nom: 'Curl poulie basse', gif: '/gifs/0868-G08RZcQ.gif' },
+            { nom: 'Curl EZ barre', gif: '/gifs/0447-6TG6x2w.gif' },
+            { nom: 'Curl incliné', gif: '/gifs/0318-ae9UoXQ.gif' },
+            { nom: 'Drag Curl', gif: '/gifs/1632-dXz8zjF.gif' },
+            { nom: 'Spider Curl', gif: '/gifs/0454-Ye5Qxb0.gif' },
+            { nom: 'Curl prise inversée', gif: '/gifs/0206-eOG0r6v.gif' },
+        ],
+        'Triceps': [
+            { nom: 'Dips triceps', gif: '/gifs/0814-X6C6i5Y.gif' },
+            { nom: 'Extension poulie haute', gif: '/gifs/0201-3ZflifB.gif' },
+            { nom: 'Barre au front', gif: '/gifs/1721-yRLPCLu.gif' },
+            { nom: 'Extension haltère', gif: '/gifs/1738-5fKX7wi.gif' },
+            { nom: 'Close Grip Bench Press', gif: '/gifs/1719-gx7s7uF.gif' },
+            { nom: 'Kickback', gif: '/gifs/0860-HEJ6DIX.gif' },
+            { nom: 'Diamond Push-up', gif: '/gifs/0283-soIB2rj.gif' },
+            { nom: 'Extension corde', gif: '/gifs/0200-dU605di.gif' },
+            { nom: 'French Press', gif: '/gifs/1749-1cTf2Ux.gif' },
+            { nom: 'Overhead Cable Extension', gif: '/gifs/1722-1xHyxys.gif' },
+        ],
+        'Jambes': [
+            { nom: 'Squat barre', gif: '/gifs/0043-qXTaZnJ.gif' },
+            { nom: 'Leg Press', gif: '/gifs/0760-7zdxRTl.gif' },
+            { nom: 'Fentes', gif: '/gifs/0054-t8iSghb.gif' },
+            { nom: 'Leg Extension', gif: '/gifs/0585-my33uHU.gif' },
+            { nom: 'Leg Curl', gif: '/gifs/0586-17lJ1kr.gif' },
+            { nom: 'Soulevé de terre roumain', gif: '/gifs/0085-wQ2c4XD.gif' },
+            { nom: 'Hack Squat', gif: '/gifs/0743-Qa55kX1.gif' },
+            { nom: 'Gobelet Squat', gif: '/gifs/1760-yn8yg1r.gif' },
+            { nom: 'Hip Thrust', gif: '/gifs/3236-Pjbc0Kt.gif' },
+            { nom: 'Squat sumo', gif: '/gifs/3142-dzz6BiV.gif' },
+        ],
+        'Mollets': [
+            { nom: 'Mollets debout', gif: '/gifs/1375-yl2IYyy.gif' },
+            { nom: 'Mollets assis', gif: '/gifs/2335-Ie9UGty.gif' },
+            { nom: 'Mollets à la presse', gif: '/gifs/2289-7B4F5nZ.gif' },
+            { nom: 'Single Leg Calf Raise', gif: '/gifs/0999-9JprnPh.gif' },
+            { nom: 'Donkey Calf Raise', gif: '/gifs/0284-u5ESqzH.gif' },
+        ],
+        'Abdominaux': [
+            { nom: 'Crunch', gif: '/gifs/2429-FFRP97T.gif' },
+            { nom: 'Planche', gif: '/gifs/3665-hCjGsRQ.gif' },
+            { nom: 'Relevé de jambes suspendu', gif: '/gifs/0472-I3tsCnC.gif' },
+            { nom: 'Russian Twist', gif: '/gifs/0687-XVDdcoj.gif' },
+            { nom: 'Ab Wheel', gif: '/gifs/0103-xnInPfE.gif' },
+            { nom: 'Mountain Climbers', gif: '/gifs/2466-9c6T1YX.gif' },
+            { nom: 'Bicycle Crunch', gif: '/gifs/0972-tZkGYZ9.gif' },
+            { nom: 'Leg Raise couché', gif: '/gifs/0689-Hgs6Nl1.gif' },
+            { nom: 'Cable Crunch', gif: '/gifs/0223-q2ADGqV.gif' },
+            { nom: 'Dragon Flag', gif: null },
+        ],
+    },
+    'Street Workout': {
+        'Street Workout': [
+            { nom: 'Tractions pronation', gif: '/gifs/0652-lBDjFxJ.gif' },
+            { nom: 'Tractions supination', gif: '/gifs/1326-T2mxWqc.gif' },
+            { nom: 'Dips', gif: '/gifs/0251-9WTm7dq.gif' },
+            { nom: 'Pompes', gif: '/gifs/0662-I4hDWkc.gif' },
+            { nom: 'Diamond Push-up', gif: '/gifs/0283-soIB2rj.gif' },
+            { nom: 'Pike Push-up', gif: '/gifs/1296-sVvXT5J.gif' },
+            { nom: 'Muscle-up', gif: '/gifs/0631-yJUHKTn.gif' },
+            { nom: 'L-sit', gif: '/gifs/3419-UpWmA5E.gif' },
+            { nom: 'Pistol Squat', gif: '/gifs/0544-5bpPTHv.gif' },
+            { nom: 'Planche', gif: '/gifs/3665-hCjGsRQ.gif' },
+            { nom: 'Burpee', gif: '/gifs/1160-dK9394r.gif' },
+            { nom: 'Front Lever', gif: '/gifs/3295-hbY9wqG.gif' },
+        ],
+    },
+    'Course à pied': {
+        'Type de séance': [
+            { nom: 'Endurance fondamentale', gif: null },
+            { nom: 'Sortie longue', gif: null },
+            { nom: 'Fractionné court', gif: null },
+            { nom: 'Fractionné long', gif: null },
+            { nom: 'Tempo run', gif: null },
+            { nom: 'Côtes', gif: null },
+            { nom: 'Récupération active', gif: null },
+            { nom: 'Trail', gif: null },
+            { nom: 'Fartlek', gif: null },
+        ],
+    },
 };
-const MUSCU_PARTS = ['chest', 'back', 'shoulders', 'upper arms', 'lower arms', 'upper legs', 'lower legs', 'waist'];
-const SW_PARTS    = ['chest', 'back', 'shoulders', 'upper arms', 'upper legs', 'waist'];
-const RUNNING_SESSIONS = [
-    'Endurance fondamentale', 'Sortie longue', 'Fractionné court', 'Fractionné long',
-    'Tempo run', 'Côtes', 'Récupération active', 'Trail', 'Fartlek'
-];
-
-async function loadExercises() {
-    if (allExercises) return allExercises;
-    const res = await fetch('/data/exercises.json');
-    allExercises = await res.json();
-    return allExercises;
-}
-
-function groupExercises(exercises, sport) {
-    const parts = sport === 'Street Workout' ? SW_PARTS : MUSCU_PARTS;
-    const filtered = sport === 'Street Workout'
-        ? exercises.filter(e => e.equipment === 'body weight' && SW_PARTS.includes(e.body_part))
-        : exercises.filter(e => MUSCU_PARTS.includes(e.body_part));
-    const grouped = {};
-    parts.forEach(part => {
-        const exs = filtered.filter(e => e.body_part === part);
-        if (exs.length) grouped[BODY_PART_FR[part]] = exs;
-    });
-    return grouped;
-}
 
 let selectedSport = null;
 let exerciceCount = 0;
@@ -751,38 +836,26 @@ function getFieldsHTML(sport) {
     return html;
 }
 
-async function addExercice() {
+function addExercice() {
     exerciceCount++;
     const sport = selectedSport || 'Musculation';
-    const num = exerciceCount;
-
-    const div = document.createElement('div');
-    div.className = 'exercice-form';
-    div.innerHTML = `<div style="text-align:center;padding:1rem;color:var(--muted);font-size:0.85rem;display:flex;align-items:center;justify-content:center;gap:0.5rem"><div class="spinner"></div>Chargement…</div>`;
-    document.getElementById('exercices-container').appendChild(div);
-
-    let grouped;
-    if (sport === 'Course à pied') {
-        grouped = { 'Type de séance': RUNNING_SESSIONS.map(n => ({ name: n, gif_url: null })) };
-    } else {
-        const exercises = await loadExercises();
-        grouped = groupExercises(exercises, sport);
-    }
-
-    const categories = Object.keys(grouped);
+    const sportDB = EXERCISE_DB[sport] || {};
+    const categories = Object.keys(sportDB);
     const firstCat = categories[0];
-    const firstExercises = grouped[firstCat] || [];
+    const firstExercises = sportDB[firstCat] || [];
     const firstEx = firstExercises[0];
-    const firstImg = firstEx?.gif_url ? '/gifs/' + firstEx.gif_url.split('/').pop() : null;
+    const firstImg = firstEx?.gif || null;
 
     const catOptions = categories.map(c => `<option value="${c}">${c}</option>`).join('');
     const exOptions = firstExercises.map(e =>
-        `<option value="${e.name}" data-img="${e.gif_url ? '/gifs/' + e.gif_url.split('/').pop() : ''}">${e.name}</option>`
+        `<option value="${e.nom}" data-img="${e.gif || ''}">${e.nom}</option>`
     ).join('');
 
+    const div = document.createElement('div');
+    div.className = 'exercice-form';
     div.innerHTML = `
         <div class="exercice-header">
-            <span class="exercice-num">Exercice ${num}</span>
+            <span class="exercice-num">Exercice ${exerciceCount}</span>
             <button class="remove-btn" onclick="this.closest('.exercice-form').remove()">✕</button>
         </div>
         ${categories.length > 1 ? `<label>Catégorie</label><select class="ex-category" onchange="updateExerciceList(this)">${catOptions}</select>` : ''}
@@ -795,17 +868,16 @@ async function addExercice() {
         <label>Notes</label>
         <input type="text" class="ex-notes" placeholder="Optionnel" style="margin-bottom:0">
     `;
+    document.getElementById('exercices-container').appendChild(div);
 }
 
-async function updateExerciceList(categorySelect) {
+function updateExerciceList(categorySelect) {
     const form = categorySelect.closest('.exercice-form');
     const sport = selectedSport || 'Musculation';
-    const exercises = await loadExercises();
-    const grouped = groupExercises(exercises, sport);
-    const exs = grouped[categorySelect.value] || [];
+    const exs = EXERCISE_DB[sport]?.[categorySelect.value] || [];
     const exSelect = form.querySelector('.ex-nom-select');
     exSelect.innerHTML = exs.map(e =>
-        `<option value="${e.name}" data-img="${e.gif_url ? '/gifs/' + e.gif_url.split('/').pop() : ''}">${e.name}</option>`
+        `<option value="${e.nom}" data-img="${e.gif || ''}">${e.nom}</option>`
     ).join('');
     updateExercicePreview(exSelect);
 }
