@@ -389,6 +389,22 @@
         .btn-log-set:hover { background: rgba(56,189,248,0.18); }
 
         .sets-logged { margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.4rem; }
+        .rest-timer-display {
+            display: none;
+            text-align: center;
+            padding: 0.5rem 0;
+            font-size: 0.85rem;
+            color: var(--muted);
+            letter-spacing: 0.03em;
+        }
+        .rest-timer-display.active { display: block; }
+        .rest-timer-display .rest-time {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        .rest-timer-display.long .rest-time { color: var(--accent2); }
 
         .set-row {
             display: flex;
@@ -1151,6 +1167,7 @@ function getFieldsHTML(sport) {
         </div>
         ${poidsHTML}
         <button type="button" class="btn-log-set" onclick="logSet(this.closest('.exercice-form'))">✓ Logger la série</button>
+        <div class="rest-timer-display">⏱ Repos : <span class="rest-time">0:00</span></div>
         <div class="sets-logged"></div>`;
 }
 
@@ -1164,6 +1181,19 @@ function adjustPoids(form, delta) {
     const el = form.querySelector('.poids-val');
     const next = Math.max(0, Math.round((parseFloat(el.textContent) + delta) * 10) / 10);
     el.textContent = next % 1 === 0 ? next : next.toFixed(1);
+}
+
+let _restInterval = null;
+
+function _tickRestTimers() {
+    document.querySelectorAll('.rest-timer-display.active').forEach(el => {
+        const t = parseInt(el.dataset.start);
+        if (!t) return;
+        const elapsed = Math.floor((Date.now() - t) / 1000);
+        const m = Math.floor(elapsed / 60), s = elapsed % 60;
+        el.querySelector('.rest-time').textContent = `${m}:${String(s).padStart(2,'0')}`;
+        el.classList.toggle('long', elapsed >= 120);
+    });
 }
 
 function logSet(form) {
@@ -1191,6 +1221,15 @@ function logSet(form) {
 
     form.querySelectorAll('.rep-chip').forEach(c => c.classList.remove('selected'));
     delete form.dataset.selectedReps;
+
+    const timerEl = form.querySelector('.rest-timer-display');
+    if (timerEl) {
+        timerEl.dataset.start = Date.now();
+        timerEl.querySelector('.rest-time').textContent = '0:00';
+        timerEl.classList.remove('long');
+        timerEl.classList.add('active');
+        if (!_restInterval) _restInterval = setInterval(_tickRestTimers, 1000);
+    }
 }
 
 function renumberSets(container) {
