@@ -487,6 +487,29 @@
 
         .chrono-btn:hover { opacity: 0.85; }
         .chrono-reset { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+
+        /* ─── SPLITS ─── */
+        .splits-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-bottom: 0.75rem;
+        }
+        .split-chip {
+            background: rgba(56,189,248,0.06);
+            border: 1px solid rgba(56,189,248,0.15);
+            border-radius: 6px;
+            padding: 0.2rem 0.5rem;
+            font-size: 0.78rem;
+            color: var(--text);
+            display: flex;
+            gap: 0.3rem;
+            align-items: center;
+        }
+        .split-km {
+            color: var(--muted);
+            font-size: 0.72rem;
+        }
     </style>
 </head>
 <body>
@@ -976,7 +999,11 @@ async function handleAppleHealthImport(event) {
         date:       r.startDate.substring(0, 10),
         duration:   r.duration,
         distanceKm: r.distanceKm,
-        calories:   r.calories
+        calories:   r.calories,
+        hrAvg:      r.hrAvg,
+        hrMax:      r.hrMax,
+        pace:       r.paceMinKm,
+        splits:     r.splits || []
     })).filter(w => w.startDate);
 
     if (!workouts.length) {
@@ -1003,6 +1030,10 @@ async function handleAppleHealthImport(event) {
             duree_min:   Math.round(w.duration),
             distance_km: w.distanceKm,
             calories:    w.calories,
+            hr_avg:      w.hrAvg,
+            hr_max:      w.hrMax,
+            pace:        w.pace,
+            splits:      w.splits.length ? w.splits : null,
             source:      'apple_health',
             external_id: w.startDate
         }));
@@ -1066,9 +1097,12 @@ async function loadHistorique() {
             <div class="seance-meta">
                 ${s.duree_min ? `<span class="meta-chip">⏱ ${s.duree_min} min</span>` : ''}
                 ${s.distance_km ? `<span class="meta-chip">📍 ${s.distance_km} km</span>` : ''}
+                ${s.pace ? `<span class="meta-chip">↗ ${s.pace}/km</span>` : ''}
+                ${s.hr_avg ? `<span class="meta-chip">❤ ${s.hr_avg}/${s.hr_max} bpm</span>` : ''}
                 ${s.calories ? `<span class="meta-chip">🔥 ${s.calories} kcal</span>` : ''}
                 ${s.exercices?.length ? `<span class="meta-chip">${s.exercices.length} exercice${s.exercices.length > 1 ? 's' : ''}</span>` : ''}
             </div>
+            ${s.splits?.length ? `<div class="splits-wrap">${s.splits.map(sp => `<span class="split-chip"><span class="split-km">${sp.km}km</span>${sp.pace}</span>`).join('')}</div>` : ''}
             ${s.notes ? `<div style="font-size:0.85rem;color:var(--muted);margin-bottom:0.75rem">${s.notes}</div>` : ''}
             ${exHTML ? `<div class="exercice-list">${exHTML}</div>` : ''}
         </div>`;
