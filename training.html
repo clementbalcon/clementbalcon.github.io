@@ -396,6 +396,32 @@
         .set-remove { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 0.9rem; padding: 0.1rem 0.3rem; }
         .set-remove:hover { color: #f87171; }
 
+        /* ─── DERNIÈRE SÉANCE ─── */
+        .last-session {
+            display: none;
+            background: rgba(56,189,248,0.04);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.6rem 0.75rem;
+            margin-bottom: 0.75rem;
+            font-size: 0.82rem;
+        }
+        .last-date { color: var(--muted); font-size: 0.75rem; }
+        .last-sets { color: var(--text); font-weight: 500; margin-top: 0.2rem; }
+        .btn-reprendre {
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--accent);
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.6rem;
+            margin-top: 0.4rem;
+            transition: background 0.15s;
+        }
+        .btn-reprendre:hover { background: rgba(56,189,248,0.08); }
+
         /* ─── HISTORIQUE ─── */
         .seance-card {
             background: var(--card);
@@ -1169,6 +1195,7 @@ function addExercice() {
         <div class="ex-preview" style="${firstImg ? 'display:block' : 'display:none'}">
             ${firstImg ? `<img src="${firstImg}" onerror="this.closest('.ex-preview').style.display='none'">` : ''}
         </div>
+        <div class="last-session"></div>
         ${getFieldsHTML(sport)}
         <label>Notes</label>
         <input type="text" class="ex-notes" placeholder="Optionnel" style="margin-bottom:0">
@@ -1197,6 +1224,61 @@ function updateExercicePreview(exSelect) {
     } else {
         preview.style.display = 'none';
     }
+    fetchLastSession(exSelect.value, form);
+}
+
+async function fetchLastSession(nom, form) {
+    const lastEl = form.querySelector('.last-session');
+    if (!lastEl) return;
+    lastEl.style.display = 'none';
+
+    const { data } = await db
+        .from('exercices')
+        .select('series, reps, poids_kg, seance_id, seances(date)')
+        .eq('nom', nom);
+
+    if (!data?.length) return;
+
+    data.sort((a, b) => (b.seances?.date || '').localeCompare(a.seances?.date || ''));
+    const latestSeanceId = data[0].seance_id;
+    const latestDate = data[0].seances?.date;
+    const latestSets = data
+        .filter(e => e.seance_id === latestSeanceId && e.reps)
+        .sort((a, b) => (a.series || 0) - (b.series || 0));
+
+    if (!latestSets.length) return;
+
+    const dateStr = new Date(latestDate + 'T00:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+    const setsStr = latestSets.map(e => e.poids_kg ? `${e.reps}×${e.poids_kg}kg` : `${e.reps} reps`).join(' · ');
+
+    lastEl.dataset.sets = JSON.stringify(latestSets);
+    lastEl.innerHTML = `
+        <div class="last-date">Dernière fois · ${dateStr}</div>
+        <div class="last-sets">${setsStr}</div>
+        <button type="button" class="btn-reprendre" onclick="reprendreSets(this.closest('.exercice-form'))">↩ Reprendre ces séries</button>`;
+    lastEl.style.display = 'block';
+}
+
+function reprendreSets(form) {
+    const lastEl = form.querySelector('.last-session');
+    const sets = JSON.parse(lastEl.dataset.sets || '[]');
+    const container = form.querySelector('.sets-logged');
+    container.innerHTML = '';
+
+    sets.forEach((s, i) => {
+        const poidsEl = form.querySelector('.poids-val');
+        if (poidsEl && s.poids_kg) poidsEl.textContent = s.poids_kg;
+
+        const row = document.createElement('div');
+        row.className = 'set-row';
+        row.dataset.reps = s.reps;
+        row.dataset.poids = s.poids_kg || '';
+        row.innerHTML = `
+            <span class="set-num">Série ${i + 1}</span>
+            <span class="set-detail">${s.reps} reps${s.poids_kg ? ` × ${s.poids_kg} kg` : ''}</span>
+            <button class="set-remove" onclick="this.closest('.set-row').remove(); renumberSets(this.closest('.sets-logged'))">×</button>`;
+        container.appendChild(row);
+    });
 }
 
 // ─── SAVE SÉANCE ───
