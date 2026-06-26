@@ -1926,11 +1926,11 @@ async function saveManualRecord() {
 async function loadHistorique() {
     const container = document.getElementById('historique-list');
 
-    const { data: seances } = await db.from('seances')
+    const { data: rawSeances } = await db.from('seances')
         .select('*, exercices(*)')
-        .or('source.is.null,source.neq.record_manuel')
         .order('date', { ascending: false })
-        .limit(50);
+        .limit(100);
+    const seances = (rawSeances || []).filter(s => s.source !== 'record_manuel');
 
     if (!seances?.length) {
         container.innerHTML = `<div class="empty-state"><div class="empty-icon">🏁</div>Aucune séance enregistrée.</div>`;
