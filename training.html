@@ -967,8 +967,11 @@ async function handleAppleHealthImport(event) {
     const text = await file.text();
     const parser = new DOMParser();
 
-    // Strip DOCTYPE block which causes XML parser to fail in browsers
-    const cleanText = text.replace(/<!DOCTYPE[\s\S]*?\]>/m, '');
+    // Strip DOCTYPE block (browser XML parser can't handle Apple Health's internal DTD)
+    const doctypeEnd = text.indexOf(']>');
+    const cleanText = doctypeEnd !== -1
+        ? '<?xml version="1.0" encoding="UTF-8"?>' + text.substring(doctypeEnd + 2)
+        : text;
     const xml = parser.parseFromString(cleanText, 'text/xml');
 
     // Check for parse error
