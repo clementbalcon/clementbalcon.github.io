@@ -1928,7 +1928,7 @@ async function loadHistorique() {
 
     const { data: seances } = await db.from('seances')
         .select('*, exercices(*)')
-        .neq('source', 'record_manuel')
+        .or('source.is.null,source.neq.record_manuel')
         .order('date', { ascending: false })
         .limit(50);
 
