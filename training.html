@@ -968,7 +968,9 @@ async function handleAppleHealthImport(event) {
     const parser = new DOMParser();
     const xml = parser.parseFromString(text, 'text/xml');
 
-    const workouts = Array.from(xml.querySelectorAll('Workout[workoutActivityType="HKWorkoutActivityTypeRunning"]'));
+    const allWorkouts = Array.from(xml.getElementsByTagName('Workout'));
+    const workouts = allWorkouts.filter(w => w.getAttribute('workoutActivityType') === 'HKWorkoutActivityTypeRunning');
+
     if (!workouts.length) {
         showMsg(importMsg, 'error', 'Aucune course à pied trouvée dans ce fichier.');
         return;
@@ -993,7 +995,8 @@ async function handleAppleHealthImport(event) {
         const date = startDate.substring(0, 10);
 
         let distanceKm = null, calories = null;
-        for (const s of w.querySelectorAll('WorkoutStatistics')) {
+        const stats = Array.from(w.getElementsByTagName('WorkoutStatistics'));
+        for (const s of stats) {
             const type = s.getAttribute('type');
             if (type === 'HKQuantityTypeIdentifierDistanceWalkingRunning')
                 distanceKm = Math.round(parseFloat(s.getAttribute('sum')) * 100) / 100;
