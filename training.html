@@ -966,13 +966,23 @@ async function handleAppleHealthImport(event) {
 
     const text = await file.text();
     const parser = new DOMParser();
-    const xml = parser.parseFromString(text, 'text/xml');
+
+    // Strip DOCTYPE block which causes XML parser to fail in browsers
+    const cleanText = text.replace(/<!DOCTYPE[\s\S]*?\]>/m, '');
+    const xml = parser.parseFromString(cleanText, 'text/xml');
+
+    // Check for parse error
+    const parseErr = xml.querySelector('parsererror');
+    if (parseErr) {
+        showMsg(importMsg, 'error', 'Erreur de lecture XML : ' + parseErr.textContent.substring(0, 100));
+        return;
+    }
 
     const allWorkouts = Array.from(xml.getElementsByTagName('Workout'));
     const workouts = allWorkouts.filter(w => w.getAttribute('workoutActivityType') === 'HKWorkoutActivityTypeRunning');
 
     if (!workouts.length) {
-        showMsg(importMsg, 'error', 'Aucune course à pied trouvée dans ce fichier.');
+        showMsg(importMsg, 'error', `Aucune course trouvée (${allWorkouts.length} séances au total dans le fichier).`);
         return;
     }
 
