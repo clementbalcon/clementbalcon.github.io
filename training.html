@@ -1468,7 +1468,6 @@ let drillMonth = null;
 let drillWeek = null;
 let statsChart = null;
 let chartMonthKeys = [];
-let manualRecords = JSON.parse(localStorage.getItem('records_manuels') || '[]');
 
 async function loadStats() {
     const [{ data: s }, { data: e }] = await Promise.all([
@@ -1505,7 +1504,7 @@ function renderStats() {
 // ── ANALYSE ──────────────────────────────────────────────────────────────────
 
 function renderAnalyse() {
-    const seances = allSeances.filter(s => s.sport === currentSport);
+    const seances = allSeances.filter(s => s.sport === currentSport && s.source !== 'record_manuel');
     renderMetrics(currentSport, seances);
     renderPeriodSelector(seances);
     renderChart(currentSport, seances);
@@ -1730,69 +1729,47 @@ function renderRecords() {
 
     if (currentSport === 'Course à pied') {
         const ranges = [
-            { label: 'RP 5 km', typeKey: '5 km', min: 4.5, max: 5.5 },
-            { label: 'RP 10 km', typeKey: '10 km', min: 9.0, max: 11.0 },
-            { label: 'RP Semi', typeKey: 'Semi', min: 20.0, max: 22.5 },
+            { label: 'RP 5 km', min: 4.5, max: 5.5 },
+            { label: 'RP 10 km', min: 9.0, max: 11.0 },
+            { label: 'RP Semi', min: 20.0, max: 22.5 },
         ];
         const cards = ranges.map(r => {
-            // Supabase best
             const matches = allSeances.filter(s => s.sport === 'Course à pied' && s.distance_km >= r.min && s.distance_km <= r.max && s.pace);
-            let bestSec = Infinity, bestSub = '';
-            if (matches.length) {
-                const best = matches.reduce((b, s) => parseTimeToSec(s.pace) < parseTimeToSec(b.pace) ? s : b);
-                const [pm, ps] = best.pace.split(':').map(Number);
-                bestSec = best.distance_km * (pm*60 + ps);
-                bestSub = `${best.pace}/km — ${best.date}`;
-            }
-            // Manual best
-            const manMatches = manualRecords.filter(rec => rec.sport === 'Course à pied' && rec.type === r.typeKey && rec.time);
-            let manBestSec = Infinity, manBestSub = '';
-            if (manMatches.length) {
-                const best = manMatches.reduce((b, rec) => parseTimeToSec(rec.time) < parseTimeToSec(b.time) ? rec : b);
-                manBestSec = parseTimeToSec(best.time);
-                manBestSub = best.date + ' ✏️';
-            }
-            if (bestSec === Infinity && manBestSec === Infinity)
-                return `<div class="stat-card"><div class="stat-label">${r.label}</div><div class="stat-value" style="color:#94a3b8">—</div><div class="stat-sub">${r.typeKey}</div></div>`;
-            const winSec = manBestSec < bestSec ? manBestSec : bestSec;
-            const winSub = manBestSec < bestSec ? manBestSub : bestSub;
-            return `<div class="stat-card"><div class="stat-label">${r.label}</div><div class="stat-value orange">${fmtTimeSec(winSec)}</div><div class="stat-sub">${winSub}</div></div>`;
+            if (!matches.length) return `<div class="stat-card"><div class="stat-label">${r.label}</div><div class="stat-value" style="color:#94a3b8">—</div></div>`;
+            const best = matches.reduce((b, s) => parseTimeToSec(s.pace) < parseTimeToSec(b.pace) ? s : b);
+            const [pm, ps] = best.pace.split(':').map(Number);
+            const bestSec = best.distance_km * (pm*60 + ps);
+            const badge = best.source === 'record_manuel' ? ' ✏️' : '';
+            const sub = best.source === 'record_manuel' ? `${best.date}${badge}` : `${best.pace}/km — ${best.date}`;
+            return `<div class="stat-card"><div class="stat-label">${r.label}</div><div class="stat-value orange">${fmtTimeSec(bestSec)}</div><div class="stat-sub">${sub}</div></div>`;
         });
         el.innerHTML = header + `<div class="stats-grid">${cards.join('')}</div>`;
 
     } else if (currentSport === 'Musculation') {
-        const supaEx = allExercices.filter(e => e.nom && e.nom.toLowerCase().includes('développé couché') && e.poids_kg);
-        const manEx  = manualRecords.filter(r => r.sport === 'Musculation' && r.nom && r.nom.toLowerCase().includes('développé couché') && r.poids_kg);
-        let bestPoids = 0, bestSub = '';
-        if (supaEx.length) {
-            const b = supaEx.reduce((x, e) => e.poids_kg > x.poids_kg ? e : x);
-            if (b.poids_kg > bestPoids) { bestPoids = b.poids_kg; const seance = allSeances.find(s => s.id === b.seance_id); bestSub = `${b.reps} rep${b.reps > 1 ? 's' : ''}${seance ? ' — ' + seance.date : ''}`; }
+        const candidates = allExercices.filter(e => e.nom && e.nom.toLowerCase().includes('développé couché') && e.poids_kg);
+        let inner;
+        if (!candidates.length) {
+            inner = `<div class="stat-value" style="color:#94a3b8">—</div>`;
+        } else {
+            const best = candidates.reduce((b, e) => e.poids_kg > b.poids_kg ? e : b);
+            const seance = allSeances.find(s => s.id === best.seance_id);
+            const badge = seance?.source === 'record_manuel' ? ' ✏️' : '';
+            inner = `<div class="stat-value orange">${best.poids_kg} <span style="font-size:1rem">kg</span></div><div class="stat-sub">${best.reps} rep${best.reps > 1 ? 's' : ''} — ${seance?.date || ''}${badge}</div>`;
         }
-        if (manEx.length) {
-            const b = manEx.reduce((x, e) => e.poids_kg > x.poids_kg ? e : x);
-            if (b.poids_kg > bestPoids) { bestPoids = b.poids_kg; bestSub = `${b.reps || '?'} reps — ${b.date} ✏️`; }
-        }
-        el.innerHTML = header + `<div class="stats-grid"><div class="stat-card wide">
-            <div class="stat-label">Max Développé couché</div>
-            ${bestPoids > 0 ? `<div class="stat-value orange">${bestPoids} <span style="font-size:1rem">kg</span></div><div class="stat-sub">${bestSub}</div>` : `<div class="stat-value" style="color:#94a3b8">—</div>`}
-        </div></div>`;
+        el.innerHTML = header + `<div class="stats-grid"><div class="stat-card wide"><div class="stat-label">Max Développé couché</div>${inner}</div></div>`;
 
     } else if (currentSport === 'Street Workout') {
-        const supaEx = allExercices.filter(e => e.nom && e.nom.toLowerCase().includes('muscle up') && e.reps);
-        const manEx  = manualRecords.filter(r => r.sport === 'Street Workout' && r.nom && r.nom.toLowerCase().includes('muscle up') && r.reps);
-        let bestReps = 0, bestSub = '';
-        if (supaEx.length) {
-            const b = supaEx.reduce((x, e) => e.reps > x.reps ? e : x);
-            if (b.reps > bestReps) { bestReps = b.reps; const seance = allSeances.find(s => s.id === b.seance_id); bestSub = seance?.date || ''; }
+        const candidates = allExercices.filter(e => e.nom && e.nom.toLowerCase().includes('muscle up') && e.reps);
+        let inner;
+        if (!candidates.length) {
+            inner = `<div class="stat-value" style="color:#94a3b8">—</div>`;
+        } else {
+            const best = candidates.reduce((b, e) => e.reps > b.reps ? e : b);
+            const seance = allSeances.find(s => s.id === best.seance_id);
+            const badge = seance?.source === 'record_manuel' ? ' ✏️' : '';
+            inner = `<div class="stat-value orange">${best.reps}</div><div class="stat-sub">${seance?.date || ''}${badge}</div>`;
         }
-        if (manEx.length) {
-            const b = manEx.reduce((x, e) => e.reps > x.reps ? e : x);
-            if (b.reps > bestReps) { bestReps = b.reps; bestSub = `${b.date} ✏️`; }
-        }
-        el.innerHTML = header + `<div class="stats-grid"><div class="stat-card wide">
-            <div class="stat-label">Max Muscle Ups d'affilée</div>
-            ${bestReps > 0 ? `<div class="stat-value orange">${bestReps}</div><div class="stat-sub">${bestSub}</div>` : `<div class="stat-value" style="color:#94a3b8">—</div>`}
-        </div></div>`;
+        el.innerHTML = header + `<div class="stats-grid"><div class="stat-card wide"><div class="stat-label">Max Muscle Ups d'affilée</div>${inner}</div></div>`;
     }
 }
 
@@ -1834,31 +1811,38 @@ function openRecordModal() {
     }
 }
 
-function saveManualRecord() {
+async function saveManualRecord() {
     const date = document.getElementById('rec-date')?.value || new Date().toISOString().slice(0,10);
-    let record = { id: Date.now().toString(), sport: currentSport, date };
+    const { data: { user } } = await db.auth.getUser();
+    const uid = user.id;
+
     if (currentSport === 'Course à pied') {
         const active = document.querySelector('#rtype-5k.active, #rtype-10k.active, #rtype-semi.active');
         const type = active?.textContent?.trim() || '5 km';
         const time = document.getElementById('rec-time')?.value?.trim();
         if (!time) return;
-        record = { ...record, type, time };
+        const distMap = { '5 km': 5.0, '10 km': 10.0, 'Semi': 21.097 };
+        const distKm = distMap[type] || 5.0;
+        const totalSec = parseTimeToSec(time);
+        const paceSec = totalSec / distKm;
+        const pace = `${Math.floor(paceSec/60)}:${String(Math.round(paceSec%60)).padStart(2,'0')}`;
+        await db.from('seances').insert({ user_id: uid, sport: 'Course à pied', date, distance_km: distKm, pace, duree_min: Math.round(totalSec/60), source: 'record_manuel', notes: type });
     } else if (currentSport === 'Musculation') {
         const nom = document.getElementById('rec-nom')?.value?.trim();
         const poids_kg = parseFloat(document.getElementById('rec-poids')?.value);
         const reps = parseInt(document.getElementById('rec-reps')?.value);
         if (!nom || isNaN(poids_kg)) return;
-        record = { ...record, nom, poids_kg, reps };
+        const { data: seance } = await db.from('seances').insert({ user_id: uid, sport: 'Musculation', date, source: 'record_manuel', notes: nom }).select().single();
+        if (seance) await db.from('exercices').insert({ seance_id: seance.id, nom, poids_kg, reps, series: 1 });
     } else {
         const nom = document.getElementById('rec-nom')?.value?.trim();
         const reps = parseInt(document.getElementById('rec-reps')?.value);
         if (!nom || isNaN(reps)) return;
-        record = { ...record, nom, reps };
+        const { data: seance } = await db.from('seances').insert({ user_id: uid, sport: 'Street Workout', date, source: 'record_manuel', notes: nom }).select().single();
+        if (seance) await db.from('exercices').insert({ seance_id: seance.id, nom, reps, series: 1 });
     }
-    manualRecords.push(record);
-    localStorage.setItem('records_manuels', JSON.stringify(manualRecords));
     document.getElementById('record-modal').style.display = 'none';
-    renderRecords();
+    await loadStats();
 }
 
 async function loadHistorique() {
@@ -1866,6 +1850,7 @@ async function loadHistorique() {
 
     const { data: seances } = await db.from('seances')
         .select('*, exercices(*)')
+        .neq('source', 'record_manuel')
         .order('date', { ascending: false })
         .limit(50);
 
