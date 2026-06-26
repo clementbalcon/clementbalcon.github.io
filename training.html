@@ -610,116 +610,45 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const IMG = 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/';
+const EXERCISE_REPO = 'https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/';
+let allExercises = null;
 
-const EXERCISE_DB = {
-    'Musculation': {
-        'Pectoraux': [
-            { nom: 'Développé couché barre',       img: IMG + 'Barbell_Bench_Press_-_Medium_Grip/0.jpg' },
-            { nom: 'Développé couché haltères',    img: IMG + 'Dumbbell_Bench_Press/0.jpg' },
-            { nom: 'Développé incliné barre',      img: IMG + 'Barbell_Incline_Bench_Press_-_Medium_Grip/0.jpg' },
-            { nom: 'Écarté haltères',              img: IMG + 'Dumbbell_Flyes/0.jpg' },
-            { nom: 'Dips pectoraux',               img: IMG + 'Dips_-_Chest_Version/0.jpg' },
-            { nom: 'Pompes',                       img: IMG + 'Push-up/0.jpg' },
-            { nom: 'Cable Fly',                    img: IMG + 'Cable_Fly/0.jpg' },
-        ],
-        'Dos': [
-            { nom: 'Tractions pronation',          img: IMG + 'Pull-up/0.jpg' },
-            { nom: 'Tractions supination',         img: IMG + 'Chin-up/0.jpg' },
-            { nom: 'Rowing barre',                 img: IMG + 'Bent_Over_Barbell_Row/0.jpg' },
-            { nom: 'Rowing haltère',               img: IMG + 'Dumbbell_Bent_Over_Row/0.jpg' },
-            { nom: 'Tirage vertical',              img: IMG + 'Wide-Grip_Lat_Pulldown/0.jpg' },
-            { nom: 'Soulevé de terre',             img: IMG + 'Barbell_Deadlift/0.jpg' },
-            { nom: 'Good Morning',                 img: IMG + 'Good_Morning/0.jpg' },
-        ],
-        'Épaules': [
-            { nom: 'Développé militaire barre',    img: IMG + 'Barbell_Shoulder_Press/0.jpg' },
-            { nom: 'Développé militaire haltères', img: IMG + 'Dumbbell_Shoulder_Press/0.jpg' },
-            { nom: 'Élévations latérales',         img: IMG + 'Side_Lateral_Raise/0.jpg' },
-            { nom: 'Élévations frontales',         img: IMG + 'Dumbbell_Front_Raise/0.jpg' },
-            { nom: 'Arnold Press',                 img: IMG + 'Arnold_Dumbbell_Press/0.jpg' },
-            { nom: 'Oiseau',                       img: IMG + 'Dumbbell_Rear_Delt_Row/0.jpg' },
-        ],
-        'Biceps': [
-            { nom: 'Curl barre',                   img: IMG + 'Barbell_Curl/0.jpg' },
-            { nom: 'Curl haltères alterné',        img: IMG + 'Dumbbell_Alternate_Bicep_Curl/0.jpg' },
-            { nom: 'Curl marteau',                 img: IMG + 'Hammer_Curls/0.jpg' },
-            { nom: 'Curl concentré',               img: IMG + 'Concentration_Curls/0.jpg' },
-            { nom: 'Curl poulie basse',            img: IMG + 'Cable_Hammer_Curls_-_Rope_Attachment/0.jpg' },
-        ],
-        'Triceps': [
-            { nom: 'Dips triceps',                 img: IMG + 'Triceps_Dip/0.jpg' },
-            { nom: 'Extension poulie haute',       img: IMG + 'Pushdown/0.jpg' },
-            { nom: 'Barre au front',               img: IMG + 'Lying_Triceps_Press/0.jpg' },
-            { nom: 'Extension haltère',            img: IMG + 'Dumbbell_Tricep_Extension/0.jpg' },
-            { nom: 'Close Grip Bench Press',       img: IMG + 'Close-grip_EZ-bar_Press/0.jpg' },
-        ],
-        'Jambes': [
-            { nom: 'Squat barre',                  img: IMG + 'Barbell_Squat/0.jpg' },
-            { nom: 'Presse à cuisses',             img: IMG + 'Leg_Press/0.jpg' },
-            { nom: 'Fentes barre',                 img: IMG + 'Barbell_Lunge/0.jpg' },
-            { nom: 'Leg extension',                img: IMG + 'Leg_Extensions/0.jpg' },
-            { nom: 'Leg curl',                     img: IMG + 'Leg_Curl/0.jpg' },
-            { nom: 'Soulevé de terre roumain',     img: IMG + 'Romanian_Deadlift/0.jpg' },
-            { nom: 'Mollets debout',               img: IMG + 'Standing_Calf_Raises/0.jpg' },
-            { nom: 'Hack Squat',                   img: IMG + 'Hack_Squat/0.jpg' },
-        ],
-        'Abdominaux': [
-            { nom: 'Crunch',                       img: IMG + 'Crunch/0.jpg' },
-            { nom: 'Planche',                      img: IMG + 'Plank/0.jpg' },
-            { nom: 'Relevé de jambes suspendu',    img: IMG + 'Hanging_Leg_Raise/0.jpg' },
-            { nom: 'Russian Twist',                img: IMG + 'Russian_Twist/0.jpg' },
-            { nom: 'Ab Wheel',                     img: IMG + 'Ab_Roller/0.jpg' },
-        ],
-    },
-    'Street Workout': {
-        'Tirage': [
-            { nom: 'Tractions pronation',          img: IMG + 'Pull-up/0.jpg' },
-            { nom: 'Tractions supination',         img: IMG + 'Chin-up/0.jpg' },
-            { nom: 'Tractions neutres',            img: null },
-            { nom: 'Archer pull-up',               img: null },
-            { nom: 'L-sit pull-up',                img: null },
-        ],
-        'Poussée': [
-            { nom: 'Pompes',                       img: IMG + 'Push-up/0.jpg' },
-            { nom: 'Dips',                         img: IMG + 'Dips_-_Chest_Version/0.jpg' },
-            { nom: 'Diamond push-up',              img: IMG + 'Close-Grip_Push-Up/0.jpg' },
-            { nom: 'Pike push-up',                 img: null },
-            { nom: 'Handstand push-up',            img: null },
-        ],
-        'Gainage': [
-            { nom: 'Planche',                      img: IMG + 'Plank/0.jpg' },
-            { nom: 'L-sit',                        img: null },
-            { nom: 'Dragon flag',                  img: null },
-            { nom: 'Relevé de jambes suspendu',    img: IMG + 'Hanging_Leg_Raise/0.jpg' },
-        ],
-        'Skills': [
-            { nom: 'Muscle-up',                    img: null },
-            { nom: 'Front lever',                  img: null },
-            { nom: 'Back lever',                   img: null },
-            { nom: 'Handstand',                    img: null },
-        ],
-        'Jambes': [
-            { nom: 'Pistol squat',                 img: null },
-            { nom: 'Squat jump',                   img: IMG + 'Jump_Squat/0.jpg' },
-            { nom: 'Burpee',                       img: IMG + 'Burpees/0.jpg' },
-            { nom: 'Fentes',                       img: IMG + 'Barbell_Lunge/0.jpg' },
-        ],
-    },
-    'Course à pied': {
-        'Type de séance': [
-            { nom: 'Endurance fondamentale',       img: null },
-            { nom: 'Sortie longue',                img: null },
-            { nom: 'Fractionné court',             img: null },
-            { nom: 'Fractionné long',              img: null },
-            { nom: 'Tempo run',                    img: null },
-            { nom: 'Côtes',                        img: null },
-            { nom: 'Récupération active',          img: null },
-            { nom: 'Trail',                        img: null },
-            { nom: 'Fartlek',                      img: null },
-        ],
-    },
+const BODY_PART_FR = {
+    'chest':       'Pectoraux',
+    'back':        'Dos',
+    'shoulders':   'Épaules',
+    'upper arms':  'Bras',
+    'lower arms':  'Avant-bras',
+    'upper legs':  'Jambes',
+    'lower legs':  'Mollets',
+    'waist':       'Abdominaux',
 };
+const MUSCU_PARTS = ['chest', 'back', 'shoulders', 'upper arms', 'lower arms', 'upper legs', 'lower legs', 'waist'];
+const SW_PARTS    = ['chest', 'back', 'shoulders', 'upper arms', 'upper legs', 'waist'];
+const RUNNING_SESSIONS = [
+    'Endurance fondamentale', 'Sortie longue', 'Fractionné court', 'Fractionné long',
+    'Tempo run', 'Côtes', 'Récupération active', 'Trail', 'Fartlek'
+];
+
+async function loadExercises() {
+    if (allExercises) return allExercises;
+    const res = await fetch(EXERCISE_REPO + 'data/exercises.json');
+    allExercises = await res.json();
+    return allExercises;
+}
+
+function groupExercises(exercises, sport) {
+    const parts = sport === 'Street Workout' ? SW_PARTS : MUSCU_PARTS;
+    const filtered = sport === 'Street Workout'
+        ? exercises.filter(e => e.equipment === 'body weight' && SW_PARTS.includes(e.body_part))
+        : exercises.filter(e => MUSCU_PARTS.includes(e.body_part));
+    const grouped = {};
+    parts.forEach(part => {
+        const exs = filtered.filter(e => e.body_part === part);
+        if (exs.length) grouped[BODY_PART_FR[part]] = exs;
+    });
+    return grouped;
+}
 
 let selectedSport = null;
 let exerciceCount = 0;
@@ -822,22 +751,38 @@ function getFieldsHTML(sport) {
     return html;
 }
 
-function addExercice() {
+async function addExercice() {
     exerciceCount++;
     const sport = selectedSport || 'Musculation';
-    const categories = Object.keys(EXERCISE_DB[sport] || {});
-    const firstCat = categories[0];
-    const firstExercises = EXERCISE_DB[sport]?.[firstCat] || [];
-
-    const catOptions = categories.map(c => `<option value="${c}">${c}</option>`).join('');
-    const exOptions = firstExercises.map(e => `<option value="${e.nom}" data-img="${e.img || ''}">${e.nom}</option>`).join('');
-    const firstImg = firstExercises[0]?.img;
+    const num = exerciceCount;
 
     const div = document.createElement('div');
     div.className = 'exercice-form';
+    div.innerHTML = `<div style="text-align:center;padding:1rem;color:var(--muted);font-size:0.85rem;display:flex;align-items:center;justify-content:center;gap:0.5rem"><div class="spinner"></div>Chargement…</div>`;
+    document.getElementById('exercices-container').appendChild(div);
+
+    let grouped;
+    if (sport === 'Course à pied') {
+        grouped = { 'Type de séance': RUNNING_SESSIONS.map(n => ({ name: n, gif_url: null })) };
+    } else {
+        const exercises = await loadExercises();
+        grouped = groupExercises(exercises, sport);
+    }
+
+    const categories = Object.keys(grouped);
+    const firstCat = categories[0];
+    const firstExercises = grouped[firstCat] || [];
+    const firstEx = firstExercises[0];
+    const firstImg = firstEx?.gif_url ? EXERCISE_REPO + firstEx.gif_url : null;
+
+    const catOptions = categories.map(c => `<option value="${c}">${c}</option>`).join('');
+    const exOptions = firstExercises.map(e =>
+        `<option value="${e.name}" data-img="${e.gif_url ? EXERCISE_REPO + e.gif_url : ''}">${e.name}</option>`
+    ).join('');
+
     div.innerHTML = `
         <div class="exercice-header">
-            <span class="exercice-num">Exercice ${exerciceCount}</span>
+            <span class="exercice-num">Exercice ${num}</span>
             <button class="remove-btn" onclick="this.closest('.exercice-form').remove()">✕</button>
         </div>
         ${categories.length > 1 ? `<label>Catégorie</label><select class="ex-category" onchange="updateExerciceList(this)">${catOptions}</select>` : ''}
@@ -850,16 +795,18 @@ function addExercice() {
         <label>Notes</label>
         <input type="text" class="ex-notes" placeholder="Optionnel" style="margin-bottom:0">
     `;
-
-    document.getElementById('exercices-container').appendChild(div);
 }
 
-function updateExerciceList(categorySelect) {
+async function updateExerciceList(categorySelect) {
     const form = categorySelect.closest('.exercice-form');
     const sport = selectedSport || 'Musculation';
-    const exercises = EXERCISE_DB[sport]?.[categorySelect.value] || [];
+    const exercises = await loadExercises();
+    const grouped = groupExercises(exercises, sport);
+    const exs = grouped[categorySelect.value] || [];
     const exSelect = form.querySelector('.ex-nom-select');
-    exSelect.innerHTML = exercises.map(e => `<option value="${e.nom}" data-img="${e.img || ''}">${e.nom}</option>`).join('');
+    exSelect.innerHTML = exs.map(e =>
+        `<option value="${e.name}" data-img="${e.gif_url ? EXERCISE_REPO + e.gif_url : ''}">${e.name}</option>`
+    ).join('');
     updateExercicePreview(exSelect);
 }
 
