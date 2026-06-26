@@ -843,11 +843,28 @@
                 <button class="filter-btn" id="filter-muscu" onclick="setSportFilter('Musculation', this)">🏋️ Muscu</button>
                 <button class="filter-btn" id="filter-street" onclick="setSportFilter('Street Workout', this)">💪 Street</button>
             </div>
+            <div class="sport-filter" style="margin-top:0.5rem; border-top:1px solid rgba(56,189,248,0.1); padding-top:0.5rem">
+                <button class="filter-btn active" id="statview-analyse" onclick="setStatView('analyse', this)">Analyse</button>
+                <button class="filter-btn" id="statview-records" onclick="setStatView('records', this)">Records</button>
+            </div>
         </div>
-        <div id="stats-metrics" class="stats-grid"></div>
-        <div class="card" style="margin-top:0.75rem">
-            <div class="card-title" id="chart-title"></div>
-            <canvas id="stats-chart"></canvas>
+
+        <!-- ANALYSE VIEW -->
+        <div id="stats-analyse-view">
+            <div id="stats-metrics" class="stats-grid"></div>
+            <div class="card" style="margin-top:0.75rem">
+                <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.75rem">
+                    <div class="card-title" id="chart-title" style="margin:0"></div>
+                    <div id="period-selector" style="display:flex; gap:0.4rem; flex-wrap:wrap"></div>
+                </div>
+                <div id="chart-breadcrumb" style="font-size:0.75rem; color:#94a3b8; margin-bottom:0.5rem; min-height:1.2em"></div>
+                <canvas id="stats-chart"></canvas>
+            </div>
+        </div>
+
+        <!-- RECORDS VIEW -->
+        <div id="stats-records-view" style="display:none">
+            <div id="stats-records"></div>
         </div>
     </div>
 
@@ -1442,134 +1459,308 @@ async function handleAppleHealthImport(event) {
 
 // ─── STATS ───
 let allSeances = [];
+let allExercices = [];
 let currentSport = 'Course à pied';
+let currentStatView = 'analyse';
+let selectedYear = 'Tout';
+let chartLevel = 'months'; // 'months' | 'weeks' | 'days'
+let drillMonth = null; // 'YYYY-MM' when drilling into weeks
+let drillWeek = null;  // { year, week } when drilling into days
 let statsChart = null;
 
 async function loadStats() {
-    const { data } = await db.from('seances').select('*').order('date', { ascending: true });
-    allSeances = data || [];
-    renderStats(currentSport);
+    const [{ data: s }, { data: e }] = await Promise.all([
+        db.from('seances').select('*').order('date', { ascending: true }),
+        db.from('exercices').select('*')
+    ]);
+    allSeances = s || [];
+    allExercices = e || [];
+    renderStats();
 }
 
 function setSportFilter(sport, btn) {
     currentSport = sport;
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('#filter-course, #filter-muscu, #filter-street').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    renderStats(sport);
+    chartLevel = 'months'; drillMonth = null; drillWeek = null;
+    renderStats();
 }
 
-function renderStats(sport) {
-    const seances = allSeances.filter(s => s.sport === sport);
-    renderMetrics(sport, seances);
-    renderChart(sport, seances);
+function setStatView(view, btn) {
+    currentStatView = view;
+    document.querySelectorAll('#statview-analyse, #statview-records').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('stats-analyse-view').style.display = view === 'analyse' ? '' : 'none';
+    document.getElementById('stats-records-view').style.display = view === 'records' ? '' : 'none';
+    renderStats();
+}
+
+function renderStats() {
+    if (currentStatView === 'analyse') renderAnalyse();
+    else renderRecords();
+}
+
+// ── ANALYSE ──────────────────────────────────────────────────────────────────
+
+function renderAnalyse() {
+    const seances = allSeances.filter(s => s.sport === currentSport);
+    renderMetrics(currentSport, seances);
+    renderPeriodSelector(seances);
+    renderChart(currentSport, seances);
+}
+
+function renderPeriodSelector(seances) {
+    const years = [...new Set(seances.map(s => s.date?.slice(0,4)).filter(Boolean))].sort();
+    const el = document.getElementById('period-selector');
+    const btns = ['Tout', ...years].map(y => {
+        const active = y === selectedYear ? 'active' : '';
+        return `<button class="filter-btn ${active}" style="font-size:0.75rem;padding:0.25rem 0.6rem" onclick="setPeriod('${y}', this)">${y}</button>`;
+    });
+    el.innerHTML = btns.join('');
+}
+
+function setPeriod(year, btn) {
+    selectedYear = year;
+    chartLevel = 'months'; drillMonth = null; drillWeek = null;
+    document.querySelectorAll('#period-selector .filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const seances = allSeances.filter(s => s.sport === currentSport);
+    renderChart(currentSport, seances);
 }
 
 function renderMetrics(sport, seances) {
     const el = document.getElementById('stats-metrics');
-    if (!seances.length) {
+    const filtered = selectedYear === 'Tout' ? seances : seances.filter(s => s.date?.startsWith(selectedYear));
+    if (!filtered.length) {
         el.innerHTML = `<div class="stat-card wide"><div class="stat-label">Aucune séance enregistrée</div></div>`;
         return;
     }
 
-    if (sport === 'Course à pied') {
-        const totalKm    = seances.reduce((a, s) => a + (s.distance_km || 0), 0);
-        const totalMin   = seances.reduce((a, s) => a + (s.duree_min || 0), 0);
-        const longuest   = Math.max(...seances.map(s => s.distance_km || 0));
-        const withPace   = seances.filter(s => s.pace);
-        const paces      = withPace.map(s => {
-            const [m, sec] = s.pace.split(':').map(Number);
-            return m * 60 + sec;
-        });
-        const bestPaceSec = paces.length ? Math.min(...paces) : null;
-        const avgPaceSec  = paces.length ? paces.reduce((a, b) => a + b, 0) / paces.length : null;
-        const fmtPace = sec => `${Math.floor(sec/60)}:${String(Math.round(sec%60)).padStart(2,'0')}`;
+    const fmtPace = sec => `${Math.floor(sec/60)}:${String(Math.round(sec%60)).padStart(2,'0')}`;
 
+    if (sport === 'Course à pied') {
+        const totalKm   = filtered.reduce((a, s) => a + (s.distance_km || 0), 0);
+        const totalMin  = filtered.reduce((a, s) => a + (s.duree_min || 0), 0);
+        const longuest  = Math.max(...filtered.map(s => s.distance_km || 0));
+        const paces     = filtered.filter(s => s.pace).map(s => { const [m,sec]=s.pace.split(':').map(Number); return m*60+sec; });
+        const bestPace  = paces.length ? Math.min(...paces) : null;
+        const avgPace   = paces.length ? paces.reduce((a,b)=>a+b,0)/paces.length : null;
         el.innerHTML = `
-            <div class="stat-card">
-                <div class="stat-label">Total distance</div>
-                <div class="stat-value">${totalKm.toFixed(1)} <span style="font-size:1rem">km</span></div>
-                <div class="stat-sub">${seances.length} sorties</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Temps total</div>
-                <div class="stat-value">${Math.floor(totalMin/60)}h<span style="font-size:1rem">${Math.round(totalMin%60)}m</span></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Meilleure allure</div>
-                <div class="stat-value orange">${bestPaceSec ? fmtPace(bestPaceSec) : '—'} <span style="font-size:1rem">/km</span></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Allure moyenne</div>
-                <div class="stat-value">${avgPaceSec ? fmtPace(avgPaceSec) : '—'} <span style="font-size:1rem">/km</span></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Plus longue sortie</div>
-                <div class="stat-value orange">${longuest.toFixed(1)} <span style="font-size:1rem">km</span></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Distance moyenne</div>
-                <div class="stat-value">${(totalKm / seances.length).toFixed(1)} <span style="font-size:1rem">km</span></div>
-            </div>`;
+            <div class="stat-card"><div class="stat-label">Total distance</div><div class="stat-value">${totalKm.toFixed(1)} <span style="font-size:1rem">km</span></div><div class="stat-sub">${filtered.length} sorties</div></div>
+            <div class="stat-card"><div class="stat-label">Temps total</div><div class="stat-value">${Math.floor(totalMin/60)}h<span style="font-size:1rem">${Math.round(totalMin%60)}m</span></div></div>
+            <div class="stat-card"><div class="stat-label">Meilleure allure</div><div class="stat-value orange">${bestPace ? fmtPace(bestPace) : '—'} <span style="font-size:1rem">/km</span></div></div>
+            <div class="stat-card"><div class="stat-label">Allure moyenne</div><div class="stat-value">${avgPace ? fmtPace(avgPace) : '—'} <span style="font-size:1rem">/km</span></div></div>
+            <div class="stat-card"><div class="stat-label">Plus longue sortie</div><div class="stat-value orange">${longuest.toFixed(1)} <span style="font-size:1rem">km</span></div></div>
+            <div class="stat-card"><div class="stat-label">Distance moyenne</div><div class="stat-value">${(totalKm/filtered.length).toFixed(1)} <span style="font-size:1rem">km</span></div></div>`;
     } else {
-        const totalMin = seances.reduce((a, s) => a + (s.duree_min || 0), 0);
-        const avgMin   = Math.round(totalMin / seances.length);
+        const totalMin = filtered.reduce((a, s) => a + (s.duree_min || 0), 0);
+        const avgMin   = Math.round(totalMin / filtered.length);
         el.innerHTML = `
-            <div class="stat-card">
-                <div class="stat-label">Séances total</div>
-                <div class="stat-value">${seances.length}</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Temps total</div>
-                <div class="stat-value">${Math.floor(totalMin/60)}h<span style="font-size:1rem">${Math.round(totalMin%60)}m</span></div>
-            </div>
-            <div class="stat-card wide">
-                <div class="stat-label">Durée moyenne par séance</div>
-                <div class="stat-value">${avgMin} <span style="font-size:1rem">min</span></div>
-            </div>`;
+            <div class="stat-card"><div class="stat-label">Séances total</div><div class="stat-value">${filtered.length}</div></div>
+            <div class="stat-card"><div class="stat-label">Temps total</div><div class="stat-value">${Math.floor(totalMin/60)}h<span style="font-size:1rem">${Math.round(totalMin%60)}m</span></div></div>
+            <div class="stat-card wide"><div class="stat-label">Durée moyenne / séance</div><div class="stat-value">${avgMin} <span style="font-size:1rem">min</span></div></div>`;
     }
 }
 
-function renderChart(sport, seances) {
-    // Build last 12 months labels
-    const now = new Date();
-    const months = [];
-    for (let i = 11; i >= 0; i--) {
-        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-        months.push({ key: `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`, label: d.toLocaleDateString('fr-FR', { month: 'short', year: '2-digit' }) });
+function getWeekNumber(date) {
+    const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+    return { week: Math.ceil((((d - yearStart) / 86400000) + 1) / 7), year: d.getUTCFullYear() };
+}
+
+function renderChart(sport, allFiltered) {
+    const seances = selectedYear === 'Tout' ? allFiltered : allFiltered.filter(s => s.date?.startsWith(selectedYear));
+    const isRun = sport === 'Course à pied';
+    const val = s => isRun ? (s.distance_km || 0) : 1;
+    const fmtVal = v => isRun ? v.toFixed(1) : String(v);
+    const unit = isRun ? 'km' : 'séance';
+
+    let labels = [], values = [], title = '', breadcrumb = '';
+
+    if (chartLevel === 'months') {
+        if (selectedYear === 'Tout') {
+            const monthMap = {};
+            seances.forEach(s => { const k = s.date?.slice(0,7); if (k) monthMap[k] = (monthMap[k]||0) + val(s); });
+            const keys = Object.keys(monthMap).sort();
+            labels = keys.map(k => { const d = new Date(k+'-01'); return d.toLocaleDateString('fr-FR',{month:'short',year:'2-digit'}); });
+            values = keys.map(k => monthMap[k]);
+            title = isRun ? 'Kilomètres par mois' : 'Séances par mois';
+        } else {
+            const monthMap = {};
+            for (let m = 1; m <= 12; m++) { monthMap[String(m).padStart(2,'0')] = 0; }
+            seances.forEach(s => { const m = s.date?.slice(5,7); if (m) monthMap[m] = (monthMap[m]||0) + val(s); });
+            labels = Object.keys(monthMap).map(m => new Date(`${selectedYear}-${m}-01`).toLocaleDateString('fr-FR',{month:'short'}));
+            values = Object.values(monthMap);
+            title = isRun ? `Km en ${selectedYear}` : `Séances en ${selectedYear}`;
+        }
+        breadcrumb = '';
+    } else if (chartLevel === 'weeks') {
+        const [yr, mn] = drillMonth.split('-').map(Number);
+        const daysInMonth = new Date(yr, mn, 0).getDate();
+        const weekMap = {};
+        for (let d = 1; d <= daysInMonth; d++) {
+            const date = new Date(yr, mn-1, d);
+            const { week, year: wy } = getWeekNumber(date);
+            const key = `${wy}-W${String(week).padStart(2,'0')}`;
+            if (!weekMap[key]) weekMap[key] = 0;
+        }
+        seances.filter(s => s.date?.startsWith(drillMonth)).forEach(s => {
+            const { week, year: wy } = getWeekNumber(new Date(s.date));
+            const key = `${wy}-W${String(week).padStart(2,'0')}`;
+            weekMap[key] = (weekMap[key]||0) + val(s);
+        });
+        const keys = Object.keys(weekMap).sort();
+        labels = keys.map(k => `Sem. ${k.split('-W')[1]}`);
+        values = keys.map(k => weekMap[k]);
+        title = isRun ? `Km — ${new Date(drillMonth+'-01').toLocaleDateString('fr-FR',{month:'long',year:'numeric'})}` : `Séances — ${new Date(drillMonth+'-01').toLocaleDateString('fr-FR',{month:'long',year:'numeric'})}`;
+        breadcrumb = `← <a href="#" onclick="drillUp(event)" style="color:#38bdf8;text-decoration:none">Retour aux mois</a>`;
+    } else if (chartLevel === 'days') {
+        const { year: wy, week: wn } = drillWeek;
+        const jan4 = new Date(Date.UTC(wy, 0, 4));
+        const weekStart = new Date(jan4);
+        weekStart.setUTCDate(jan4.getUTCDate() - (jan4.getUTCDay() || 7) + 1 + (wn - 1) * 7);
+        const dayMap = {};
+        for (let d = 0; d < 7; d++) {
+            const day = new Date(weekStart); day.setUTCDate(weekStart.getUTCDate() + d);
+            const key = day.toISOString().slice(0,10);
+            dayMap[key] = 0;
+        }
+        seances.forEach(s => { if (dayMap.hasOwnProperty(s.date)) dayMap[s.date] += val(s); });
+        const keys = Object.keys(dayMap).sort();
+        labels = keys.map(k => new Date(k).toLocaleDateString('fr-FR',{weekday:'short',day:'numeric'}));
+        values = keys.map(k => dayMap[k]);
+        title = isRun ? `Km — Semaine ${wn}` : `Séances — Semaine ${wn}`;
+        breadcrumb = `← <a href="#" onclick="drillUp(event)" style="color:#38bdf8;text-decoration:none">Retour aux semaines</a>`;
     }
 
-    const values = months.map(({ key }) => {
-        const inMonth = seances.filter(s => s.date?.startsWith(key));
-        return sport === 'Course à pied'
-            ? inMonth.reduce((a, s) => a + (s.distance_km || 0), 0)
-            : inMonth.length;
-    });
-
-    document.getElementById('chart-title').textContent =
-        sport === 'Course à pied' ? 'Kilomètres par mois' : 'Séances par mois';
+    document.getElementById('chart-title').textContent = title;
+    document.getElementById('chart-breadcrumb').innerHTML = breadcrumb;
 
     if (statsChart) statsChart.destroy();
     statsChart = new Chart(document.getElementById('stats-chart'), {
         type: 'bar',
         data: {
-            labels: months.map(m => m.label),
-            datasets: [{
-                data: values,
-                backgroundColor: 'rgba(56,189,248,0.25)',
-                borderColor: '#38bdf8',
-                borderWidth: 1.5,
-                borderRadius: 4,
-            }]
+            labels,
+            datasets: [{ data: values, backgroundColor: 'rgba(56,189,248,0.25)', borderColor: '#38bdf8', borderWidth: 1.5, borderRadius: 4 }]
         },
         options: {
             responsive: true,
-            plugins: { legend: { display: false } },
+            plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => `${fmtVal(ctx.parsed.y)} ${unit}` } } },
             scales: {
                 x: { ticks: { color: '#94a3b8', font: { size: 11 } }, grid: { color: 'rgba(56,189,248,0.05)' } },
                 y: { ticks: { color: '#94a3b8', font: { size: 11 } }, grid: { color: 'rgba(56,189,248,0.05)' }, beginAtZero: true }
+            },
+            onClick(event, elements) {
+                if (!elements.length) return;
+                const idx = elements[0].index;
+                if (chartLevel === 'months') {
+                    let monthKey;
+                    if (selectedYear === 'Tout') {
+                        const seancesFiltered = selectedYear === 'Tout' ? allFiltered : allFiltered.filter(s => s.date?.startsWith(selectedYear));
+                        const monthMap = {};
+                        seancesFiltered.forEach(s => { const k = s.date?.slice(0,7); if (k) monthMap[k] = (monthMap[k]||0) + val(s); });
+                        monthKey = Object.keys(monthMap).sort()[idx];
+                    } else {
+                        const m = String(idx+1).padStart(2,'0');
+                        monthKey = `${selectedYear}-${m}`;
+                    }
+                    drillMonth = monthKey;
+                    chartLevel = 'weeks';
+                    renderChart(sport, allFiltered);
+                } else if (chartLevel === 'weeks') {
+                    const [yr, mn] = drillMonth.split('-').map(Number);
+                    const jan4 = new Date(yr, 0, 4);
+                    const weekMap = {};
+                    const daysInMonth = new Date(yr, mn, 0).getDate();
+                    for (let d = 1; d <= daysInMonth; d++) {
+                        const date = new Date(yr, mn-1, d);
+                        const { week, year: wy } = getWeekNumber(date);
+                        const key = `${wy}-W${String(week).padStart(2,'0')}`;
+                        if (!weekMap[key]) weekMap[key] = true;
+                    }
+                    const weekKeys = Object.keys(weekMap).sort();
+                    const chosen = weekKeys[idx];
+                    if (chosen) {
+                        const [wy, wStr] = chosen.split('-W');
+                        drillWeek = { year: parseInt(wy), week: parseInt(wStr) };
+                        chartLevel = 'days';
+                        renderChart(sport, allFiltered);
+                    }
+                }
             }
         }
     });
+}
+
+function drillUp(e) {
+    e.preventDefault();
+    if (chartLevel === 'days') { chartLevel = 'weeks'; drillWeek = null; }
+    else if (chartLevel === 'weeks') { chartLevel = 'months'; drillMonth = null; }
+    const seances = allSeances.filter(s => s.sport === currentSport);
+    renderChart(currentSport, seances);
+}
+
+// ── RECORDS ──────────────────────────────────────────────────────────────────
+
+async function renderRecords() {
+    const el = document.getElementById('stats-records');
+    el.innerHTML = `<div class="stat-card wide"><div class="stat-label">Chargement…</div></div>`;
+    const fmtPace = sec => `${Math.floor(sec/60)}:${String(Math.round(sec%60)).padStart(2,'0')}`;
+
+    if (currentSport === 'Course à pied') {
+        const ranges = [
+            { label: 'RP 5 km', min: 4.5, max: 5.5, distLabel: '5 km' },
+            { label: 'RP 10 km', min: 9.0, max: 11.0, distLabel: '10 km' },
+            { label: 'RP Semi', min: 20.0, max: 22.5, distLabel: 'Semi-marathon' },
+        ];
+        const cards = ranges.map(r => {
+            const matches = allSeances.filter(s => s.sport === 'Course à pied' && s.distance_km >= r.min && s.distance_km <= r.max && s.pace);
+            if (!matches.length) return `<div class="stat-card"><div class="stat-label">${r.label}</div><div class="stat-value" style="color:#94a3b8">—</div><div class="stat-sub">${r.distLabel}</div></div>`;
+            const best = matches.reduce((b, s) => {
+                const toSec = p => { const [m,sc]=p.split(':').map(Number); return m*60+sc; };
+                return toSec(s.pace) < toSec(b.pace) ? s : b;
+            });
+            const [m,sc] = best.pace.split(':').map(Number);
+            const totalSec = (best.distance_km * (m*60+sc));
+            const hh = Math.floor(totalSec/3600), mm = Math.floor((totalSec%3600)/60), ss = Math.round(totalSec%60);
+            const timeStr = hh > 0 ? `${hh}h${String(mm).padStart(2,'0')}` : `${mm}:${String(ss).padStart(2,'0')}`;
+            return `<div class="stat-card"><div class="stat-label">${r.label}</div><div class="stat-value orange">${best.pace} <span style="font-size:1rem">/km</span></div><div class="stat-sub">${timeStr} — ${best.date}</div></div>`;
+        });
+        el.innerHTML = `<div class="stats-grid">${cards.join('')}</div>`;
+
+    } else if (currentSport === 'Musculation') {
+        const devCouche = allExercices.filter(e => e.nom && e.nom.toLowerCase().includes('développé couché') && e.poids_kg);
+        if (!devCouche.length) {
+            el.innerHTML = `<div class="stat-card wide"><div class="stat-label">Aucune donnée développé couché</div></div>`;
+            return;
+        }
+        const best = devCouche.reduce((b, e) => e.poids_kg > b.poids_kg ? e : b);
+        const seance = allSeances.find(s => s.id === best.seance_id);
+        el.innerHTML = `<div class="stats-grid">
+            <div class="stat-card wide">
+                <div class="stat-label">Max Développé couché</div>
+                <div class="stat-value orange">${best.poids_kg} <span style="font-size:1rem">kg</span></div>
+                <div class="stat-sub">${best.reps} rep${best.reps > 1 ? 's' : ''}${seance ? ' — ' + seance.date : ''}</div>
+            </div>
+        </div>`;
+
+    } else if (currentSport === 'Street Workout') {
+        const muscleUp = allExercices.filter(e => e.nom && e.nom.toLowerCase().includes('muscle up') && e.reps);
+        if (!muscleUp.length) {
+            el.innerHTML = `<div class="stat-card wide"><div class="stat-label">Aucune donnée Muscle Up</div></div>`;
+            return;
+        }
+        const best = muscleUp.reduce((b, e) => e.reps > b.reps ? e : b);
+        const seance = allSeances.find(s => s.id === best.seance_id);
+        el.innerHTML = `<div class="stats-grid">
+            <div class="stat-card wide">
+                <div class="stat-label">Max Muscle Ups d'affilée</div>
+                <div class="stat-value orange">${best.reps}</div>
+                <div class="stat-sub">${seance ? seance.date : ''}</div>
+            </div>
+        </div>`;
+    }
 }
 
 async function loadHistorique() {
