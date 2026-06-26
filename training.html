@@ -567,9 +567,9 @@
     <!-- TAB: HISTORIQUE -->
     <div id="tab-historique" class="tab-content">
         <div style="padding:1rem 1rem 0">
-            <input type="file" id="apple-health-input" accept=".xml" style="display:none" onchange="handleAppleHealthImport(event)">
+            <input type="file" id="apple-health-input" accept=".json" style="display:none" onchange="handleAppleHealthImport(event)">
             <button class="btn btn-secondary" onclick="document.getElementById('apple-health-input').click()" style="width:100%;margin-bottom:0.75rem">
-                ↑ Importer Apple Health (export.xml)
+                ↑ Importer Apple Health (running_workouts.json)
             </button>
             <div id="import-msg" class="msg"></div>
         </div>
@@ -965,31 +965,22 @@ async function handleAppleHealthImport(event) {
     showMsg(importMsg, 'info', 'Lecture du fichier en cours...');
 
     const text = await file.text();
-
-    // Parse with regex — avoids browser XML parser issues with Apple Health DOCTYPE
-    const workouts = [];
-    const workoutRe = /<Workout workoutActivityType="HKWorkoutActivityTypeRunning"([^>]*)>([\s\S]*?)<\/Workout>/g;
-    let m;
-    while ((m = workoutRe.exec(text)) !== null) {
-        const attrs = m[1], content = m[2];
-        const startDate = (attrs.match(/startDate="([^"]+)"/) || [])[1];
-        const duration  = parseFloat((attrs.match(/duration="([^"]+)"/) || [])[1]);
-        if (!startDate || isNaN(duration)) continue;
-
-        const distM = content.match(/type="HKQuantityTypeIdentifierDistanceWalkingRunning"[^>]*sum="([^"]+)"/);
-        const calM  = content.match(/type="HKQuantityTypeIdentifierActiveEnergyBurned"[^>]*sum="([^"]+)"/);
-
-        workouts.push({
-            startDate,
-            date: startDate.substring(0, 10),
-            duration,
-            distanceKm: distM ? Math.round(parseFloat(distM[1]) * 100) / 100 : null,
-            calories:   calM  ? Math.round(parseFloat(calM[1]))              : null
-        });
+    let raw;
+    try { raw = JSON.parse(text); } catch(e) {
+        showMsg(importMsg, 'error', 'Fichier invalide. Utilise running_workouts.json généré par le script Python.');
+        return;
     }
 
+    const workouts = raw.map(r => ({
+        startDate:  r.startDate,
+        date:       r.startDate.substring(0, 10),
+        duration:   r.duration,
+        distanceKm: r.distanceKm,
+        calories:   r.calories
+    })).filter(w => w.startDate);
+
     if (!workouts.length) {
-        showMsg(importMsg, 'error', 'Aucune course à pied trouvée dans ce fichier.');
+        showMsg(importMsg, 'error', 'Aucune course trouvée dans ce fichier.');
         return;
     }
 
