@@ -356,6 +356,18 @@
         .exercice-name { font-size: 0.85rem; color: var(--text); }
         .exercice-detail { font-size: 0.8rem; color: var(--muted); }
 
+        .delete-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            opacity: 0.4;
+            padding: 0.1rem 0.3rem;
+            transition: opacity 0.2s;
+        }
+
+        .delete-btn:hover { opacity: 1; }
+
         /* ─── ANALYSE ─── */
         .analyse-output {
             background: var(--subtle);
@@ -797,10 +809,13 @@ async function loadHistorique() {
             </div>`;
         }).join('') : '';
 
-        return `<div class="seance-card">
+        return `<div class="seance-card" id="seance-${s.id}">
             <div class="seance-header">
                 <div class="seance-sport">${emoji[s.sport] || '🏋️'} ${s.sport}</div>
-                <div class="seance-date">${dateStr}</div>
+                <div style="display:flex;align-items:center;gap:0.75rem">
+                    <div class="seance-date">${dateStr}</div>
+                    <button class="delete-btn" onclick="deleteSeance(${s.id})" title="Supprimer">🗑</button>
+                </div>
             </div>
             <div class="seance-meta">
                 ${s.duree_min ? `<span class="meta-chip">⏱ ${s.duree_min} min</span>` : ''}
@@ -810,6 +825,14 @@ async function loadHistorique() {
             ${exHTML ? `<div class="exercice-list">${exHTML}</div>` : ''}
         </div>`;
     }).join('');
+}
+
+// ─── SUPPRIMER SÉANCE ───
+async function deleteSeance(id) {
+    if (!confirm('Supprimer cette séance ?')) return;
+    await db.from('exercices').delete().eq('seance_id', id);
+    await db.from('seances').delete().eq('id', id);
+    document.getElementById(`seance-${id}`)?.remove();
 }
 
 // ─── ANALYSE IA ───
