@@ -1214,8 +1214,12 @@ function _tickRestTimers() {
 }
 
 function dismissRestOverlay() {
-    const overlay = document.getElementById('rest-overlay');
-    overlay.style.display = 'none';
+    clearInterval(_restInterval);
+    _restInterval = null;
+    document.getElementById('rest-overlay').style.display = 'none';
+    document.querySelectorAll('.rest-timer-display.active').forEach(el => {
+        el.classList.remove('active', 'long');
+    });
 }
 
 function logSet(form) {
