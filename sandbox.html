@@ -101,16 +101,13 @@
 </div>
 
 <script>
-    // Cacher le titre après 4s
     setTimeout(() => {
         const intro = document.getElementById('intro');
         intro.classList.add('hidden');
         setTimeout(() => intro.remove(), 1000);
-    }, 4000);
-
-    window.RAFALE_OPTS = { spawnFromPortal: true };
+    }, 3000);
 </script>
-<script src="rafale-game.js"></script>
+<script src="sandbox-game.js"></script>
 
 </body>
 </html>
