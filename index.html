@@ -952,15 +952,15 @@
         else if (px > W + HALF_W) px = -HALF_W;
         if (py < -HALF_H) py = H + HALF_H;
 
-        const sf = ab ? 500 : 200;
+        const sf = ab ? 120 : 35;
         const scrollZone = H * 0.85;
         if (py > scrollZone) {
-            window.scrollBy(0, sf);
+            window.scrollBy({ top: sf, behavior: 'instant' });
             if (py > H * 0.95) py = H * 0.95;
         }
         const scrollUpZone = H * 0.15;
         if (py < scrollUpZone) {
-            window.scrollBy(0, -sf);
+            window.scrollBy({ top: -sf, behavior: 'instant' });
             if (py < 0) py = 0;
         }
 
