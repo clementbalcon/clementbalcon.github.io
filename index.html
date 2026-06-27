@@ -954,12 +954,12 @@
 
         const sf = ab ? 15 : 5;
         const scrollZone = H * 0.85;
-        if (py > scrollZone) {
+        if (py > scrollZone && keys['s']) {
             window.scrollBy({ top: sf, behavior: 'instant' });
             if (py > H * 0.95) py = H * 0.95;
         }
         const scrollUpZone = H * 0.15;
-        if (py < scrollUpZone) {
+        if (py < scrollUpZone && keys['z']) {
             window.scrollBy({ top: -sf, behavior: 'instant' });
             if (py < 0) py = 0;
         }
