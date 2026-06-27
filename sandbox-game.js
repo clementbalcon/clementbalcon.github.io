@@ -18,7 +18,7 @@
 
     // ── Hint ──
     const hint = document.createElement('div');
-    hint.textContent = 'ZQSD · R tirer · ESPACE post-combustion';
+    hint.textContent = 'ZQSD · Entrée/Clic tirer · ESPACE post-combustion';
     hint.style.cssText = 'position:fixed;bottom:1.4rem;right:1.5rem;font-size:0.63rem;font-family:Inter,sans-serif;text-transform:uppercase;letter-spacing:0.09em;color:rgba(255,255,255,0.42);z-index:20;pointer-events:none;transition:opacity 1.2s;';
     document.body.appendChild(hint);
     setTimeout(() => { hint.style.opacity = '0'; }, 5000);
@@ -48,7 +48,7 @@
         const k = e.key.toLowerCase();
         if (['z','q','s','d'].includes(k)) { e.preventDefault(); keys[k] = true; }
         if (e.code === 'Space') { e.preventDefault(); ab = true; }
-        if (k === 'r' || k === 'enter') { e.preventDefault(); if (gameState === 'fighting') fireMica(); }
+        if (k === 'enter') { e.preventDefault(); if (gameState === 'fighting') fireMica(); }
     });
     addEventListener('keyup', e => {
         const k = e.key.toLowerCase();
