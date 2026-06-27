@@ -1,5 +1,18 @@
-// rafale-game.js — Rafale jouable ZQSD / ESPACE / A (post-combustion)
+// rafale-game.js — Rafale jouable ZQSD / ESPACE / Entrée / Clic
 // Config optionnelle : window.RAFALE_OPTS = { spawnFromPortal: true }
+
+if (window.matchMedia('(hover: none)').matches) {
+    // Mobile : portail cliquable seulement
+    document.querySelectorAll('.portal[data-href]').forEach(p => {
+        p.addEventListener('click', () => {
+            const f = document.createElement('div');
+            f.style.cssText = 'position:fixed;inset:0;background:#fff;opacity:0;z-index:9999;transition:opacity 0.25s ease;pointer-events:none;';
+            document.body.appendChild(f);
+            requestAnimationFrame(() => { f.style.opacity = '1'; });
+            setTimeout(() => { location.href = p.dataset.href; }, 280);
+        });
+    });
+} else {
 (function () {
     const cfg = window.RAFALE_OPTS || {};
 
@@ -325,3 +338,4 @@
     }
     tick();
 })();
+} // end desktop-only

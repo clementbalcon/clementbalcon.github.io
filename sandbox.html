@@ -101,13 +101,26 @@
 </div>
 
 <script>
+if (window.matchMedia('(hover: none)').matches) {
+    // Mobile : afficher message et rediriger via portail
+    const intro = document.getElementById('intro');
+    intro.querySelector('h1').textContent = 'Zone de Combat';
+    intro.querySelector('p').textContent = 'Disponible sur ordinateur uniquement';
+    intro.style.opacity = '1';
+    document.querySelector('.portal[data-href]').addEventListener('click', () => {
+        location.href = document.querySelector('.portal[data-href]').dataset.href;
+    });
+} else {
     setTimeout(() => {
         const intro = document.getElementById('intro');
         intro.classList.add('hidden');
         setTimeout(() => intro.remove(), 1000);
     }, 3000);
+    const s = document.createElement('script');
+    s.src = 'sandbox-game.js';
+    document.body.appendChild(s);
+}
 </script>
-<script src="sandbox-game.js"></script>
 
 </body>
 </html>
