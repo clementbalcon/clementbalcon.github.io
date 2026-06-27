@@ -6,201 +6,157 @@
     <title>Nerf Rider CS-35 — TN20 · Clément Balcon</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
         :root {
-            --bg: #060c15;
-            --accent: #38bdf8;
-            --accent2: #fb923c;
-            --text: #e2e8f0;
-            --muted: #94a3b8;
-            --subtle: #64748b;
-            --card: rgba(56,189,248,0.04);
-            --card-hover: rgba(56,189,248,0.075);
-            --border: rgba(56,189,248,0.1);
+            --bg: #40916C;
+            --white: #ffffff;
+            --w70: rgba(255,255,255,0.70);
+            --w40: rgba(255,255,255,0.40);
+            --w20: rgba(255,255,255,0.18);
         }
+
         html { scroll-behavior: smooth; }
-        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; line-height: 1.65; overflow-x: hidden; }
-
-        body::before {
-            content: '';
-            position: fixed; inset: 0; z-index: -2; pointer-events: none;
-            background-image:
-                linear-gradient(rgba(56,189,248,0.025) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(56,189,248,0.025) 1px, transparent 1px);
-            background-size: 50px 50px;
-        }
-        body::after {
-            content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
-            background: radial-gradient(ellipse 70% 45% at 50% 0%, rgba(56,189,248,0.09), transparent 60%);
+        body {
+            background: #40916C;
+            background-image: radial-gradient(ellipse at 15% 0%, #52a87e 0%, transparent 60%);
+            color: var(--white);
+            font-family: 'Inter', sans-serif;
+            font-weight: 400; line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* ── NAV ── */
-        nav {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-            padding: 1rem 2.5rem;
-            display: flex; align-items: center; gap: 1.2rem;
-            background: rgba(6,12,21,0.88);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
-        }
+        .wrap { max-width: 900px; margin: 0 auto; padding: 0 2rem 5rem; }
+
+        .top-nav { padding: 2rem 2rem 0; max-width: 900px; margin: 0 auto; }
         .back-link {
-            display: inline-flex; align-items: center; gap: 0.4rem;
-            color: var(--muted); text-decoration: none; font-size: 0.85rem;
-            font-weight: 500; transition: color 0.2s;
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            border: 1.5px solid var(--w40); color: var(--w70); text-decoration: none;
+            font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.1em; padding: 0.45rem 1rem;
+            transition: border-color 0.18s, color 0.18s;
         }
-        .back-link:hover { color: #7dd3fc; }
-        .nav-sep { color: var(--subtle); font-size: 0.8rem; }
-        .nav-title { color: var(--text); font-size: 0.85rem; font-weight: 500; }
+        .back-link:hover { border-color: var(--white); color: var(--white); }
 
-        /* ── HERO ── */
-        .hero {
-            padding: 7rem 2rem 3rem;
-            max-width: 1020px; margin: 0 auto;
-        }
-        .hero-meta {
-            display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1.5rem;
-        }
+        /* ── Hero ── */
+        .hero { padding: 3rem 0 2rem; border-bottom: 1px solid var(--w20); margin-bottom: 3rem; }
+        .hero-badges { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 1.2rem; }
         .badge {
-            display: inline-flex; align-items: center;
-            background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.22);
-            color: #7dd3fc; font-size: 0.75rem; font-weight: 600;
-            padding: 0.22rem 0.75rem; border-radius: 999px;
+            font-size: 0.72rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.09em; color: var(--w70);
+            border: 1px solid var(--w40); display: inline-block; padding: 0.2rem 0.65rem;
         }
-        .badge.amber {
-            background: rgba(251,146,60,0.08); border-color: rgba(251,146,60,0.25); color: #fdba74;
+        .hero h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(2.5rem, 7vw, 5rem);
+            line-height: 0.95; letter-spacing: 0.03em; margin-bottom: 1.2rem;
         }
-        h1 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 700; line-height: 1.1;
-            margin-bottom: 1rem;
-        }
-        .gradient-text {
-            background: linear-gradient(135deg, #38bdf8 0%, #60a5fa 50%, #fb923c 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-        }
-        .hero-sub { color: var(--muted); font-size: 1.05rem; max-width: 620px; margin-bottom: 2rem; }
+        .hero p { font-size: 1rem; color: var(--w70); max-width: 640px; line-height: 1.75; }
 
         .hero-img {
-            width: 100%; border-radius: 1.25rem; border: 1px solid var(--border);
-            box-shadow: 0 24px 60px rgba(0,0,0,0.5);
-            display: block; margin-bottom: 4rem;
+            width: 100%; border: 1px solid var(--w20);
+            display: block; margin-top: 2rem; margin-bottom: 0;
         }
 
-        /* ── LAYOUT ── */
-        .wrap { max-width: 1020px; margin: 0 auto; padding: 0 2rem 5rem; }
-        .divider { height: 1px; background: var(--border); margin: 3.5rem 0; }
+        /* ── Sections ── */
+        .section-title {
+            font-family: 'Bebas Neue', sans-serif; font-size: clamp(1.8rem, 4vw, 2.5rem);
+            letter-spacing: 0.04em; margin-bottom: 1.2rem; padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--w20);
+        }
 
-        .section-eyebrow {
-            display: inline-flex; align-items: center; gap: 0.5rem;
-            color: #7dd3fc; font-size: 0.72rem; font-weight: 600;
-            text-transform: uppercase; letter-spacing: 0.13em; margin-bottom: 0.6rem;
+        .eyebrow {
+            font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.12em; color: var(--w40); margin-bottom: 0.4rem; display: block;
         }
-        .section-eyebrow::after { content:''; display:inline-block; width:30px; height:1px; background:rgba(56,189,248,0.35); }
 
-        h2 {
-            font-family: 'Space Grotesk', sans-serif; font-weight: 700;
-            font-size: clamp(1.5rem, 3vw, 2rem); margin-bottom: 1rem;
-        }
-        h3 {
-            font-family: 'Space Grotesk', sans-serif; font-weight: 600;
-            font-size: 1.1rem; margin-bottom: 0.6rem; color: var(--text);
-        }
-        p { color: var(--muted); line-height: 1.75; margin-bottom: 1rem; }
+        .divider { height: 1px; background: var(--w20); margin: 3rem 0; }
+
+        p { color: var(--w70); line-height: 1.75; margin-bottom: 1rem; }
         p:last-child { margin-bottom: 0; }
-        strong { color: var(--text); font-weight: 600; }
+        strong { color: var(--white); font-weight: 600; }
 
-        /* ── CONTENT LAYOUTS ── */
-        .two-col {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;
-        }
+        ol, ul { color: var(--w70); padding-left: 1.4rem; line-height: 2; }
+
+        /* ── Two column ── */
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start; }
         .two-col.flip { direction: rtl; }
         .two-col.flip > * { direction: ltr; }
-        @media(max-width: 700px) { .two-col { grid-template-columns: 1fr; } .two-col.flip { direction: ltr; } }
+        @media(max-width: 680px) { .two-col, .two-col.flip { grid-template-columns: 1fr; direction: ltr; } }
 
-        .text-block { }
-
-        /* ── IMAGES ── */
-        .img-card {
-            border-radius: 1rem; border: 1px solid var(--border);
-            overflow: hidden; background: var(--card);
-        }
+        /* ── Images ── */
+        .img-card { border: 1px solid var(--w20); overflow: hidden; background: rgba(255,255,255,0.04); }
         .img-card img { width: 100%; display: block; }
-        .img-caption {
-            padding: 0.65rem 0.9rem;
-            color: var(--subtle); font-size: 0.78rem; text-align: center;
-            border-top: 1px solid var(--border);
-        }
+        .img-caption { padding: 0.6rem 0.8rem; color: var(--w40); font-size: 0.76rem; text-align: center; border-top: 1px solid var(--w20); }
 
         .img-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
         .img-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
-        @media(max-width: 600px) { .img-grid-2, .img-grid-3 { grid-template-columns: 1fr; } }
+        @media(max-width: 580px) { .img-grid-2, .img-grid-3 { grid-template-columns: 1fr; } }
 
-        /* ── CALLOUT BOX ── */
-        .callout {
-            background: var(--card); border: 1px solid var(--border);
-            border-left: 3px solid var(--accent); border-radius: 0 0.75rem 0.75rem 0;
-            padding: 1.1rem 1.3rem; margin: 1.5rem 0;
-        }
-        .callout.amber { border-left-color: var(--accent2); }
-        .callout p { margin: 0; font-size: 0.92rem; }
+        /* ── Callout ── */
+        .callout { border-left: 2px solid var(--w40); padding: 1rem 1.4rem; margin: 1.5rem 0; }
+        .callout p { color: var(--w70); font-size: 0.9rem; margin: 0; }
 
-        /* ── TAGS ── */
-        .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1rem; }
-        .tag {
-            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09);
-            color: var(--muted); padding: 0.22rem 0.65rem; border-radius: 999px; font-size: 0.77rem;
-        }
+        /* ── Tags ── */
+        .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1.2rem; }
+        .tag { border: 1px solid var(--w40); color: var(--white); font-size: 0.75rem; font-weight: 500; letter-spacing: 0.04em; padding: 0.25rem 0.7rem; }
 
-        /* ── BACK TO TOP ── */
+        /* ── Back button ── */
         .back-btn {
-            display: inline-flex; align-items: center; gap: 0.4rem;
-            color: #7dd3fc; text-decoration: none; font-size: 0.88rem; font-weight: 500;
-            padding: 0.65rem 1.4rem; border: 1px solid rgba(56,189,248,0.28);
-            border-radius: 999px; transition: all 0.2s; margin-top: 2rem;
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            border: 1.5px solid var(--w40); color: var(--w70); text-decoration: none;
+            font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.1em; padding: 0.55rem 1.2rem; margin-top: 2rem;
+            transition: border-color 0.18s, color 0.18s;
         }
-        .back-btn:hover { background: rgba(56,189,248,0.07); }
+        .back-btn:hover { border-color: var(--white); color: var(--white); }
 
-        /* ── FADE IN ── */
-        .fade-in { opacity: 0; transform: translateY(18px); transition: opacity 0.55s ease, transform 0.55s ease; }
+        footer { border-top: 1px solid var(--w40); padding: 2rem 0; text-align: center; font-size: 0.78rem; color: var(--w40); letter-spacing: 0.05em; text-transform: uppercase; }
+        footer a { color: var(--w70); text-decoration: none; }
+        footer a:hover { color: var(--white); }
+
+        /* ── Fade in ── */
+        .fade-in { opacity: 0; transform: translateY(16px); transition: opacity 0.5s ease, transform 0.5s ease; }
         .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+        @media(max-width: 600px) { .wrap { padding: 0 1.2rem 4rem; } }
     </style>
 </head>
 <body>
 
-<nav>
+<div class="top-nav">
     <a href="index.html" class="back-link">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-        Retour au portfolio
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Portfolio
     </a>
-    <span class="nav-sep">/</span>
-    <span class="nav-title">TN20 — Nerf Rider CS-35</span>
-</nav>
-
-<div class="hero">
-    <div class="hero-meta">
-        <span class="badge">UV TN20 · UTC</span>
-        <span class="badge">Semestre P24 · 2024</span>
-        <span class="badge amber">CATIA V5</span>
-        <span class="badge amber">Rétro-modélisation</span>
-    </div>
-    <h1>Nerf Rider CS-35<br><span class="gradient-text">Revue de Projet CAO</span></h1>
-    <p class="hero-sub">Rétro-modélisation complète d'un pistolet NERF Rider CS-35 sous CATIA V5, réalisée en binôme avec <strong>Damien Guichon</strong> dans le cadre de l'UV TN20 à l'UTC.</p>
-    <img src="nerf_hero.png" alt="Modélisation finale CATIA V5 — Nerf Rider CS-35 complet" class="hero-img">
 </div>
 
 <div class="wrap">
 
-    <!-- ── INTRODUCTION ── -->
+    <div class="hero">
+        <div class="hero-badges">
+            <span class="badge">UV TN20 · UTC</span>
+            <span class="badge">Semestre P24 · 2024</span>
+            <span class="badge">CATIA V5</span>
+            <span class="badge">Rétro-modélisation</span>
+        </div>
+        <h1>Nerf Rider CS-35<br>Revue de Projet CAO</h1>
+        <p>Rétro-modélisation complète d'un pistolet NERF Rider CS-35 sous CATIA V5, réalisée en binôme avec <strong>Damien Guichon</strong> dans le cadre de l'UV TN20 à l'UTC.</p>
+        <img src="nerf_hero.png" alt="Modélisation finale CATIA V5 — Nerf Rider CS-35 complet" class="hero-img">
+    </div>
+
+    <!-- ── Contexte ── -->
     <div class="fade-in">
-        <div class="section-eyebrow">Contexte</div>
-        <h2>Le projet</h2>
+        <span class="eyebrow">Contexte</span>
+        <h2 class="section-title">Le projet</h2>
         <div class="two-col">
-            <div class="text-block">
+            <div>
                 <p>Durant le semestre P24 à l'<strong>Université de Technologie de Compiègne</strong>, notre binôme — Damien Guichon et Clément Balcon — a eu l'opportunité de rétro-modéliser un pistolet NERF dans le cadre de l'UV TN20.</p>
                 <p>L'objet choisi est le <strong>Nerf Rider CS-35</strong>, légèrement modifié par rapport à son modèle d'origine : la crosse arrière a été retirée et une <strong>lunette de visée</strong> a été ajoutée.</p>
-                <p>Le projet visait à appliquer la <strong>méthodologie squelette</strong> pour une modélisation collaborative, en se répartissant les différentes pièces tout en conservant une cohérence d'ensemble. Toute la démarche est restée guidée par un objectif de <strong>fidélité à l'objet physique</strong> : les cotes ont été relevées directement sur le Nerf au <strong>pied à coulisse</strong> afin que la maquette numérique colle au plus près de la réalité.</p>
+                <p>Le projet visait à appliquer la <strong>méthodologie squelette</strong> pour une modélisation collaborative. Toutes les cotes ont été relevées directement sur l'objet au <strong>pied à coulisse</strong>.</p>
                 <div class="tags">
                     <span class="tag">CATIA V5</span>
                     <span class="tag">Modélisation surfacique</span>
@@ -218,25 +174,22 @@
 
     <div class="divider"></div>
 
-    <!-- ── MÉTHODOLOGIE SQUELETTE ── -->
+    <!-- ── Méthodologie squelette ── -->
     <div class="fade-in">
-        <div class="section-eyebrow">Méthodologie</div>
-        <h2>La méthodologie squelette</h2>
+        <span class="eyebrow">Méthodologie</span>
+        <h2 class="section-title">La méthodologie squelette</h2>
         <p>Avant de commencer la modélisation, la <strong>méthodologie squelette</strong> nous a été enseignée. Cette approche consiste à créer d'abord une structure de base — un "squelette" — avant de détailler les éléments spécifiques.</p>
-
         <div class="callout">
             <p>La méthodologie squelette est particulièrement utile pour les projets <strong>complexes et collaboratifs</strong> : elle fournit une base commune permettant à chaque membre de l'équipe de travailler simultanément sur des parties distinctes sans créer d'incohérences géométriques.</p>
         </div>
-
-        <p>Elle nous a permis de nous répartir le travail et d'avancer en parallèle sur les différentes pièces, puis d'assembler le tout sur le squelette central. Cependant, son application a nécessité une <strong>adaptation constante</strong> — certains contacts entre pièces n'avaient pas été anticipés et ont dû être réintégrés au fur et à mesure.</p>
-
+        <p>Elle nous a permis de nous répartir le travail et d'avancer en parallèle sur les différentes pièces. Cependant, son application a nécessité une <strong>adaptation constante</strong> — certains contacts entre pièces n'avaient pas été anticipés et ont dû être réintégrés au fur et à mesure.</p>
         <div class="img-grid-3" style="margin-top:1.5rem;">
             <div class="img-card">
-                <img src="nerf_squelette1.png" alt="Squelette axial — axes et repères de référence">
-                <div class="img-caption">Squelette initial — axes et repères de référence</div>
+                <img src="nerf_squelette1.png" alt="Squelette axial">
+                <div class="img-caption">Squelette initial — axes et repères</div>
             </div>
             <div class="img-card">
-                <img src="nerf_squelette2.png" alt="Squelette avec repère chargeur ajouté">
+                <img src="nerf_squelette2.png" alt="Repère chargeur">
                 <div class="img-caption">Ajout du repère chargeur</div>
             </div>
             <div class="img-card">
@@ -248,19 +201,19 @@
 
     <div class="divider"></div>
 
-    <!-- ── POIGNÉES ── -->
+    <!-- ── Poignées ── -->
     <div class="fade-in">
-        <div class="section-eyebrow">Partie 1</div>
-        <h2>Poignées</h2>
+        <span class="eyebrow">Partie 1</span>
+        <h2 class="section-title">Poignées</h2>
         <div class="two-col">
             <div class="img-card">
-                <img src="nerf_poigneeav.png" alt="Poignée avant assemblée — rendu final">
+                <img src="nerf_poigneeav.png" alt="Poignée avant assemblée">
                 <div class="img-caption">Poignée avant assemblée — rendu final</div>
             </div>
-            <div class="text-block">
-                <p>La modélisation surfacique des <strong>poignées</strong> a constitué l'une des principales difficultés du projet. Les formes organiques et les raccordements complexes ont nécessité la création d'un grand nombre de <strong>courbes guides et de points de contrôle</strong> dont le positionnement n'était pas toujours évident.</p>
-                <p>Pour faire face à cette difficulté, nous avons utilisé un <strong>croquis intermédiaire</strong> servant de référence géométrique afin de guider la construction des surfaces et d'assurer la continuité de courbure.</p>
-                <div class="callout amber">
+            <div>
+                <p>La modélisation surfacique des <strong>poignées</strong> a constitué l'une des principales difficultés du projet. Les formes organiques et les raccordements complexes ont nécessité la création d'un grand nombre de <strong>courbes guides et de points de contrôle</strong>.</p>
+                <p>Pour faire face à cette difficulté, nous avons utilisé un <strong>croquis intermédiaire</strong> servant de référence géométrique pour guider la construction des surfaces.</p>
+                <div class="callout">
                     <p>La modélisation surfacique impose une rigueur dans l'ordre de création des entités — une courbe guide mal positionnée peut invalider l'ensemble du réseau de surfaces.</p>
                 </div>
             </div>
@@ -279,29 +232,27 @@
 
     <div class="divider"></div>
 
-    <!-- ── LUNETTE ── -->
+    <!-- ── Lunette ── -->
     <div class="fade-in">
-        <div class="section-eyebrow">Partie 2</div>
-        <h2>Lunette de visée</h2>
-        <div class="text-block">
-            <p>La <strong>lunette de visée</strong> ajoutée sur le Nerf modifié représentait également un défi notable : elle comporte de nombreux petits corps devant être intégrés via des <strong>opérations booléennes</strong> successives.</p>
-            <p>La réalisation des <strong>rainures complexes</strong> sur la surface grise épaisse a nécessité un processus multi-étapes :</p>
-            <ol style="color:var(--muted); padding-left:1.4rem; line-height:2;">
-                <li>Création d'un corps auxiliaire + esquisse</li>
-                <li>Extrusion surfacique</li>
-                <li>Décalage et extrapolation de la surface épaisse</li>
-                <li>Découpe par l'extrusion surfacique</li>
-                <li>Extrusion de la surface découpée</li>
-                <li>Soustraction booléenne du corps de la surface épaisse</li>
-            </ol>
-        </div>
+        <span class="eyebrow">Partie 2</span>
+        <h2 class="section-title">Lunette de visée</h2>
+        <p>La <strong>lunette de visée</strong> ajoutée sur le Nerf modifié représentait un défi notable : elle comporte de nombreux petits corps intégrés via des <strong>opérations booléennes</strong> successives.</p>
+        <p>La réalisation des <strong>rainures complexes</strong> sur la surface grise épaisse a nécessité un processus multi-étapes :</p>
+        <ol>
+            <li>Création d'un corps auxiliaire + esquisse</li>
+            <li>Extrusion surfacique</li>
+            <li>Décalage et extrapolation de la surface épaisse</li>
+            <li>Découpe par l'extrusion surfacique</li>
+            <li>Extrusion de la surface découpée</li>
+            <li>Soustraction booléenne du corps de la surface épaisse</li>
+        </ol>
         <div class="img-grid-3" style="margin-top:1.5rem;">
             <div class="img-card">
                 <img src="nerf_lunette1.png" alt="Vue latérale — lunette assemblée">
                 <div class="img-caption">Vue latérale — lunette assemblée</div>
             </div>
             <div class="img-card">
-                <img src="nerf_lunette2.png" alt="Rail de fixation et surface grise épaisse">
+                <img src="nerf_lunette2.png" alt="Rail de fixation">
                 <div class="img-caption">Rail de fixation et surface grise épaisse</div>
             </div>
             <div class="img-card">
@@ -313,22 +264,22 @@
 
     <div class="divider"></div>
 
-    <!-- ── CHARGEUR & TAMBOUR ── -->
+    <!-- ── Chargeur ── -->
     <div class="fade-in">
-        <div class="section-eyebrow">Partie 3</div>
-        <h2>Chargeur & Tambour</h2>
-        <p>Le chargeur circulaire a été traité comme un <strong>sous-ensemble indépendant</strong> en raison de sa complexité : il est composé de <strong>quatre pièces distinctes</strong>, dont le tambour rotatif. Nous avons donc décidé de lui créer son propre squelette afin de faciliter et d'organiser sa conception.</p>
+        <span class="eyebrow">Partie 3</span>
+        <h2 class="section-title">Chargeur & Tambour</h2>
+        <p>Le chargeur circulaire a été traité comme un <strong>sous-ensemble indépendant</strong> en raison de sa complexité : il est composé de <strong>quatre pièces distinctes</strong>, dont le tambour rotatif. Il dispose de son propre squelette.</p>
         <div class="img-grid-3">
             <div class="img-card">
                 <img src="nerf_chargeur.png" alt="Chargeur tambour — assemblage complet">
                 <div class="img-caption">Chargeur tambour — assemblage complet</div>
             </div>
             <div class="img-card">
-                <img src="nerf_tambour.png" alt="Tambour rotatif — géométrie interne">
+                <img src="nerf_tambour.png" alt="Tambour rotatif">
                 <div class="img-caption">Tambour rotatif — géométrie interne</div>
             </div>
             <div class="img-card">
-                <img src="nerf_surfchargeur.png" alt="Partie surfacique — couvercle du chargeur">
+                <img src="nerf_surfchargeur.png" alt="Couvercle du chargeur">
                 <div class="img-caption">Partie surfacique — couvercle du chargeur</div>
             </div>
         </div>
@@ -336,14 +287,13 @@
 
     <div class="divider"></div>
 
-    <!-- ── CORPS BLEU ── -->
+    <!-- ── Corps ── -->
     <div class="fade-in">
-        <div class="section-eyebrow">Partie 4</div>
-        <h2>Corps principal</h2>
+        <span class="eyebrow">Partie 4</span>
+        <h2 class="section-title">Corps principal</h2>
         <div class="two-col">
-            <div class="text-block">
-                <p>Le corps bleu principal du Nerf concentre l'essentiel de la <strong>modélisation volumique</strong> du projet. Sa géométrie générale est plus accessible que les pièces détaillées, mais certains détails de surface ont posé des difficultés spécifiques.</p>
-                <p>La réalisation d'une <strong>"poche surfacique"</strong> — n'étant pas une opération native dans CATIA V5 — a demandé une approche détournée :</p>
+            <div>
+                <p>Le corps bleu principal concentre l'essentiel de la <strong>modélisation volumique</strong>. La réalisation d'une <strong>"poche surfacique"</strong> — non native dans CATIA V5 — a demandé une approche détournée :</p>
                 <div class="callout">
                     <p>Création d'un corps + esquisse → extrusion → extrapolation de la surface bleue → découpe → extrusion de la découpe → <strong>opération booléenne de soustraction</strong>, puis addition pour la partie orange.</p>
                 </div>
@@ -357,11 +307,11 @@
 
     <div class="divider"></div>
 
-    <!-- ── RENDU FINAL ── -->
+    <!-- ── Résultat ── -->
     <div class="fade-in">
-        <div class="section-eyebrow">Résultat</div>
-        <h2>Modélisation finale</h2>
-        <p>Pour assurer la précision dimensionnelle de l'ensemble, nous avons emprunté un <strong>pied à coulisse</strong> pour relever les cotes réelles du Nerf — ce qui a permis d'obtenir un rendu fidèle à l'objet physique. Les deux vues ci-dessous montrent le résultat final de la <strong>rétro-modélisation</strong>, avec et sans le chargeur tambour.</p>
+        <span class="eyebrow">Résultat</span>
+        <h2 class="section-title">Modélisation finale</h2>
+        <p>Pour assurer la précision dimensionnelle, nous avons emprunté un <strong>pied à coulisse</strong> pour relever les cotes réelles du Nerf. Les deux vues montrent le résultat final de la <strong>rétro-modélisation</strong>, avec et sans le chargeur tambour.</p>
         <div class="img-grid-2" style="margin-top:1.2rem;">
             <div class="img-card">
                 <img src="nerf_hero.png" alt="Vue 3/4 — Nerf complet avec chargeur tambour">
@@ -376,15 +326,15 @@
 
     <div class="divider"></div>
 
-    <!-- ── CONCLUSION ── -->
+    <!-- ── Conclusion ── -->
     <div class="fade-in">
-        <div class="section-eyebrow">Bilan</div>
-        <h2>Conclusion</h2>
-        <p>Ce projet TN20 a été riche en apprentissages techniques et méthodologiques. La comparaison entre <strong>CATIA V5</strong> et CREO Parametric — que nous avions utilisé auparavant — a révélé que CATIA V5 présente moins de bugs d'assemblage, facilitant grandement le travail collaboratif. En revanche, sa <strong>documentation en ligne</strong> est parfois insuffisante pour débloquer certains problèmes spécifiques.</p>
-        <div class="callout" style="margin-top:1.5rem;">
-            <p>TN20 nous a permis d'acquérir une <strong>maîtrise avancée de CATIA V5</strong> et des logiciels de CAO en général, tout en forgeant une véritable cohésion d'équipe et en démontrant la valeur du travail collaboratif structuré autour d'une méthodologie partagée.</p>
+        <span class="eyebrow">Bilan</span>
+        <h2 class="section-title">Conclusion</h2>
+        <p>Ce projet TN20 a été riche en apprentissages techniques et méthodologiques. La comparaison entre <strong>CATIA V5</strong> et CREO Parametric — que nous avions utilisé auparavant — a révélé que CATIA V5 présente moins de bugs d'assemblage, facilitant grandement le travail collaboratif.</p>
+        <div class="callout">
+            <p>TN20 nous a permis d'acquérir une <strong>maîtrise avancée de CATIA V5</strong> et des logiciels de CAO en général, tout en forgeant une véritable cohésion d'équipe autour d'une méthodologie partagée.</p>
         </div>
-        <div class="tags" style="margin-top:1.2rem;">
+        <div class="tags">
             <span class="tag">CATIA V5</span>
             <span class="tag">Modélisation surfacique</span>
             <span class="tag">Opérations booléennes</span>
@@ -394,17 +344,23 @@
             <span class="tag">Travail collaboratif</span>
         </div>
         <a href="index.html" class="back-btn">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
             Retour au portfolio
         </a>
     </div>
 
 </div>
 
+<footer>
+    <div style="max-width:900px;margin:0 auto;padding:0 2rem;">
+        <a href="index.html">← Retour au portfolio</a> &nbsp;·&nbsp; Clément Balcon © 2026
+    </div>
+</footer>
+
 <script>
     const obs = new IntersectionObserver((entries) => {
         entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
-    }, { threshold: 0.08 });
+    }, { threshold: 0.06 });
     document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
 </script>
 </body>
