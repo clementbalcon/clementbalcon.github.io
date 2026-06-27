@@ -663,11 +663,15 @@
         const ry = py + Math.sin(ra) * 44;
         const perpX = Math.cos(pa), perpY = Math.sin(pa);
 
+        // Offset fuselage : centre visuel du PNG est 4.6px au-dessus du centre pixel
+        // → se traduit en décalage perpendiculaire qui tourne avec l'avion
+        const fcx = perpX * 4.6, fcy = perpY * 4.6;
+
         // Deux réacteurs (Rafale vue du dessus, moteurs côte à côte)
         for (let s = -1; s <= 1; s += 2) {
             parts.push({
-                x: rx + perpX * 7 * s + (Math.random() - 0.5) * 2,
-                y: ry + perpY * 7 * s + (Math.random() - 0.5) * 2,
+                x: rx + fcx + perpX * 6 * s + (Math.random() - 0.5) * 1.5,
+                y: ry + fcy + perpY * 6 * s + (Math.random() - 0.5) * 1.5,
                 vx: Math.cos(ra) * (1.2 + Math.random() * 0.6),
                 vy: Math.sin(ra) * (1.2 + Math.random() * 0.6),
                 life: 1.0,
