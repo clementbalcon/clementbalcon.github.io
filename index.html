@@ -210,6 +210,48 @@
         }
         .arrow-link:hover { border-color: var(--white); }
 
+        /* ── Portails trou noir ── */
+        @keyframes portal-spin     { to { transform: rotate(360deg); } }
+        @keyframes portal-spin-rev { to { transform: rotate(-360deg); } }
+        @keyframes portal-pulse {
+            0%,100% { box-shadow: 0 0 8px rgba(255,255,255,0.18), inset 0 0 14px rgba(0,0,0,0.9); }
+            50%      { box-shadow: 0 0 18px rgba(255,255,255,0.38), inset 0 0 22px rgba(0,0,0,0.95); }
+        }
+
+        .project-row { display: flex; align-items: center; gap: 2.5rem; }
+        .project-content { flex: 1; min-width: 0; }
+
+        .portal-wrap { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 0.35rem; }
+        .portal {
+            width: 54px; height: 54px; border-radius: 50%;
+            background: radial-gradient(circle, #030a05 0%, #0d1f13 55%, #173024 100%);
+            border: 2px solid rgba(255,255,255,0.45);
+            position: relative;
+            animation: portal-pulse 2.8s ease-in-out infinite;
+            cursor: pointer;
+        }
+        .portal::before {
+            content: ''; position: absolute; inset: 4px; border-radius: 50%;
+            border: 1.5px solid transparent;
+            border-top-color: rgba(255,255,255,0.7);
+            border-right-color: rgba(255,255,255,0.2);
+            animation: portal-spin 3s linear infinite;
+        }
+        .portal::after {
+            content: ''; position: absolute; inset: 11px; border-radius: 50%;
+            border: 1px dashed rgba(255,255,255,0.2);
+            animation: portal-spin-rev 6s linear infinite;
+        }
+        .portal-label {
+            font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.07em;
+            color: var(--w40); font-family: 'Inter', sans-serif;
+        }
+        .portal-enter { animation: portal-pulse-enter 0.5s ease-in-out infinite !important; }
+        @keyframes portal-pulse-enter {
+            0%,100% { box-shadow: 0 0 25px rgba(255,255,255,0.6); }
+            50%      { box-shadow: 0 0 45px rgba(255,255,255,0.9); }
+        }
+
         /* ── Skills ── */
         .skills-group { margin-bottom: 2rem; }
         .skills-group:last-child { margin-bottom: 0; }
@@ -417,43 +459,75 @@
         <div class="section-title">Projets</div>
 
         <div class="project">
-            <div class="project-name">Solder Pen — Outillage de Brasage</div>
-            <div class="entry-meta">
-                <span class="badge">PR UTC · 2026</span>
-                <span class="entry-sub">Clément Balcon · Tristan Marquet · Matra Électronique × UTC</span>
+            <div class="project-row">
+                <div class="project-content">
+                    <div class="project-name">Solder Pen — Outillage de Brasage</div>
+                    <div class="entry-meta">
+                        <span class="badge">PR UTC · 2026</span>
+                        <span class="entry-sub">Clément Balcon · Tristan Marquet · Matra Électronique × UTC</span>
+                    </div>
+                    <p class="project-desc">Conception d'un outil ergonomique d'apport de fil d'alliage pour le brasage manuel de cartes électroniques. Analyse fonctionnelle (FAST), modélisation 3D CATIA et prototype imprimé.</p>
+                    <a href="matra.html" class="arrow-link">Voir le projet →</a>
+                </div>
+                <div class="portal-wrap">
+                    <div class="portal" data-href="matra.html"></div>
+                    <div class="portal-label">Entrer</div>
+                </div>
             </div>
-            <p class="project-desc">Conception d'un outil ergonomique d'apport de fil d'alliage pour le brasage manuel de cartes électroniques. Analyse fonctionnelle (FAST), modélisation 3D CATIA et prototype imprimé.</p>
-            <a href="matra.html" class="arrow-link">Voir le projet →</a>
         </div>
 
         <div class="project">
-            <div class="project-name">RobAFIS — Robot Mobile Autonome</div>
-            <div class="entry-meta">
-                <span class="badge gold">🏆 Prix de l'Innovation</span>
-                <span class="entry-sub">Équipe BACAR · UTC · Sept 2025 — Janv 2026 · 13 écoles</span>
+            <div class="project-row">
+                <div class="project-content">
+                    <div class="project-name">RobAFIS — Robot Mobile Autonome</div>
+                    <div class="entry-meta">
+                        <span class="badge gold">🏆 Prix de l'Innovation</span>
+                        <span class="entry-sub">Équipe BACAR · UTC · Sept 2025 — Janv 2026 · 13 écoles</span>
+                    </div>
+                    <p class="project-desc">Concours national RobAFIS (AFIS, Toulouse). Rôle de coordinateur Intégration, Vérification &amp; Validation. L'UTC a décroché le Prix de l'Innovation.</p>
+                    <a href="robafis.html" class="arrow-link">Voir la revue →</a>
+                </div>
+                <div class="portal-wrap">
+                    <div class="portal" data-href="robafis.html"></div>
+                    <div class="portal-label">Entrer</div>
+                </div>
             </div>
-            <p class="project-desc">Concours national RobAFIS (AFIS, Toulouse). Rôle de coordinateur Intégration, Vérification &amp; Validation. L'UTC a décroché le Prix de l'Innovation.</p>
-            <a href="robafis.html" class="arrow-link">Voir la revue →</a>
         </div>
 
         <div class="project">
-            <div class="project-name">Cric Hydraulique — Étude de Statique</div>
-            <div class="entry-meta">
-                <span class="badge">UV TN06 · UTC 2023</span>
-                <span class="entry-sub">Lucas Arulnadin · Clément Balcon · Damien Guichon</span>
+            <div class="project-row">
+                <div class="project-content">
+                    <div class="project-name">Cric Hydraulique — Étude de Statique</div>
+                    <div class="entry-meta">
+                        <span class="badge">UV TN06 · UTC 2023</span>
+                        <span class="entry-sub">Lucas Arulnadin · Clément Balcon · Damien Guichon</span>
+                    </div>
+                    <p class="project-desc">Analyse statique complète d'un cric hydraulique (7 solides) — schéma cinématique, PFS 3D analytique et graphique, démultiplication hydraulique ×17, validation expérimentale.</p>
+                    <a href="tn06.html" class="arrow-link">Voir l'étude →</a>
+                </div>
+                <div class="portal-wrap">
+                    <div class="portal" data-href="tn06.html"></div>
+                    <div class="portal-label">Entrer</div>
+                </div>
             </div>
-            <p class="project-desc">Analyse statique complète d'un cric hydraulique (7 solides) — schéma cinématique, PFS 3D analytique et graphique, démultiplication hydraulique ×17, validation expérimentale.</p>
-            <a href="tn06.html" class="arrow-link">Voir l'étude →</a>
         </div>
 
         <div class="project">
-            <div class="project-name">Rétro-modélisation Nerf Rider CS-35</div>
-            <div class="entry-meta">
-                <span class="badge">CATIA V5 · UTC P24</span>
-                <span class="entry-sub">Clément Balcon · Damien Guichon</span>
+            <div class="project-row">
+                <div class="project-content">
+                    <div class="project-name">Rétro-modélisation Nerf Rider CS-35</div>
+                    <div class="entry-meta">
+                        <span class="badge">CATIA V5 · UTC P24</span>
+                        <span class="entry-sub">Clément Balcon · Damien Guichon</span>
+                    </div>
+                    <p class="project-desc">Rétro-modélisation complète d'un pistolet NERF sous CATIA V5. Méthodologie squelette, modélisation surfacique complexe, assemblages multi-pièces.</p>
+                    <a href="nerf.html" class="arrow-link">Voir la revue →</a>
+                </div>
+                <div class="portal-wrap">
+                    <div class="portal" data-href="nerf.html"></div>
+                    <div class="portal-label">Entrer</div>
+                </div>
             </div>
-            <p class="project-desc">Rétro-modélisation complète d'un pistolet NERF sous CATIA V5. Méthodologie squelette, modélisation surfacique complexe, assemblages multi-pièces.</p>
-            <a href="nerf.html" class="arrow-link">Voir la revue →</a>
         </div>
 
         <div class="project">
@@ -693,6 +767,10 @@
     const missiles = [], f35s = [], expl = [];
     let kills = 0, lastFire = 0, f35Timer = 0;
 
+    // Portails
+    const portalEls = Array.from(document.querySelectorAll('.portal[data-href]'));
+    let portalCooldown = 0, portalNavigating = false;
+
     function fireMica() {
         const now = Date.now();
         if (now - lastFire < 650) return;
@@ -790,6 +868,29 @@
             f.el.style.top  = (f.y - HALF_FH) + 'px';
             // F35 nez en HAUT → rotation = angle + π/2
             f.img.style.transform = `rotate(${(f.angle + Math.PI/2) * 180 / Math.PI}deg)`;
+        }
+
+        // Portails — détection collision
+        if (!portalNavigating) {
+            if (portalCooldown > 0) portalCooldown--;
+            else {
+                for (const pel of portalEls) {
+                    const r = pel.getBoundingClientRect();
+                    const cx = r.left + r.width / 2;
+                    const cy = r.top  + r.height / 2;
+                    const dx = px - cx, dy = py - cy;
+                    if (dx*dx + dy*dy < 36*36) {
+                        portalNavigating = true;
+                        pel.classList.add('portal-enter');
+                        const flash = document.createElement('div');
+                        flash.style.cssText = 'position:fixed;inset:0;background:#fff;opacity:0;z-index:9999;transition:opacity 0.25s ease;pointer-events:none;';
+                        document.body.appendChild(flash);
+                        requestAnimationFrame(() => { flash.style.opacity = '1'; });
+                        setTimeout(() => { window.location.href = pel.dataset.href; }, 280);
+                        break;
+                    }
+                }
+            }
         }
 
         // Explosions sur canvas
