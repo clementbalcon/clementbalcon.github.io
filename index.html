@@ -700,11 +700,26 @@
         // Position
         px += vx; py += vy;
 
-        // Wrap bords
+        // Wrap bords gauche/droite, haut
         if (px < -HALF_W) px = W + HALF_W;
         else if (px > W + HALF_W) px = -HALF_W;
         if (py < -HALF_H) py = H + HALF_H;
-        else if (py > H + HALF_H) py = -HALF_H;
+
+        // Scroll page quand l'avion approche du bas
+        const scrollZone = H * 0.78;
+        const scrollMax  = H * 0.95;
+        if (py > scrollZone) {
+            const force = ((py - scrollZone) / (scrollMax - scrollZone)) * 18;
+            window.scrollBy(0, force);
+            if (py > scrollMax) py = scrollMax;
+        }
+        // Scroll vers le haut quand l'avion remonte en haut
+        const scrollUpZone = H * 0.12;
+        if (py < scrollUpZone) {
+            const force = ((scrollUpZone - py) / scrollUpZone) * 18;
+            window.scrollBy(0, -force);
+            if (py < 0) py = 0;
+        }
 
         // Angle lissé vers la direction de vol
         const curSpd = Math.sqrt(vx * vx + vy * vy);
