@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zone de Combat · Clément Balcon</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            width: 100%; height: 100%;
+            overflow: hidden;
+            background: #06090f;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Grille de fond */
+        body::before {
+            content: '';
+            position: fixed; inset: 0; z-index: 0;
+            background-image:
+                linear-gradient(rgba(64,145,108,0.06) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(64,145,108,0.06) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+        }
+
+        /* Titre centré affiché au départ */
+        #intro {
+            position: fixed; inset: 0; z-index: 200;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            gap: 1.2rem;
+            pointer-events: none;
+            transition: opacity 1s ease;
+        }
+        #intro h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(3rem, 10vw, 7rem);
+            letter-spacing: 0.06em;
+            color: rgba(255,255,255,0.92);
+            line-height: 1;
+        }
+        #intro p {
+            font-size: 0.78rem; text-transform: uppercase;
+            letter-spacing: 0.14em; color: rgba(255,255,255,0.40);
+        }
+        #intro.hidden { opacity: 0; }
+
+        /* Portail sortie */
+        @keyframes portal-spin     { to { transform: rotate(360deg); } }
+        @keyframes portal-spin-rev { to { transform: rotate(-360deg); } }
+        @keyframes portal-pulse {
+            0%,100% { box-shadow: 0 0 10px rgba(255,255,255,0.55), 0 0 22px rgba(255,255,255,0.22); }
+            50%      { box-shadow: 0 0 24px rgba(255,255,255,0.95), 0 0 48px rgba(255,255,255,0.42); }
+        }
+        .portal {
+            position: fixed; top: 1.2rem; right: 1.5rem; z-index: 100;
+            width: 70px; height: 70px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(8,20,12,0.85) 0%, rgba(255,255,255,0.06) 55%, rgba(255,255,255,0.6) 80%, rgba(255,255,255,0.88) 100%);
+            border: 2px solid rgba(255,255,255,0.88);
+            animation: portal-pulse 2.8s ease-in-out infinite;
+            cursor: pointer;
+        }
+        .portal::before {
+            content: ''; position: absolute; inset: 5px; border-radius: 50%;
+            border: 2px solid transparent;
+            border-top-color: rgba(255,255,255,0.95);
+            border-right-color: rgba(255,255,255,0.4);
+            animation: portal-spin 3s linear infinite;
+        }
+        .portal::after {
+            content: ''; position: absolute; inset: 14px; border-radius: 50%;
+            border: 1px dashed rgba(255,255,255,0.55);
+            animation: portal-spin-rev 6s linear infinite;
+        }
+        .portal-label {
+            position: absolute; bottom: -1.3rem; left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.55rem; text-transform: uppercase;
+            letter-spacing: 0.07em; color: rgba(255,255,255,0.40);
+            white-space: nowrap; font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body>
+
+<div id="intro">
+    <h1>Zone de Combat</h1>
+    <p>ZQSD · Voler &nbsp;·&nbsp; ESPACE · Tirer &nbsp;·&nbsp; A · Post-combustion</p>
+</div>
+
+<div class="portal" data-href="index.html#sandbox">
+    <span class="portal-label">Sortie</span>
+</div>
+
+<script>
+    // Cacher le titre après 4s
+    setTimeout(() => {
+        const intro = document.getElementById('intro');
+        intro.classList.add('hidden');
+        setTimeout(() => intro.remove(), 1000);
+    }, 4000);
+
+    window.RAFALE_OPTS = { spawnFromPortal: true };
+</script>
+<script src="rafale-game.js"></script>
+
+</body>
+</html>

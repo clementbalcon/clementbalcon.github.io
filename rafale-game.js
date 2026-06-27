@@ -134,6 +134,7 @@
     }
 
     // ── F35 ──
+    const NO_ENEMIES = cfg.noEnemies || false;
     const F35_W = 95, HALF_FW = 47, HALF_FH = 47;
     const f35s = [], expl = [];
     let kills = 0, f35Timer = 0;
@@ -168,8 +169,10 @@
 
     function updateGame() {
         // Spawn F35
-        f35Timer++;
-        if (f35Timer > 300 && f35s.length < 5) { f35Timer = 0; spawnF35(); }
+        if (!NO_ENEMIES) {
+            f35Timer++;
+            if (f35Timer > 300 && f35s.length < 5) { f35Timer = 0; spawnF35(); }
+        }
 
         // Missiles
         for (let i = missiles.length-1; i >= 0; i--) {
@@ -182,35 +185,39 @@
             m.el.style.top  = (m.y - HALF_MH) + 'px';
             m.img.style.transform = `rotate(${m.angle * 180 / Math.PI}deg)`;
 
-            for (let j = f35s.length-1; j >= 0; j--) {
-                const f = f35s[j];
-                const dx = m.x-f.x, dy = m.y-f.y;
-                if (dx*dx+dy*dy < 45*45) {
-                    explode(f.x, f.y);
-                    f.el.remove(); f35s.splice(j,1);
-                    m.el.remove(); missiles.splice(i,1);
-                    kills++;
-                    hud.textContent = kills + (kills>1 ? ' ABATTUS' : ' ABATTU');
-                    hud.style.opacity = '1';
-                    break;
+            if (!NO_ENEMIES) {
+                for (let j = f35s.length-1; j >= 0; j--) {
+                    const f = f35s[j];
+                    const dx = m.x-f.x, dy = m.y-f.y;
+                    if (dx*dx+dy*dy < 45*45) {
+                        explode(f.x, f.y);
+                        f.el.remove(); f35s.splice(j,1);
+                        m.el.remove(); missiles.splice(i,1);
+                        kills++;
+                        hud.textContent = kills + (kills>1 ? ' ABATTUS' : ' ABATTU');
+                        hud.style.opacity = '1';
+                        break;
+                    }
                 }
             }
         }
 
         // F35 IA
-        for (const f of f35s) {
-            const ta = Math.atan2(py-f.y, px-f.x);
-            let diff = ta-f.angle;
-            while (diff>Math.PI) diff-=2*Math.PI;
-            while (diff<-Math.PI) diff+=2*Math.PI;
-            f.angle += diff*0.03;
-            f.vx += Math.cos(f.angle)*0.07; f.vy += Math.sin(f.angle)*0.07;
-            const spd = Math.sqrt(f.vx*f.vx+f.vy*f.vy);
-            if (spd>2.2) { f.vx=f.vx/spd*2.2; f.vy=f.vy/spd*2.2; }
-            f.x += f.vx; f.y += f.vy;
-            f.el.style.left = (f.x - HALF_FW) + 'px';
-            f.el.style.top  = (f.y - HALF_FH) + 'px';
-            f.img.style.transform = `rotate(${(f.angle + Math.PI/2) * 180 / Math.PI}deg)`;
+        if (!NO_ENEMIES) {
+            for (const f of f35s) {
+                const ta = Math.atan2(py-f.y, px-f.x);
+                let diff = ta-f.angle;
+                while (diff>Math.PI) diff-=2*Math.PI;
+                while (diff<-Math.PI) diff+=2*Math.PI;
+                f.angle += diff*0.03;
+                f.vx += Math.cos(f.angle)*0.07; f.vy += Math.sin(f.angle)*0.07;
+                const spd = Math.sqrt(f.vx*f.vx+f.vy*f.vy);
+                if (spd>2.2) { f.vx=f.vx/spd*2.2; f.vy=f.vy/spd*2.2; }
+                f.x += f.vx; f.y += f.vy;
+                f.el.style.left = (f.x - HALF_FW) + 'px';
+                f.el.style.top  = (f.y - HALF_FH) + 'px';
+                f.img.style.transform = `rotate(${(f.angle + Math.PI/2) * 180 / Math.PI}deg)`;
+            }
         }
 
         // Explosions
