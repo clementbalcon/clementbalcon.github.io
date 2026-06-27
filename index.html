@@ -12,7 +12,7 @@
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
-            --bg: #00A86B;
+            --bg: #40916C;
             --white: #ffffff;
             --w70: rgba(255,255,255,0.70);
             --w40: rgba(255,255,255,0.40);
@@ -22,8 +22,8 @@
         html { scroll-behavior: smooth; }
 
         body {
-            background: #00A86B;
-            background-image: radial-gradient(ellipse at 15% 0%, #00c97e 0%, transparent 60%);
+            background: #40916C;
+            background-image: radial-gradient(ellipse at 15% 0%, #52a87e 0%, transparent 60%);
             color: var(--white);
             font-family: 'Inter', sans-serif;
             font-weight: 400;
@@ -32,7 +32,28 @@
         }
 
         /* ── Layout ── */
-        .wrap { max-width: 860px; margin: 0 auto; padding: 0 2rem; }
+        .wrap { max-width: 1060px; margin: 0 auto; padding: 0 2rem; }
+
+        /* ── Dual column (parcours) ── */
+        .dual-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0 4rem;
+            align-items: start;
+        }
+        .col-head {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(1.6rem, 3vw, 2.2rem);
+            letter-spacing: 0.05em;
+            color: var(--w70);
+            margin-bottom: 2rem;
+            padding-bottom: 0.6rem;
+            border-bottom: 1px solid var(--w20);
+        }
+        @media (max-width: 680px) {
+            .dual-col { grid-template-columns: 1fr; }
+            .dual-col > div + div { margin-top: 3rem; border-top: 1px solid var(--w20); padding-top: 3rem; }
+        }
 
         /* ── Section ── */
         .section { padding: 5rem 0; border-top: 1px solid var(--w40); }
@@ -312,73 +333,82 @@
         </div>
     </section>
 
-    <!-- ─── EXPÉRIENCE ─── -->
+    <!-- ─── PARCOURS ─── -->
     <section class="section fade-in" id="experience">
-        <div class="section-title">Expérience</div>
+        <div class="section-title">Parcours</div>
+        <div class="dual-col">
 
-        <div class="entry">
-            <div class="entry-name">Safran Aircraft Engines</div>
-            <div class="entry-meta">
-                <span class="badge">Sep 2024 — Sep 2026</span>
-                <span class="entry-sub">Apprenti Ingénieur · Division des Moteurs Militaires, Châtellerault</span>
+            <!-- Expérience -->
+            <div>
+                <div class="col-head">Expérience Professionnelle</div>
+
+                <div class="entry">
+                    <div class="entry-name">Safran Aircraft Engines</div>
+                    <div class="entry-meta">
+                        <span class="badge">Sep 2024 — Sep 2026</span>
+                    </div>
+                    <div class="entry-sub" style="margin-bottom:0.4rem">Apprenti Ingénieur · Division des Moteurs Militaires, Châtellerault</div>
+                    <p class="entry-desc">Pilotage de la performance industrielle (KPI), amélioration continue, digitalisation des processus de production et déploiement de nouvelles technologies sur lignes de maintenance.</p>
+                </div>
+
+                <div class="entry">
+                    <div class="entry-name">Matra Électronique — filiale MBDA</div>
+                    <div class="entry-meta">
+                        <span class="badge">2026</span>
+                    </div>
+                    <div class="entry-sub" style="margin-bottom:0.4rem">Conception Outillage · Prestation JE UTC (UTeam)</div>
+                    <p class="entry-desc">Conception d'un nouvel outillage de brasage et implémentation dans la ligne de production, en partenariat industriel avec un équipementier de défense.</p>
+                </div>
+
+                <div class="entry">
+                    <div class="entry-name">ICN — Itaguaí Construções Navais</div>
+                    <div class="entry-meta">
+                        <span class="badge">Juil — Août 2022</span>
+                    </div>
+                    <div class="entry-sub" style="margin-bottom:0.4rem">Stage Ouvrier · Construction Navale, Brésil</div>
+                    <p class="entry-desc">Immersion en production industrielle lourde au sein d'un chantier naval militaire brésilien spécialisé dans la fabrication de sous-marins.</p>
+                </div>
             </div>
-            <p class="entry-desc">Pilotage de la performance industrielle (KPI), amélioration continue, digitalisation des processus de production et déploiement de nouvelles technologies sur lignes de maintenance.</p>
-        </div>
 
-        <div class="entry">
-            <div class="entry-name">Matra Électronique — filiale MBDA</div>
-            <div class="entry-meta">
-                <span class="badge">2026</span>
-                <span class="entry-sub">Conception Outillage · Prestation JE UTC (UTeam)</span>
+            <!-- Formation -->
+            <div>
+                <div class="col-head">Formation Académique</div>
+
+                <div class="entry">
+                    <div class="entry-name">UTC · Diplôme d'Ingénieur</div>
+                    <div class="entry-meta">
+                        <span class="badge">Fév 2024 — Sept 2026</span>
+                    </div>
+                    <div class="entry-sub" style="margin-bottom:0.4rem">Filière PIL — Production Intégrée et Logistique · Compiègne</div>
+                    <p class="entry-desc">Lean management, gestion de production, méthodes statistiques, modélisation des systèmes de performance industrielle. En alternance.</p>
+                </div>
+
+                <div class="entry">
+                    <div class="entry-name">UTC · Cycle Ingénieur</div>
+                    <div class="entry-meta">
+                        <span class="badge">Fév 2022 — Fév 2024</span>
+                    </div>
+                    <div class="entry-sub" style="margin-bottom:0.4rem">Conception Mécanique · Compiègne</div>
+                    <p class="entry-desc">Tronc commun pluridisciplinaire puis spécialisation mécanique — RDM, conception, phénomènes électromagnétiques, transmission des efforts.</p>
+                </div>
+
+                <div class="entry">
+                    <div class="entry-name">Lycée Molière · Rio de Janeiro</div>
+                    <div class="entry-meta">
+                        <span class="badge">Août 2018 — Nov 2021</span>
+                    </div>
+                    <div class="entry-sub">Baccalauréat · Maths & Physique-Chimie, option Maths Expertes</div>
+                </div>
+
+                <div class="entry">
+                    <div class="entry-name">Sayfol International School</div>
+                    <div class="entry-meta">
+                        <span class="badge">Sept 2017 — Juin 2018</span>
+                    </div>
+                    <div class="entry-sub">Lycée International Anglophone · Kota Kinabalu, Malaisie</div>
+                </div>
             </div>
-            <p class="entry-desc">Conception d'un nouvel outillage de brasage et implémentation dans la ligne de production, en partenariat industriel avec un équipementier de défense.</p>
-        </div>
 
-        <div class="entry">
-            <div class="entry-name">ICN — Itaguaí Construções Navais</div>
-            <div class="entry-meta">
-                <span class="badge">Juil — Août 2022</span>
-                <span class="entry-sub">Stage Ouvrier · Construction Navale, Brésil</span>
-            </div>
-            <p class="entry-desc">Immersion en production industrielle lourde au sein d'un chantier naval militaire brésilien spécialisé dans la fabrication de sous-marins.</p>
-        </div>
-    </section>
-
-    <!-- ─── FORMATION ─── -->
-    <section class="section fade-in" id="formation">
-        <div class="section-title">Formation</div>
-
-        <div class="entry">
-            <div class="entry-name">UTC — Diplôme d'Ingénieur · PIL</div>
-            <div class="entry-meta">
-                <span class="badge">Fév 2024 — Sept 2026</span>
-                <span class="entry-sub">Production Intégrée et Logistique · Compiègne</span>
-            </div>
-            <p class="entry-desc">Lean management, gestion de production, méthodes statistiques, modélisation des systèmes de performance industrielle. En alternance.</p>
-        </div>
-
-        <div class="entry">
-            <div class="entry-name">UTC — Cycle Ingénieur · Conception Mécanique</div>
-            <div class="entry-meta">
-                <span class="badge">Fév 2022 — Fév 2024</span>
-            </div>
-            <p class="entry-desc">Tronc commun pluridisciplinaire puis spécialisation mécanique — RDM, conception, phénomènes électromagnétiques, transmission des efforts.</p>
-        </div>
-
-        <div class="entry">
-            <div class="entry-name">Lycée Molière · Rio de Janeiro</div>
-            <div class="entry-meta">
-                <span class="badge">Août 2018 — Nov 2021</span>
-                <span class="entry-sub">Baccalauréat · Maths & Physique-Chimie, option Maths Expertes</span>
-            </div>
-        </div>
-
-        <div class="entry">
-            <div class="entry-name">Sayfol International School · Kota Kinabalu</div>
-            <div class="entry-meta">
-                <span class="badge">Sept 2017 — Juin 2018</span>
-                <span class="entry-sub">Lycée International Anglophone · Malaisie</span>
-            </div>
         </div>
     </section>
 
