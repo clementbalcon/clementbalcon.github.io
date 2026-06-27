@@ -618,10 +618,10 @@
 
     // Élément avion
     const wrap = document.createElement('div');
-    wrap.style.cssText = 'position:fixed;z-index:10;pointer-events:none;width:68px;height:34px;';
+    wrap.style.cssText = 'position:fixed;z-index:10;pointer-events:none;width:120px;height:96px;';
     const img = document.createElement('img');
     img.src = 'Rafale.png';
-    img.style.cssText = 'width:68px;display:block;filter:invert(1);opacity:0.85;transform-origin:center center;';
+    img.style.cssText = 'width:120px;display:block;filter:brightness(0) invert(1);opacity:0.80;transform-origin:center center;';
     wrap.appendChild(img);
     document.body.appendChild(wrap);
 
@@ -639,7 +639,7 @@
     addEventListener('resize', resize);
 
     // État du Rafale
-    const HALF_W = 34, HALF_H = 17;
+    const HALF_W = 60, HALF_H = 48;
     let px = W * 0.5, py = H * 0.55;
     let vx = 0.4, vy = 0;
     let angle = Math.PI; // image originale pointe à gauche
@@ -659,15 +659,15 @@
     function spawnSmoke() {
         const ra = angle + Math.PI; // direction arrière
         const pa = angle + Math.PI / 2; // perpendiculaire
-        const rx = px + Math.cos(ra) * 27;
-        const ry = py + Math.sin(ra) * 27;
+        const rx = px + Math.cos(ra) * 50;
+        const ry = py + Math.sin(ra) * 50;
         const perpX = Math.cos(pa), perpY = Math.sin(pa);
 
-        // Deux réacteurs
+        // Deux réacteurs (Rafale vue du dessus, moteurs côte à côte)
         for (let s = -1; s <= 1; s += 2) {
             parts.push({
-                x: rx + perpX * 5.5 * s + (Math.random() - 0.5) * 2,
-                y: ry + perpY * 5.5 * s + (Math.random() - 0.5) * 2,
+                x: rx + perpX * 10 * s + (Math.random() - 0.5) * 3,
+                y: ry + perpY * 10 * s + (Math.random() - 0.5) * 3,
                 vx: Math.cos(ra) * (1.2 + Math.random() * 0.6),
                 vy: Math.sin(ra) * (1.2 + Math.random() * 0.6),
                 life: 1.0,
