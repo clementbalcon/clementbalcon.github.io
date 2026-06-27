@@ -888,7 +888,7 @@ if (_isTouch) {
 
     function fireMica() {
         const now = Date.now();
-        if (now - lastFire < 650) return;
+        if (now - lastFire < 250) return;
         lastFire = now;
         const pa = angle + Math.PI / 2;
         const perpX = Math.cos(pa), perpY = Math.sin(pa);
