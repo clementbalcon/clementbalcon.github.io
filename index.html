@@ -701,7 +701,7 @@
 
     // Hint clavier
     const hint = document.createElement('div');
-    hint.textContent = 'ZQSD · ESPACE tirer · A post-combustion';
+    hint.textContent = 'ZQSD · R tirer · ESPACE post-combustion';
     hint.style.cssText = 'position:fixed;bottom:1.4rem;right:1.5rem;font-size:0.68rem;font-family:Inter,sans-serif;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.42);z-index:20;pointer-events:none;transition:opacity 1.2s;';
     document.body.appendChild(hint);
     setTimeout(() => { hint.style.opacity = '0'; }, 5000);
@@ -732,13 +732,13 @@
     addEventListener('keydown', e => {
         const k = e.key.toLowerCase();
         if (['z','q','s','d'].includes(k)) { e.preventDefault(); keys[k] = true; }
-        if (e.code === 'Space') { e.preventDefault(); fireMica(); }
-        if (k === 'a') { e.preventDefault(); ab = true; }
+        if (e.code === 'Space') { e.preventDefault(); ab = true; }
+        if (k === 'r') { e.preventDefault(); fireMica(); }
     });
     addEventListener('keyup', e => {
         const k = e.key.toLowerCase();
         keys[k] = false;
-        if (k === 'a') ab = false;
+        if (e.code === 'Space') ab = false;
     });
 
     // Particules de fumée
