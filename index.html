@@ -148,6 +148,22 @@
         .entry { margin-bottom: 2.8rem; }
         .entry:last-child { margin-bottom: 0; }
 
+        .entry-head {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            margin-bottom: 0.35rem;
+        }
+        .entry-head .entry-name { margin-bottom: 0; }
+        .entry-logo {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+            opacity: 0.75;
+            flex-shrink: 0;
+        }
+
         .entry-name {
             font-family: 'Bebas Neue', sans-serif;
             font-size: clamp(1.35rem, 3vw, 1.85rem);
@@ -380,7 +396,10 @@
                 <div class="col-head">Expérience Professionnelle</div>
 
                 <div class="entry">
-                    <div class="entry-name">Safran Aircraft Engines</div>
+                    <div class="entry-head">
+                        <img src="logo_safran.jpeg" class="entry-logo" alt="">
+                        <div class="entry-name">Safran Aircraft Engines</div>
+                    </div>
                     <div class="entry-meta">
                         <span class="badge">Sep 2024 — Sep 2026</span>
                     </div>
@@ -389,7 +408,10 @@
                 </div>
 
                 <div class="entry">
-                    <div class="entry-name">Matra Électronique — filiale MBDA</div>
+                    <div class="entry-head">
+                        <img src="logo_matra.png" class="entry-logo" alt="">
+                        <div class="entry-name">Matra Électronique — filiale MBDA</div>
+                    </div>
                     <div class="entry-meta">
                         <span class="badge">2026</span>
                     </div>
@@ -398,7 +420,10 @@
                 </div>
 
                 <div class="entry">
-                    <div class="entry-name">ICN — Itaguaí Construções Navais</div>
+                    <div class="entry-head">
+                        <img src="logo_icn.jpeg" class="entry-logo" alt="">
+                        <div class="entry-name">ICN — Itaguaí Construções Navais</div>
+                    </div>
                     <div class="entry-meta">
                         <span class="badge">Juil — Août 2022</span>
                     </div>
@@ -412,7 +437,10 @@
                 <div class="col-head">Formation Académique</div>
 
                 <div class="entry">
-                    <div class="entry-name">UTC · Diplôme d'Ingénieur</div>
+                    <div class="entry-head">
+                        <img src="logo_utc.jpeg" class="entry-logo" alt="">
+                        <div class="entry-name">UTC · Diplôme d'Ingénieur</div>
+                    </div>
                     <div class="entry-meta">
                         <span class="badge">Fév 2024 — Sept 2026</span>
                     </div>
@@ -421,7 +449,10 @@
                 </div>
 
                 <div class="entry">
-                    <div class="entry-name">UTC · Cycle Ingénieur</div>
+                    <div class="entry-head">
+                        <img src="logo_utc.jpeg" class="entry-logo" alt="">
+                        <div class="entry-name">UTC · Cycle Ingénieur</div>
+                    </div>
                     <div class="entry-meta">
                         <span class="badge">Fév 2022 — Fév 2024</span>
                     </div>
@@ -430,7 +461,10 @@
                 </div>
 
                 <div class="entry">
-                    <div class="entry-name">Lycée Molière · Rio de Janeiro</div>
+                    <div class="entry-head">
+                        <img src="logo_lycee_moliere.jpeg" class="entry-logo" alt="">
+                        <div class="entry-name">Lycée Molière · Rio de Janeiro</div>
+                    </div>
                     <div class="entry-meta">
                         <span class="badge">Août 2018 — Nov 2021</span>
                     </div>
@@ -438,7 +472,10 @@
                 </div>
 
                 <div class="entry">
-                    <div class="entry-name">Sayfol International School</div>
+                    <div class="entry-head">
+                        <img src="logo_sayfol.jpeg" class="entry-logo" alt="">
+                        <div class="entry-name">Sayfol International School</div>
+                    </div>
                     <div class="entry-meta">
                         <span class="badge">Sept 2017 — Juin 2018</span>
                     </div>
