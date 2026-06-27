@@ -777,6 +777,15 @@
     const portalEls = Array.from(document.querySelectorAll('.portal[data-href]'));
     let portalCooldown = 0, portalNavigating = false;
 
+    // Retour depuis une page projet → repositionner le Rafale sur le bon portail
+    let returnPortalEl = null;
+    const returnHash = window.location.hash;
+    if (returnHash) {
+        const slug = returnHash.replace('#', '');
+        returnPortalEl = document.querySelector(`.portal[data-href="${slug}.html"]`);
+        if (returnPortalEl) history.replaceState(null, '', window.location.pathname);
+    }
+
     function fireMica() {
         const now = Date.now();
         if (now - lastFire < 650) return;
@@ -914,6 +923,17 @@
     let frame = 0;
 
     function tick() {
+        // Retour depuis une page projet : scroll vers le portail d'entrée
+        if (returnPortalEl) {
+            returnPortalEl.scrollIntoView({ behavior: 'instant', block: 'center' });
+            const r = returnPortalEl.getBoundingClientRect();
+            px = r.left + r.width / 2 - 120;
+            py = r.top  + r.height / 2;
+            vx = -3; vy = 0; angle = Math.PI;
+            portalCooldown = 120;
+            returnPortalEl = null;
+        }
+
         const acc    = ab ? ACC_AB : ACC_N;
         const maxSpd = ab ? SPD_AB : SPD_N;
 
@@ -932,7 +952,7 @@
         else if (px > W + HALF_W) px = -HALF_W;
         if (py < -HALF_H) py = H + HALF_H;
 
-        const sf = ab ? 50 : 18;
+        const sf = ab ? 150 : 55;
         const scrollZone = H * 0.78, scrollMax = H * 0.95;
         if (py > scrollZone) {
             window.scrollBy(0, ((py - scrollZone) / (scrollMax - scrollZone)) * sf);

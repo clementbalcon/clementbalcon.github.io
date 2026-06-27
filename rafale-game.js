@@ -269,7 +269,7 @@
         else if (px > W + HALF_W) px = -HALF_W;
         if (py < -HALF_H) py = H + HALF_H;
 
-        const sf = ab ? 50 : 18;
+        const sf = ab ? 150 : 55;
         const scrollZone = H * 0.78, scrollMax = H * 0.95;
         if (py > scrollZone) {
             window.scrollBy(0, ((py-scrollZone)/(scrollMax-scrollZone)) * sf);
