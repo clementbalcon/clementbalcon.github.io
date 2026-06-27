@@ -699,8 +699,11 @@
         lastFire = now;
         const pa = angle + Math.PI / 2;
         const perpX = Math.cos(pa), perpY = Math.sin(pa);
-        const nX = px + Math.cos(angle) * 44;
-        const nY = py + Math.sin(angle) * 44;
+        // Position de départ : milieu des ailes (faible avance, large latéral)
+        // Fuselage offset 4.6px + 34px vers le bout d'aile
+        const wX = px + Math.cos(angle) * 8;
+        const wY = py + Math.sin(angle) * 8;
+        const fcx = perpX * 4.6, fcy = perpY * 4.6;
         for (let s = -1; s <= 1; s += 2) {
             const el = document.createElement('div');
             el.style.cssText = 'position:fixed;z-index:11;pointer-events:none;';
@@ -708,7 +711,7 @@
             mi.src = 'mica.png';
             mi.style.cssText = `width:${MICA_W}px;display:block;filter:brightness(0) invert(1);opacity:0.9;transform-origin:center center;`;
             el.appendChild(mi); document.body.appendChild(el);
-            missiles.push({ x: nX + perpX*8*s, y: nY + perpY*8*s,
+            missiles.push({ x: wX + fcx + perpX*34*s, y: wY + fcy + perpY*34*s,
                 vx: Math.cos(angle)*13, vy: Math.sin(angle)*13,
                 angle, life: 200, el, img: mi });
         }
