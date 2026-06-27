@@ -6,13 +6,13 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Training">
-    <meta name="theme-color" content="#060c15">
+    <meta name="theme-color" content="#40916C">
     <title>Training — Clément Balcon</title>
     <link rel="icon" href="/favicon-training.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/apple-touch-icon-training.png">
     <link rel="manifest" href="manifest.json">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -21,20 +21,21 @@
         button { touch-action: manipulation; }
 
         :root {
-            --bg: #060c15;
-            --accent: #38bdf8;
+            --bg: #40916C;
+            --accent: rgba(255,255,255,0.92);
             --accent2: #fb923c;
-            --text: #e2e8f0;
-            --muted: #94a3b8;
-            --subtle: #1e293b;
-            --card: #0f1c2e;
-            --border: rgba(56,189,248,0.15);
+            --text: #ffffff;
+            --muted: rgba(255,255,255,0.55);
+            --subtle: rgba(0,0,0,0.18);
+            --card: rgba(0,0,0,0.22);
+            --border: rgba(255,255,255,0.18);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            background: var(--bg);
+            background: #40916C;
+            background-image: radial-gradient(ellipse at 15% 0%, #52a87e 0%, transparent 60%);
             color: var(--text);
             font-family: 'Inter', sans-serif;
             min-height: 100vh;
@@ -46,8 +47,8 @@
             position: fixed;
             inset: 0;
             background-image:
-                linear-gradient(rgba(56,189,248,0.025) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(56,189,248,0.025) 1px, transparent 1px);
+                linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
             background-size: 40px 40px;
             pointer-events: none;
             z-index: 0;
@@ -74,8 +75,8 @@
         }
 
         .login-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.5rem;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem;
             font-weight: 700;
             color: var(--accent);
             margin-bottom: 0.25rem;
@@ -130,7 +131,7 @@
             justify-content: center;
             gap: 0.5rem;
             background: var(--accent);
-            color: #060c15;
+            color: #40916C;
             border: none;
             border-radius: 8px;
             font-family: 'Inter', sans-serif;
@@ -165,8 +166,8 @@
         }
 
         .app-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.25rem;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
             font-weight: 700;
             color: var(--accent);
         }
@@ -260,7 +261,7 @@
         .sport-btn:hover, .sport-btn.selected {
             border-color: var(--accent);
             color: var(--accent);
-            background: rgba(56,189,248,0.08);
+            background: rgba(255,255,255,0.08);
         }
 
         /* ─── EXERCICE FORM ─── */
@@ -333,7 +334,7 @@
         .rep-chip.selected {
             background: var(--accent);
             border-color: var(--accent);
-            color: #060c15;
+            color: #40916C;
             font-weight: 700;
         }
 
@@ -371,8 +372,8 @@
         }
 
         .poids-val {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.5rem;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem;
             font-weight: 700;
             color: var(--text);
             line-height: 1;
@@ -382,8 +383,8 @@
 
         .btn-log-set {
             width: 100%;
-            background: rgba(56,189,248,0.1);
-            border: 1px solid rgba(56,189,248,0.3);
+            background: rgba(255,255,255,0.10);
+            border: 1px solid rgba(255,255,255,0.25);
             border-radius: 8px;
             color: var(--accent);
             cursor: pointer;
@@ -395,7 +396,7 @@
             transition: background 0.2s;
         }
 
-        .btn-log-set:hover { background: rgba(56,189,248,0.18); }
+        .btn-log-set:hover { background: rgba(255,255,255,0.12); }
 
         .sets-logged { margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.4rem; }
         .rest-timer-display {
@@ -433,7 +434,7 @@
         /* ─── DERNIÈRE SÉANCE ─── */
         .last-session {
             display: none;
-            background: rgba(56,189,248,0.04);
+            background: rgba(255,255,255,0.05);
             border: 1px solid var(--border);
             border-radius: 8px;
             padding: 0.6rem 0.75rem;
@@ -454,7 +455,7 @@
             margin-top: 0.4rem;
             transition: background 0.15s;
         }
-        .btn-reprendre:hover { background: rgba(56,189,248,0.08); }
+        .btn-reprendre:hover { background: rgba(255,255,255,0.08); }
 
         /* ─── HISTORIQUE ─── */
         .seance-card {
@@ -592,7 +593,7 @@
         }
 
         .msg.error { background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); color: #f87171; }
-        .msg.success { background: rgba(56,189,248,0.1); border: 1px solid rgba(56,189,248,0.3); color: var(--accent); }
+        .msg.success { background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.25); color: var(--accent); }
         .msg.info { background: rgba(251,146,60,0.1); border: 1px solid rgba(251,146,60,0.3); color: var(--accent2); }
 
         .empty-state {
@@ -633,7 +634,7 @@
             background: var(--accent);
             border: none;
             border-radius: 7px;
-            color: #060c15;
+            color: #40916C;
             cursor: pointer;
             font-family: 'Inter', sans-serif;
             font-size: 0.85rem;
@@ -653,8 +654,8 @@
             margin-bottom: 0.75rem;
         }
         .split-chip {
-            background: rgba(56,189,248,0.06);
-            border: 1px solid rgba(56,189,248,0.15);
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.18);
             border-radius: 6px;
             padding: 0.2rem 0.5rem;
             font-size: 0.78rem;
@@ -686,7 +687,7 @@
             transition: all 0.2s;
         }
         .filter-btn.active {
-            background: rgba(56,189,248,0.1);
+            background: rgba(255,255,255,0.10);
             border-color: var(--accent);
             color: var(--accent);
         }
@@ -733,7 +734,7 @@
             margin-top: 0.5rem;
             transition: background 0.2s;
         }
-        .btn-map:hover { background: rgba(56,189,248,0.08); }
+        .btn-map:hover { background: rgba(255,255,255,0.08); }
 
         /* ─── MODAL CARTE ─── */
         #map-modal {
@@ -741,7 +742,7 @@
             position: fixed;
             inset: 0;
             z-index: 1000;
-            background: rgba(6,12,21,0.97);
+            background: rgba(0,0,0,0.70);
             padding: 1rem;
             padding-bottom: env(safe-area-inset-bottom);
         }
@@ -868,7 +869,7 @@
                 <button class="filter-btn" id="filter-muscu" onclick="setSportFilter('Musculation', this)">🏋️ Muscu</button>
                 <button class="filter-btn" id="filter-street" onclick="setSportFilter('Street Workout', this)">💪 Street</button>
             </div>
-            <div class="sport-filter" style="margin-top:0.5rem; border-top:1px solid rgba(56,189,248,0.1); padding-top:0.5rem">
+            <div class="sport-filter" style="margin-top:0.5rem; border-top:1px solid rgba(255,255,255,0.10); padding-top:0.5rem">
                 <button class="filter-btn active" id="statview-analyse" onclick="setStatView('analyse', this)">Analyse</button>
                 <button class="filter-btn" id="statview-records" onclick="setStatView('records', this)">Records</button>
             </div>
@@ -882,7 +883,7 @@
                     <div class="card-title" id="chart-title" style="margin:0"></div>
                     <div id="period-selector" style="display:flex; gap:0.4rem; flex-wrap:wrap"></div>
                 </div>
-                <div id="chart-breadcrumb" style="font-size:0.75rem; color:#94a3b8; margin-bottom:0.5rem; min-height:1.2em"></div>
+                <div id="chart-breadcrumb" style="font-size:0.75rem; color:rgba(255,255,255,0.55); margin-bottom:0.5rem; min-height:1.2em"></div>
                 <canvas id="stats-chart"></canvas>
             </div>
         </div>
@@ -1213,7 +1214,7 @@ function _tickRestTimers() {
             const m = Math.floor(elapsed / 60), s = elapsed % 60;
             const timeEl = document.getElementById('rest-overlay-time');
             timeEl.textContent = `${m}:${String(s).padStart(2,'0')}`;
-            timeEl.style.color = elapsed >= 120 ? '#fb923c' : '#38bdf8';
+            timeEl.style.color = elapsed >= 120 ? '#fb923c' : 'rgba(255,255,255,0.92)';
         }
     }
 }
@@ -1265,7 +1266,7 @@ function logSet(form) {
     if (overlay) {
         overlay.dataset.start = now;
         document.getElementById('rest-overlay-time').textContent = '0:00';
-        document.getElementById('rest-overlay-time').style.color = '#38bdf8';
+        document.getElementById('rest-overlay-time').style.color = 'rgba(255,255,255,0.92)';
         overlay.style.display = 'flex';
     }
     if (!_restInterval) _restInterval = setInterval(_tickRestTimers, 1000);
@@ -1705,7 +1706,7 @@ function renderChart(sport, allFiltered) {
         values = keys.map(k => weekMap[k]);
         const [dmY, dmM] = drillMonth.split('-').map(Number);
         title = isRun ? `Km — ${new Date(dmY, dmM-1, 1).toLocaleDateString('fr-FR',{month:'long',year:'numeric'})}` : `Séances — ${new Date(dmY, dmM-1, 1).toLocaleDateString('fr-FR',{month:'long',year:'numeric'})}`;
-        breadcrumb = `← <a href="#" onclick="drillUp(event)" style="color:#38bdf8;text-decoration:none">Retour aux mois</a>`;
+        breadcrumb = `← <a href="#" onclick="drillUp(event)" style="color:rgba(255,255,255,0.92);text-decoration:none">Retour aux mois</a>`;
     } else if (chartLevel === 'days') {
         const { year: wy, week: wn } = drillWeek;
         const jan4 = new Date(Date.UTC(wy, 0, 4));
@@ -1722,7 +1723,7 @@ function renderChart(sport, allFiltered) {
         labels = keys.map(k => { const [yr,mn,dd] = k.split('-').map(Number); return new Date(yr, mn-1, dd).toLocaleDateString('fr-FR',{weekday:'short',day:'numeric'}); });
         values = keys.map(k => dayMap[k]);
         title = isRun ? `Km — Semaine ${wn}` : `Séances — Semaine ${wn}`;
-        breadcrumb = `← <a href="#" onclick="drillUp(event)" style="color:#38bdf8;text-decoration:none">Retour aux semaines</a>`;
+        breadcrumb = `← <a href="#" onclick="drillUp(event)" style="color:rgba(255,255,255,0.92);text-decoration:none">Retour aux semaines</a>`;
     }
 
     document.getElementById('chart-title').textContent = title;
@@ -1733,14 +1734,14 @@ function renderChart(sport, allFiltered) {
         type: 'bar',
         data: {
             labels,
-            datasets: [{ data: values, backgroundColor: 'rgba(56,189,248,0.25)', borderColor: '#38bdf8', borderWidth: 1.5, borderRadius: 4 }]
+            datasets: [{ data: values, backgroundColor: 'rgba(255,255,255,0.20)', borderColor: 'rgba(255,255,255,0.92)', borderWidth: 1.5, borderRadius: 4 }]
         },
         options: {
             responsive: true,
             plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => `${fmtVal(ctx.parsed.y)} ${unit}` } } },
             scales: {
-                x: { ticks: { color: '#94a3b8', font: { size: 11 } }, grid: { color: 'rgba(56,189,248,0.05)' } },
-                y: { ticks: { color: '#94a3b8', font: { size: 11 } }, grid: { color: 'rgba(56,189,248,0.05)' }, beginAtZero: true }
+                x: { ticks: { color: 'rgba(255,255,255,0.55)', font: { size: 11 } }, grid: { color: 'rgba(255,255,255,0.06)' } },
+                y: { ticks: { color: 'rgba(255,255,255,0.55)', font: { size: 11 } }, grid: { color: 'rgba(255,255,255,0.06)' }, beginAtZero: true }
             },
             onClick(event, elements) {
                 if (!elements.length) return;
@@ -1813,7 +1814,7 @@ function renderRecords() {
         ];
         const cards = ranges.map(r => {
             const matches = allSeances.filter(s => s.sport === 'Course à pied' && s.distance_km >= r.min && s.distance_km <= r.max && s.pace);
-            if (!matches.length) return `<div class="stat-card"><div class="stat-label">${r.label}</div><div class="stat-value" style="color:#94a3b8">—</div></div>`;
+            if (!matches.length) return `<div class="stat-card"><div class="stat-label">${r.label}</div><div class="stat-value" style="color:rgba(255,255,255,0.55)">—</div></div>`;
             const best = matches.reduce((b, s) => parseTimeToSec(s.pace) < parseTimeToSec(b.pace) ? s : b);
             const [pm, ps] = best.pace.split(':').map(Number);
             const bestSec = best.distance_km * (pm*60 + ps);
@@ -1827,7 +1828,7 @@ function renderRecords() {
         const candidates = allExercices.filter(e => e.nom && e.nom.toLowerCase().includes('développé couché') && e.poids_kg);
         let inner;
         if (!candidates.length) {
-            inner = `<div class="stat-value" style="color:#94a3b8">—</div>`;
+            inner = `<div class="stat-value" style="color:rgba(255,255,255,0.55)">—</div>`;
         } else {
             const best = candidates.reduce((b, e) => e.poids_kg > b.poids_kg ? e : b);
             const seance = allSeances.find(s => s.id === best.seance_id);
@@ -1840,7 +1841,7 @@ function renderRecords() {
         const candidates = allExercices.filter(e => e.nom && e.nom.toLowerCase().includes('muscle up') && e.reps);
         let inner;
         if (!candidates.length) {
-            inner = `<div class="stat-value" style="color:#94a3b8">—</div>`;
+            inner = `<div class="stat-value" style="color:rgba(255,255,255,0.55)">—</div>`;
         } else {
             const best = candidates.reduce((b, e) => e.reps > b.reps ? e : b);
             const seance = allSeances.find(s => s.id === best.seance_id);
@@ -2106,9 +2107,9 @@ function showMap(id) {
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
             attribution: '©OpenStreetMap ©CartoDB', maxZoom: 19
         }).addTo(mapInstance);
-        const line = L.polyline(track, { color: '#38bdf8', weight: 3, opacity: 0.9 }).addTo(mapInstance);
-        L.circleMarker(track[0], { radius: 6, color: '#38bdf8', fillColor: '#060c15', fillOpacity: 1, weight: 2 }).addTo(mapInstance);
-        L.circleMarker(track[track.length-1], { radius: 6, color: '#fb923c', fillColor: '#060c15', fillOpacity: 1, weight: 2 }).addTo(mapInstance);
+        const line = L.polyline(track, { color: 'rgba(255,255,255,0.92)', weight: 3, opacity: 0.9 }).addTo(mapInstance);
+        L.circleMarker(track[0], { radius: 6, color: 'rgba(255,255,255,0.92)', fillColor: '#40916C', fillOpacity: 1, weight: 2 }).addTo(mapInstance);
+        L.circleMarker(track[track.length-1], { radius: 6, color: '#fb923c', fillColor: '#40916C', fillOpacity: 1, weight: 2 }).addTo(mapInstance);
         mapInstance.fitBounds(line.getBounds(), { padding: [24, 24] });
     }, 50);
 }
@@ -2128,13 +2129,13 @@ function closeMap() {
     <div id="map"></div>
 </div>
 
-<div id="rest-overlay" style="display:none;position:fixed;inset:0;background:#060c15;z-index:850;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem">
-    <div style="font-size:0.85rem;letter-spacing:0.12em;text-transform:uppercase;color:#94a3b8">Repos</div>
-    <div id="rest-overlay-time" style="font-family:'Space Grotesk',sans-serif;font-size:6rem;font-weight:700;color:#38bdf8;letter-spacing:0.04em;line-height:1">0:00</div>
-    <button onclick="dismissRestOverlay()" style="margin-top:1rem;background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.35);border-radius:12px;color:#38bdf8;font-family:'Inter',sans-serif;font-size:1rem;font-weight:600;padding:0.9rem 2.5rem;cursor:pointer;letter-spacing:0.05em">Reprendre</button>
+<div id="rest-overlay" style="display:none;position:fixed;inset:0;background:#2d6a4f;z-index:850;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem">
+    <div style="font-size:0.85rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.55)">Repos</div>
+    <div id="rest-overlay-time" style="font-family:'Space Grotesk',sans-serif;font-size:6rem;font-weight:700;color:rgba(255,255,255,0.92);letter-spacing:0.04em;line-height:1">0:00</div>
+    <button onclick="dismissRestOverlay()" style="margin-top:1rem;background:rgba(255,255,255,0.10);border:1px solid rgba(255,255,255,0.30);border-radius:12px;color:rgba(255,255,255,0.92);font-family:'Inter',sans-serif;font-size:1rem;font-weight:600;padding:0.9rem 2.5rem;cursor:pointer;letter-spacing:0.05em">Reprendre</button>
 </div>
 
-<div id="record-modal" style="display:none;position:fixed;inset:0;background:rgba(6,12,21,0.92);z-index:900;padding:1rem;overflow-y:auto">
+<div id="record-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.60);z-index:900;padding:1rem;overflow-y:auto">
     <div class="card" style="max-width:400px;margin:2rem auto">
         <div class="card-title">Ajouter un record</div>
         <div id="record-modal-body" style="margin-bottom:1rem"></div>
