@@ -48,13 +48,14 @@
         const k = e.key.toLowerCase();
         if (['z','q','s','d'].includes(k)) { e.preventDefault(); keys[k] = true; }
         if (e.code === 'Space') { e.preventDefault(); ab = true; }
-        if (k === 'r') { e.preventDefault(); if (gameState === 'fighting') fireMica(); }
+        if (k === 'r' || e.code === 'Enter') { e.preventDefault(); if (gameState === 'fighting') fireMica(); }
     });
     addEventListener('keyup', e => {
         const k = e.key.toLowerCase();
         keys[k] = false;
         if (e.code === 'Space') ab = false;
     });
+    addEventListener('mousedown', e => { if (e.button === 0 && gameState === 'fighting') fireMica(); });
 
     // ── Fumée ──
     const parts = [];
