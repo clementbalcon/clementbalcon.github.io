@@ -269,15 +269,15 @@
         else if (px > W + HALF_W) px = -HALF_W;
         if (py < -HALF_H) py = H + HALF_H;
 
-        const sf = ab ? 150 : 55;
-        const scrollZone = H * 0.78, scrollMax = H * 0.95;
+        const sf = ab ? 500 : 200;
+        const scrollZone = H * 0.85;
         if (py > scrollZone) {
-            window.scrollBy(0, ((py-scrollZone)/(scrollMax-scrollZone)) * sf);
-            if (py > scrollMax) py = scrollMax;
+            window.scrollBy(0, sf);
+            if (py > H * 0.95) py = H * 0.95;
         }
-        const scrollUpZone = H * 0.12;
+        const scrollUpZone = H * 0.15;
         if (py < scrollUpZone) {
-            window.scrollBy(0, -((scrollUpZone-py)/scrollUpZone) * sf);
+            window.scrollBy(0, -sf);
             if (py < 0) py = 0;
         }
 
