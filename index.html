@@ -210,12 +210,12 @@
         }
         .arrow-link:hover { border-color: var(--white); }
 
-        /* ── Portails trou noir ── */
+        /* ── Portails ── */
         @keyframes portal-spin     { to { transform: rotate(360deg); } }
         @keyframes portal-spin-rev { to { transform: rotate(-360deg); } }
         @keyframes portal-pulse {
-            0%,100% { box-shadow: 0 0 8px rgba(255,255,255,0.18), inset 0 0 14px rgba(0,0,0,0.9); }
-            50%      { box-shadow: 0 0 18px rgba(255,255,255,0.38), inset 0 0 22px rgba(0,0,0,0.95); }
+            0%,100% { box-shadow: 0 0 10px rgba(255,255,255,0.55), 0 0 22px rgba(255,255,255,0.22); }
+            50%      { box-shadow: 0 0 24px rgba(255,255,255,0.95), 0 0 48px rgba(255,255,255,0.42); }
         }
 
         .project-row { display: flex; align-items: center; gap: 2.5rem; }
@@ -224,8 +224,8 @@
         .portal-wrap { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 0.35rem; }
         .portal {
             width: 54px; height: 54px; border-radius: 50%;
-            background: radial-gradient(circle, #030a05 0%, #0d1f13 55%, #173024 100%);
-            border: 2px solid rgba(255,255,255,0.45);
+            background: radial-gradient(circle, rgba(8,20,12,0.85) 0%, rgba(255,255,255,0.06) 55%, rgba(255,255,255,0.6) 80%, rgba(255,255,255,0.88) 100%);
+            border: 2px solid rgba(255,255,255,0.88);
             position: relative;
             animation: portal-pulse 2.8s ease-in-out infinite;
             cursor: pointer;
@@ -233,23 +233,18 @@
         .portal::before {
             content: ''; position: absolute; inset: 4px; border-radius: 50%;
             border: 1.5px solid transparent;
-            border-top-color: rgba(255,255,255,0.7);
-            border-right-color: rgba(255,255,255,0.2);
+            border-top-color: rgba(255,255,255,0.95);
+            border-right-color: rgba(255,255,255,0.4);
             animation: portal-spin 3s linear infinite;
         }
         .portal::after {
             content: ''; position: absolute; inset: 11px; border-radius: 50%;
-            border: 1px dashed rgba(255,255,255,0.2);
+            border: 1px dashed rgba(255,255,255,0.55);
             animation: portal-spin-rev 6s linear infinite;
         }
         .portal-label {
             font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.07em;
             color: var(--w40); font-family: 'Inter', sans-serif;
-        }
-        .portal-enter { animation: portal-pulse-enter 0.5s ease-in-out infinite !important; }
-        @keyframes portal-pulse-enter {
-            0%,100% { box-shadow: 0 0 25px rgba(255,255,255,0.6); }
-            50%      { box-shadow: 0 0 45px rgba(255,255,255,0.9); }
         }
 
         /* ── Skills ── */
@@ -682,7 +677,7 @@
 </script>
 
 <script>
-// ─── Rafale jouable ZQSD ───
+// ─── Rafale jouable ZQSD / ESPACE / A ───
 (function () {
     // Canvas fumée
     const cvs = document.createElement('canvas');
@@ -701,7 +696,7 @@
 
     // Hint clavier
     const hint = document.createElement('div');
-    hint.textContent = 'ZQSD · ESPACE pour tirer';
+    hint.textContent = 'ZQSD · ESPACE tirer · A post-combustion';
     hint.style.cssText = 'position:fixed;bottom:1.4rem;right:1.5rem;font-size:0.68rem;font-family:Inter,sans-serif;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.42);z-index:20;pointer-events:none;transition:opacity 1.2s;';
     document.body.appendChild(hint);
     setTimeout(() => { hint.style.opacity = '0'; }, 5000);
@@ -723,15 +718,23 @@
     let vx = 0.4, vy = 0;
     let angle = Math.PI; // image originale pointe à gauche
 
-    const ACC = 0.30, MAX_SPD = 6.5, FRICTION = 0.925;
+    const ACC_N = 0.30, ACC_AB = 1.0;
+    const SPD_N = 6.5,  SPD_AB = 20;
+    const FRICTION = 0.925;
+    let ab = false;
 
     const keys = {};
     addEventListener('keydown', e => {
         const k = e.key.toLowerCase();
         if (['z','q','s','d'].includes(k)) { e.preventDefault(); keys[k] = true; }
         if (e.code === 'Space') { e.preventDefault(); fireMica(); }
+        if (k === 'a') { e.preventDefault(); ab = true; }
     });
-    addEventListener('keyup', e => { keys[e.key.toLowerCase()] = false; });
+    addEventListener('keyup', e => {
+        const k = e.key.toLowerCase();
+        keys[k] = false;
+        if (k === 'a') ab = false;
+    });
 
     // Particules de fumée
     const parts = [];
@@ -749,15 +752,18 @@
 
         // Deux réacteurs (Rafale vue du dessus, moteurs côte à côte)
         for (let s = -1; s <= 1; s += 2) {
-            parts.push({
-                x: rx + fcx + perpX * 6 * s + (Math.random() - 0.5) * 1.5,
-                y: ry + fcy + perpY * 6 * s + (Math.random() - 0.5) * 1.5,
-                vx: Math.cos(ra) * (1.2 + Math.random() * 0.6),
-                vy: Math.sin(ra) * (1.2 + Math.random() * 0.6),
-                life: 1.0,
-                size: 2.5 + Math.random() * 1.5,
-                decay: 0.014 + Math.random() * 0.008,
-            });
+            for (let i = 0; i < (ab ? 2 : 1); i++) {
+                parts.push({
+                    x: rx + fcx + perpX * 6 * s + (Math.random() - 0.5) * 2,
+                    y: ry + fcy + perpY * 6 * s + (Math.random() - 0.5) * 2,
+                    vx: Math.cos(ra) * (1.5 + Math.random() * 1.5),
+                    vy: Math.sin(ra) * (1.5 + Math.random() * 1.5),
+                    life: 1.0,
+                    size: ab ? 5 + Math.random() * 4 : 2.5 + Math.random() * 1.5,
+                    decay: ab ? 0.018 + Math.random() * 0.012 : 0.014 + Math.random() * 0.008,
+                    ab,
+                });
+            }
         }
     }
 
@@ -908,75 +914,65 @@
     let frame = 0;
 
     function tick() {
-        // Input
-        if (keys['z']) vy -= ACC;
-        if (keys['s']) vy += ACC;
-        if (keys['q']) vx -= ACC;
-        if (keys['d']) vx += ACC;
+        const acc    = ab ? ACC_AB : ACC_N;
+        const maxSpd = ab ? SPD_AB : SPD_N;
 
-        // Vitesse max
+        if (keys['z']) vy -= acc;
+        if (keys['s']) vy += acc;
+        if (keys['q']) vx -= acc;
+        if (keys['d']) vx += acc;
+
         const spd = Math.sqrt(vx * vx + vy * vy);
-        if (spd > MAX_SPD) { vx = vx / spd * MAX_SPD; vy = vy / spd * MAX_SPD; }
+        if (spd > maxSpd) { vx = vx / spd * maxSpd; vy = vy / spd * maxSpd; }
 
-        // Friction
         vx *= FRICTION; vy *= FRICTION;
-
-        // Position
         px += vx; py += vy;
 
-        // Wrap bords gauche/droite, haut
         if (px < -HALF_W) px = W + HALF_W;
         else if (px > W + HALF_W) px = -HALF_W;
         if (py < -HALF_H) py = H + HALF_H;
 
-        // Scroll page quand l'avion approche du bas
-        const scrollZone = H * 0.78;
-        const scrollMax  = H * 0.95;
+        const sf = ab ? 50 : 18;
+        const scrollZone = H * 0.78, scrollMax = H * 0.95;
         if (py > scrollZone) {
-            const force = ((py - scrollZone) / (scrollMax - scrollZone)) * 18;
-            window.scrollBy(0, force);
+            window.scrollBy(0, ((py - scrollZone) / (scrollMax - scrollZone)) * sf);
             if (py > scrollMax) py = scrollMax;
         }
-        // Scroll vers le haut quand l'avion remonte en haut
         const scrollUpZone = H * 0.12;
         if (py < scrollUpZone) {
-            const force = ((scrollUpZone - py) / scrollUpZone) * 18;
-            window.scrollBy(0, -force);
+            window.scrollBy(0, -((scrollUpZone - py) / scrollUpZone) * sf);
             if (py < 0) py = 0;
         }
 
-        // Angle lissé vers la direction de vol
         const curSpd = Math.sqrt(vx * vx + vy * vy);
         if (curSpd > 0.25) {
             const target = Math.atan2(vy, vx);
             let diff = target - angle;
-            while (diff > Math.PI) diff -= 2 * Math.PI;
+            while (diff > Math.PI)  diff -= 2 * Math.PI;
             while (diff < -Math.PI) diff += 2 * Math.PI;
             angle += diff * 0.12;
         }
 
-        // Position + rotation de l'image
         wrap.style.left = (px - HALF_W) + 'px';
         wrap.style.top  = (py - HALF_H) + 'px';
-        // L'image pointe à gauche (angle=PI), on soustrait PI pour aligner
         img.style.transform = `rotate(${(angle - Math.PI) * 180 / Math.PI}deg)`;
 
-        // Fumée
         frame++;
-        if (curSpd > 0.4 && frame % 2 === 0) spawnSmoke();
+        if (curSpd > 0.4 && frame % (ab ? 1 : 2) === 0) spawnSmoke();
 
-        // Dessin des particules fumée + jeu
         ctx.clearRect(0, 0, W, H);
         for (let i = parts.length - 1; i >= 0; i--) {
             const p = parts[i];
             p.x += p.vx; p.y += p.vy;
             p.vx *= 0.97; p.vy *= 0.97;
             p.life -= p.decay;
-            p.size += 0.32;
+            p.size += p.ab ? 0.6 : 0.32;
             if (p.life <= 0) { parts.splice(i, 1); continue; }
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(255,255,255,${p.life * 0.28})`;
+            ctx.fillStyle = p.ab
+                ? `rgba(255,${80 + Math.floor(p.life * 80)},0,${p.life * 0.6})`
+                : `rgba(255,255,255,${p.life * 0.28})`;
             ctx.fill();
         }
         updateGame();

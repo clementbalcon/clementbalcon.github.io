@@ -32,7 +32,7 @@
 
         .wrap { max-width: 900px; margin: 0 auto; padding: 0 2rem; }
 
-        .top-nav { padding: 2rem 2rem 0; max-width: 900px; margin: 0 auto; display: flex; align-items: center; gap: 1.5rem; }
+        .top-nav { padding: 2rem 2rem 0; max-width: 900px; margin: 0 auto; }
         .back-link {
             display: inline-flex; align-items: center; gap: 0.5rem;
             border: 1.5px solid var(--w40); color: var(--w70);
@@ -41,19 +41,13 @@
             transition: border-color 0.18s, color 0.18s;
         }
         .back-link:hover { border-color: var(--white); color: var(--white); }
-        @keyframes exit-spin     { to { transform: rotate(360deg); } }
-        @keyframes exit-spin-rev { to { transform: rotate(-360deg); } }
-        @keyframes exit-pulse { 0%,100%{box-shadow:0 0 8px rgba(255,255,255,0.18);}50%{box-shadow:0 0 18px rgba(255,255,255,0.38);} }
-        .exit-wrap { display: flex; flex-direction: column; align-items: center; gap: 0.3rem; }
-        .exit-portal {
-            display: block; width: 38px; height: 38px; border-radius: 50%;
-            background: radial-gradient(circle, #030a05 0%, #0d1f13 55%, #173024 100%);
-            border: 1.5px solid rgba(255,255,255,0.45); position: relative;
-            animation: exit-pulse 2.8s ease-in-out infinite; text-decoration: none;
-        }
-        .exit-portal::before { content:''; position:absolute; inset:3px; border-radius:50%; border:1px solid transparent; border-top-color:rgba(255,255,255,0.7); border-right-color:rgba(255,255,255,0.2); animation:exit-spin 3s linear infinite; }
-        .exit-portal::after  { content:''; position:absolute; inset:8px; border-radius:50%; border:1px dashed rgba(255,255,255,0.2); animation:exit-spin-rev 6s linear infinite; }
-        .exit-label { font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--w40); }
+        @keyframes portal-spin     { to { transform: rotate(360deg); } }
+        @keyframes portal-spin-rev { to { transform: rotate(-360deg); } }
+        @keyframes portal-pulse { 0%,100%{box-shadow:0 0 10px rgba(255,255,255,0.55),0 0 22px rgba(255,255,255,0.22);}50%{box-shadow:0 0 24px rgba(255,255,255,0.95),0 0 48px rgba(255,255,255,0.42);} }
+        .portal { position:fixed;top:1.2rem;right:1.5rem;z-index:100;width:70px;height:70px;border-radius:50%;background:radial-gradient(circle,rgba(8,20,12,0.85) 0%,rgba(255,255,255,0.06) 55%,rgba(255,255,255,0.6) 80%,rgba(255,255,255,0.88) 100%);border:2px solid rgba(255,255,255,0.88);animation:portal-pulse 2.8s ease-in-out infinite;cursor:pointer; }
+        .portal::before { content:'';position:absolute;inset:5px;border-radius:50%;border:2px solid transparent;border-top-color:rgba(255,255,255,0.95);border-right-color:rgba(255,255,255,0.4);animation:portal-spin 3s linear infinite; }
+        .portal::after  { content:'';position:absolute;inset:14px;border-radius:50%;border:1px dashed rgba(255,255,255,0.55);animation:portal-spin-rev 6s linear infinite; }
+        .portal-label { position:absolute;bottom:-1.3rem;left:50%;transform:translateX(-50%);font-size:0.55rem;text-transform:uppercase;letter-spacing:0.07em;color:var(--w40);white-space:nowrap;font-family:'Inter',sans-serif; }
 
         .hero { padding: 3rem 0 2rem; border-bottom: 1px solid var(--w20); margin-bottom: 3rem; }
         .hero-badge {
@@ -128,10 +122,10 @@
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
         Portfolio
     </a>
-    <div class="exit-wrap">
-        <a href="index.html" class="exit-portal" title="Retour au portfolio"></a>
-        <span class="exit-label">Sortie</span>
-    </div>
+</div>
+
+<div class="portal" data-href="index.html">
+    <span class="portal-label">Sortie</span>
 </div>
 
 <div class="wrap">
@@ -193,6 +187,9 @@
         <a href="index.html">← Retour au portfolio</a> &nbsp;·&nbsp; Clément Balcon © 2026
     </div>
 </footer>
+
+<script>window.RAFALE_OPTS = { spawnFromPortal: true };</script>
+<script src="rafale-game.js"></script>
 
 </body>
 </html>
