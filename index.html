@@ -29,6 +29,7 @@
             font-weight: 400;
             line-height: 1.65;
             -webkit-font-smoothing: antialiased;
+            cursor: none;
         }
 
         /* ── Layout ── */
@@ -716,11 +717,19 @@
     resize();
     addEventListener('resize', resize);
 
+    // ── Curseur point blanc ──
+    const dot = document.createElement('div');
+    dot.style.cssText = 'position:fixed;z-index:9999;width:7px;height:7px;border-radius:50%;background:#fff;pointer-events:none;transform:translate(-50%,-50%);transition:opacity 0.15s;';
+    document.body.appendChild(dot);
+    addEventListener('mousemove', e => { dot.style.left = e.clientX + 'px'; dot.style.top = e.clientY + 'px'; });
+    addEventListener('mouseleave', () => { dot.style.opacity = '0'; });
+    addEventListener('mouseenter', () => { dot.style.opacity = '1'; });
+
     // État du Rafale
     const HALF_W = 60, HALF_H = 48;
-    let px = W * 0.5, py = H * 0.55;
-    let vx = 0.4, vy = 0;
-    let angle = Math.PI; // image originale pointe à gauche
+    let px = W * 0.88, py = H * 0.10;
+    let vx = -2, vy = 1;
+    let angle = Math.PI;
 
     const ACC_N = 0.30, ACC_AB = 1.0;
     const SPD_N = 6.5,  SPD_AB = 20;
