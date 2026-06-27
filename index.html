@@ -29,7 +29,9 @@
             font-weight: 400;
             line-height: 1.65;
             -webkit-font-smoothing: antialiased;
-            cursor: none;
+        }
+        @media (hover: hover) and (pointer: fine) {
+            body { cursor: none; }
         }
 
         /* ── Layout ── */
@@ -349,12 +351,33 @@
         .fade-in.visible { opacity: 1; transform: translateY(0); }
 
         /* ── Responsive ── */
-        @media (max-width: 600px) {
-            .wrap { padding: 0 1.2rem; }
-            #hero { padding: 4rem 0 3.5rem; }
-            .section { padding: 3.5rem 0; }
-            .phase { grid-template-columns: 1fr; gap: 0.4rem; }
+        @media (max-width: 640px) {
+            .wrap { padding: 0 1.1rem; }
+            #hero { padding: 3.5rem 0 3rem; }
+            .section { padding: 3rem 0; }
+            .section-title { margin-bottom: 1.8rem; }
+
+            /* Parcours : déjà géré à 680px, on reserre l'espacement */
+            .col-head { margin-bottom: 1.4rem; }
+            .entry { margin-bottom: 2rem; }
+
+            /* Projets : portail en dessous du contenu */
+            .project-row { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .portal-wrap { flex-direction: row; align-items: center; gap: 0.6rem; }
+
+            /* Mon Projet */
+            .phase { grid-template-columns: 1fr; gap: 0.35rem; }
             .phase-period { padding-top: 0; }
+
+            /* Callout */
+            .callout { padding: 0.8rem 1rem; font-size: 0.85rem; }
+
+            /* Boutons contact */
+            .btn-group { flex-direction: column; }
+            .btn-outline { text-align: center; }
+
+            /* Hint clavier masqué sur mobile */
+            #rafale-hint { display: none !important; }
         }
     </style>
 </head>
@@ -719,7 +742,31 @@
 </script>
 
 <script>
-// ─── Rafale jouable ZQSD / ESPACE / A ───
+// ─── Détection touch ───
+const _isTouch = window.matchMedia('(hover: none)').matches;
+
+if (_isTouch) {
+    // Sur mobile : portails cliquables + scroll retour
+    const _hash = window.location.hash;
+    if (_hash) {
+        const _slug = _hash.replace('#', '');
+        const _pel = document.querySelector(`.portal[data-href="${_slug}.html"]`);
+        if (_pel) {
+            history.replaceState(null, '', location.pathname);
+            _pel.scrollIntoView({ behavior: 'instant', block: 'center' });
+        }
+    }
+    document.querySelectorAll('.portal[data-href]').forEach(p => {
+        p.addEventListener('click', () => {
+            const f = document.createElement('div');
+            f.style.cssText = 'position:fixed;inset:0;background:#fff;opacity:0;z-index:9999;transition:opacity 0.25s ease;pointer-events:none;';
+            document.body.appendChild(f);
+            requestAnimationFrame(() => { f.style.opacity = '1'; });
+            setTimeout(() => { location.href = p.dataset.href; }, 280);
+        });
+    });
+} else {
+// ─── Rafale jouable ZQSD / ESPACE / Entrée / Clic ───
 (function () {
     // Canvas fumée
     const cvs = document.createElement('canvas');
@@ -738,6 +785,7 @@
 
     // Hint clavier
     const hint = document.createElement('div');
+    hint.id = 'rafale-hint';
     hint.textContent = 'ZQSD · Entrée/Clic tirer · ESPACE post-combustion';
     hint.style.cssText = 'position:fixed;bottom:1.4rem;right:1.5rem;font-size:0.68rem;font-family:Inter,sans-serif;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.42);z-index:20;pointer-events:none;transition:opacity 1.2s;';
     document.body.appendChild(hint);
@@ -1060,6 +1108,7 @@
 
     tick();
 })();
+} // end !_isTouch
 </script>
 
 </body>
