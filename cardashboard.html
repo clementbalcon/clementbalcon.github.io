@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarDashboard — CarPlay maison sur iPad · Clément Balcon</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/apple-touch-icon-portfolio.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg: #1E4A73;
+            --white: #ffffff;
+            --w70: rgba(255,255,255,0.70);
+            --w40: rgba(255,255,255,0.40);
+            --w20: rgba(255,255,255,0.18);
+        }
+
+        html { scroll-behavior: smooth; }
+        body {
+            background: #1E4A73;
+            background-image: radial-gradient(ellipse at 15% 0%, #2a5f92 0%, transparent 60%);
+            color: var(--white);
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .wrap { max-width: 900px; margin: 0 auto; padding: 0 2rem; }
+
+        /* ── Nav ── */
+        .top-nav { padding: 2rem 2rem 0; max-width: 900px; margin: 0 auto; }
+        .back-link {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            border: 1.5px solid var(--w40);
+            color: var(--w70); text-decoration: none;
+            font-size: 0.75rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.1em;
+            padding: 0.45rem 1rem;
+            transition: border-color 0.18s, color 0.18s;
+        }
+        .back-link:hover { border-color: var(--white); color: var(--white); }
+
+        /* ── Portail sortie (fixed, white) ── */
+        @keyframes portal-spin     { to { transform: rotate(360deg); } }
+        @keyframes portal-spin-rev { to { transform: rotate(-360deg); } }
+        @keyframes portal-pulse {
+            0%,100% { box-shadow: 0 0 10px rgba(255,255,255,0.55), 0 0 22px rgba(255,255,255,0.22); }
+            50%      { box-shadow: 0 0 24px rgba(255,255,255,0.95), 0 0 48px rgba(255,255,255,0.42); }
+        }
+        .portal {
+            position: fixed; top: 1.2rem; right: 1.5rem; z-index: 100;
+            width: 70px; height: 70px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(8,14,20,0.85) 0%, rgba(255,255,255,0.06) 55%, rgba(255,255,255,0.6) 80%, rgba(255,255,255,0.88) 100%);
+            border: 2px solid rgba(255,255,255,0.88);
+            animation: portal-pulse 2.8s ease-in-out infinite;
+            cursor: pointer;
+        }
+        .portal::before {
+            content: ''; position: absolute; inset: 5px; border-radius: 50%;
+            border: 2px solid transparent;
+            border-top-color: rgba(255,255,255,0.95);
+            border-right-color: rgba(255,255,255,0.4);
+            animation: portal-spin 3s linear infinite;
+        }
+        .portal::after {
+            content: ''; position: absolute; inset: 14px; border-radius: 50%;
+            border: 1px dashed rgba(255,255,255,0.55);
+            animation: portal-spin-rev 6s linear infinite;
+        }
+        .portal-label {
+            position: absolute; bottom: -1.3rem; left: 50%; transform: translateX(-50%);
+            font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.07em;
+            color: var(--w40); white-space: nowrap; font-family: 'Inter', sans-serif;
+        }
+
+        /* ── Hero ── */
+        .hero { padding: 3rem 0 2rem; border-bottom: 1px solid var(--w20); margin-bottom: 3rem; }
+
+        .hero-badge {
+            font-size: 0.72rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.09em; color: var(--w70);
+            border: 1px solid var(--w40); display: inline-block;
+            padding: 0.2rem 0.65rem; margin-bottom: 1.2rem;
+        }
+
+        .hero h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(2.5rem, 7vw, 5rem);
+            line-height: 0.95; letter-spacing: 0.03em;
+            margin-bottom: 1.2rem;
+        }
+
+        .hero p {
+            font-size: 1rem; color: var(--w70);
+            max-width: 640px; line-height: 1.75;
+            margin-bottom: 1.4rem;
+        }
+
+        .partner-banner {
+            display: inline-flex; align-items: center; gap: 0.75rem;
+            border: 1px solid var(--w40); padding: 0.55rem 1rem;
+            text-decoration: none;
+            transition: border-color 0.18s;
+        }
+        .partner-banner:hover { border-color: var(--white); }
+        .partner-banner svg { width: 22px; height: 22px; fill: rgba(255,255,255,0.8); flex-shrink: 0; }
+        .partner-banner span { font-size: 0.82rem; color: var(--w70); }
+        .partner-banner strong { color: var(--white); }
+
+        /* ── Images hero ── */
+        .hero-img {
+            margin: 2.5rem 0;
+            border: 1px solid var(--w20);
+            background: rgba(255,255,255,0.06);
+            display: flex; align-items: center; justify-content: center;
+            gap: 2rem; padding: 2rem; flex-wrap: wrap;
+        }
+        .hero-img img { display: block; max-width: 100%; max-height: 320px; object-fit: contain; }
+        .hero-img figure { text-align: center; margin: 0; }
+        .hero-img figcaption { font-size: 0.7rem; color: var(--w40); text-transform: uppercase; letter-spacing: 0.07em; margin-top: 0.6rem; }
+
+        /* ── Stats ── */
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem; margin-bottom: 1.5rem;
+        }
+        @media(max-width: 500px) { .stats-grid { grid-template-columns: 1fr 1fr; } }
+        .stat {
+            border: 1px solid var(--w40); padding: 0.9rem 0.5rem;
+            text-align: center;
+        }
+        .stat .v {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem; letter-spacing: 0.04em; line-height: 1;
+        }
+        .stat .l { font-size: 0.68rem; color: var(--w70); margin-top: 0.3rem; text-transform: uppercase; letter-spacing: 0.05em; }
+
+        /* ── Stack ── */
+        .meta-row {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 2rem; margin-bottom: 3rem;
+        }
+        @media(max-width: 640px) { .meta-row { grid-template-columns: 1fr; } }
+
+        .team-block { border: 1px solid var(--w20); padding: 1.2rem; }
+        .team-block h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.1rem; letter-spacing: 0.06em;
+            color: var(--w70); margin-bottom: 1rem;
+        }
+        .team-section { margin-bottom: 0.9rem; }
+        .team-section:last-child { margin-bottom: 0; }
+        .team-section-label { font-size: 0.68rem; color: var(--w40); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 0.4rem; }
+        .tm { display: flex; align-items: baseline; gap: 0.5rem; margin-bottom: 0.25rem; }
+        .tm-name { font-size: 0.88rem; color: var(--white); font-weight: 500; }
+        .tm-role { font-size: 0.78rem; color: var(--w70); }
+
+        /* ── Tags ── */
+        .tags-row { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 3rem; }
+        .tag {
+            border: 1px solid var(--w40); color: var(--white);
+            font-size: 0.75rem; font-weight: 500;
+            letter-spacing: 0.04em; padding: 0.25rem 0.7rem;
+        }
+
+        /* ── Content ── */
+        .section-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            letter-spacing: 0.04em; margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--w20);
+        }
+
+        .phase-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; margin-bottom: 2.5rem; }
+        @media(max-width: 640px) { .phase-grid { grid-template-columns: 1fr; } }
+        .phase-card { border: 1px solid var(--w20); padding: 1.2rem; }
+        .phase-num {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem; letter-spacing: 0.04em;
+            color: var(--w40); line-height: 1; margin-bottom: 0.6rem;
+        }
+        .phase-title { font-size: 0.9rem; font-weight: 600; color: var(--white); margin-bottom: 0.5rem; }
+        .phase-desc { font-size: 0.82rem; color: var(--w70); line-height: 1.6; }
+
+        .deliverables-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2.5rem; }
+        @media(max-width: 500px) { .deliverables-grid { grid-template-columns: 1fr; } }
+        .deliv-card { border: 1px solid var(--w20); padding: 1.1rem; display: flex; gap: 0.8rem; }
+        .deliv-icon { font-size: 1.1rem; flex-shrink: 0; }
+        .deliv-title { font-size: 0.88rem; font-weight: 600; color: var(--white); margin-bottom: 0.2rem; }
+        .deliv-desc { font-size: 0.8rem; color: var(--w70); line-height: 1.5; }
+
+        .callout {
+            border-left: 2px solid var(--w40); padding: 1rem 1.4rem;
+            margin-bottom: 2.5rem;
+        }
+        .callout p { color: var(--w70); font-size: 0.9rem; line-height: 1.8; margin: 0; }
+
+        .content { padding-bottom: 4rem; }
+
+        /* ── Footer ── */
+        footer {
+            border-top: 1px solid var(--w40);
+            padding: 2rem 0; text-align: center;
+            font-size: 0.78rem; color: var(--w40);
+            letter-spacing: 0.05em; text-transform: uppercase;
+        }
+        footer a { color: var(--w70); text-decoration: none; }
+        footer a:hover { color: var(--white); }
+
+        @media(max-width: 600px) { .wrap { padding: 0 1.2rem; } }
+    </style>
+</head>
+<body>
+
+<div class="top-nav">
+    <a href="index.html" class="back-link">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Portfolio
+    </a>
+</div>
+
+<div class="portal" data-href="index.html#projects">
+    <span class="portal-label">Sortie</span>
+</div>
+
+<div class="wrap">
+
+    <div class="hero">
+        <div class="hero-badge">Projet personnel · iOS / SwiftUI · 2026</div>
+        <h1>CarDashboard<br>CarPlay Maison sur iPad</h1>
+        <p>Ma voiture n'a pas CarPlay — alors je l'ai construit. Un iPad fixé au tableau de bord affiche en temps réel le mirroring de Waze depuis mon iPhone, la musique en cours, la météo et des contacts d'appel rapide. Le tout communique en pair-à-pair sur le hotspot de l'iPhone : aucun serveur, aucune connexion Internet requise pour le flux vidéo.</p>
+        <a class="partner-banner" href="https://github.com/clementbalcon/CarDashboard" target="_blank" rel="noopener">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+            <span>Code source : <strong>github.com/clementbalcon/CarDashboard</strong></span>
+        </a>
+    </div>
+
+    <div class="hero-img">
+        <figure>
+            <img src="cardashboard_ipad.png" alt="Dashboard iPad — mirroring Waze, musique, météo, appels rapides" style="max-height: 380px;">
+            <figcaption>iPad — le dashboard</figcaption>
+        </figure>
+        <figure>
+            <img src="cardashboard_iphone.png" alt="App companion iPhone — broadcast et Waze" style="max-height: 380px;">
+            <figcaption>iPhone — le companion</figcaption>
+        </figure>
+    </div>
+
+    <div class="meta-row">
+        <div>
+            <div class="stats-grid">
+                <div class="stat"><div class="v">3</div><div class="l">Cibles Xcode</div></div>
+                <div class="stat"><div class="v">5</div><div class="l">Widgets</div></div>
+                <div class="stat"><div class="v">H.264</div><div class="l">Flux temps réel</div></div>
+                <div class="stat"><div class="v">0</div><div class="l">Serveur requis</div></div>
+            </div>
+            <p style="font-size:0.8rem;color:var(--w40);margin-top:0.7rem">
+                Conception, développement et intégration — projet solo, développé avec l'aide de Claude Code
+            </p>
+        </div>
+        <div class="team-block">
+            <h3>Stack Technique</h3>
+            <div class="team-section">
+                <div class="team-section-label">Apps</div>
+                <div class="tm"><span class="tm-name">Dashboard iPad</span><span class="tm-role">— SwiftUI, layout adaptatif portrait/paysage</span></div>
+                <div class="tm"><span class="tm-name">Companion iPhone</span><span class="tm-role">— broadcast, batterie, GPS</span></div>
+                <div class="tm"><span class="tm-name">Broadcast Extension</span><span class="tm-role">— capture d'écran ReplayKit</span></div>
+            </div>
+            <div class="team-section">
+                <div class="team-section-label">Frameworks Apple</div>
+                <div class="tm"><span class="tm-name">Multipeer Connectivity · VideoToolbox · ReplayKit · MediaPlayer · CoreLocation · Contacts</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tags-row">
+        <span class="tag">Swift / SwiftUI</span>
+        <span class="tag">Streaming vidéo H.264</span>
+        <span class="tag">Multipeer Connectivity</span>
+        <span class="tag">ReplayKit</span>
+        <span class="tag">VideoToolbox</span>
+        <span class="tag">Temps réel</span>
+        <span class="tag">API REST (Open-Meteo)</span>
+        <span class="tag">Architecture modulaire</span>
+    </div>
+
+    <div class="content">
+
+        <h2 class="section-title">Contexte & Problématique</h2>
+        <div class="callout">
+            <p>Les systèmes CarPlay d'origine sont absents des voitures plus anciennes, et les solutions du marché (autoradios compatibles) sont coûteuses et limitées. L'idée : transformer un iPad en dashboard embarqué qui réplique l'essentiel — navigation, musique, appels — en exploitant l'iPhone déjà présent dans la voiture. Contrainte majeure : Waze ne partage ses données de navigation avec aucune app tierce, la seule voie possible est le mirroring d'écran temps réel.</p>
+        </div>
+
+        <h2 class="section-title">Démarche</h2>
+        <div class="phase-grid">
+            <div class="phase-card">
+                <div class="phase-num">01</div>
+                <div class="phase-title">Dashboard & widgets autonomes</div>
+                <div class="phase-desc">Grille SwiftUI modulaire (chaque widget conforme à un protocole commun), lecteur Apple Music interactif avec playlists, météo Open-Meteo sur 6 heures, contacts d'appel rapide configurables.</div>
+            </div>
+            <div class="phase-card">
+                <div class="phase-num">02</div>
+                <div class="phase-title">Liaison iPhone ↔ iPad</div>
+                <div class="phase-desc">Canal pair-à-pair Multipeer Connectivity (découverte Bonjour, zéro configuration) transportant messages de données — batterie, position GPS relayée pour la météo — et flux vidéo sur le même lien.</div>
+            </div>
+            <div class="phase-card">
+                <div class="phase-num">03</div>
+                <div class="phase-title">Mirroring vidéo temps réel</div>
+                <div class="phase-desc">Capture d'écran par Broadcast Upload Extension (ReplayKit), encodage H.264 matériel (VideoToolbox, budget mémoire 50 Mo), transport hybride fiable/non-fiable, décodage et affichage sur l'iPad.</div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Architecture</h2>
+        <div class="deliverables-grid">
+            <div class="deliv-card">
+                <div class="deliv-icon">📱</div>
+                <div>
+                    <div class="deliv-title">App iPad — le dashboard</div>
+                    <div class="deliv-desc">Layout adaptatif portrait/paysage, zone Waze dimensionnée au ratio exact de l'écran iPhone, widgets musique, météo, contacts et batterie.</div>
+                </div>
+            </div>
+            <div class="deliv-card">
+                <div class="deliv-icon">📡</div>
+                <div>
+                    <div class="deliv-title">Extension broadcast — la capture</div>
+                    <div class="deliv-desc">Capture chaque frame de l'écran iPhone, encode en H.264 temps réel et diffuse — keyframes en transport fiable, inter-frames en non-fiable pour minimiser la latence.</div>
+                </div>
+            </div>
+            <div class="deliv-card">
+                <div class="deliv-icon">🔗</div>
+                <div>
+                    <div class="deliv-title">Transport Multipeer — le lien</div>
+                    <div class="deliv-desc">Un seul canal pair-à-pair pour tout : vidéo, config décodeur (renvoyée à chaque keyframe pour la reconnexion à chaud), batterie et position GPS.</div>
+                </div>
+            </div>
+            <div class="deliv-card">
+                <div class="deliv-icon">🎛️</div>
+                <div>
+                    <div class="deliv-title">App companion — le cockpit iPhone</div>
+                    <div class="deliv-desc">Démarrage du broadcast en un tap (RPSystemBroadcastPickerView), ouverture de Waze, envoi périodique de la batterie et du GPS en arrière-plan.</div>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Résultat</h2>
+        <div class="callout">
+            <p>Le système fonctionne en conditions réelles dans ma Citroën C4 : l'iPad affiche la carte Waze avec une latence imperceptible, la musique se pilote depuis le tableau de bord, et le tout survit aux rotations d'écran et aux reconnexions. Développé intégralement avec un compte développeur Apple gratuit — le code est open source sur GitHub.</p>
+        </div>
+
+    </div>
+
+</div>
+
+<footer>
+    <div class="wrap">
+        <a href="index.html">← Retour au portfolio</a> &nbsp;·&nbsp; Clément Balcon © 2026
+    </div>
+</footer>
+
+<script>window.RAFALE_OPTS = { spawnFromPortal: true, noEnemies: true };</script>
+<script src="rafale-game.js"></script>
+
+</body>
+</html>

@@ -28,6 +28,8 @@ nerf.html           — projet TN20 CATIA V5 (16 photos locales, pas de PDF)
 robafis.html        — projet RobAFIS (PDF embarqué)
 tn06.html           — projet TN06 cric hydraulique (PDF embarqué)
 matra.html          — projet PR Solder Pen (pas de PDF, page recap)
+cardashboard.html   — projet perso CarDashboard (page recap, thème bleu nuit #1E4A73, lien GitHub)
+cardashboard_*.png  — captures iPad/iPhone + icône (assets CarDashboard)
 solder_pen.png      — render 3D du Solder Pen (couverture carte Matra)
 logo_matra.png      — logo Matra Électronique
 logo_safran.jpeg    — logo Safran Aircraft Engines
@@ -47,7 +49,7 @@ robafis.pdf, tn06.pdf, nerf_*.png/jpeg — assets projets
 2. **Qui suis-je** — présentation, langues
 3. **Expérience** — timeline Pro + Formation (côte à côte)
 4. **Ce que je maîtrise** — skill cards (CAO, Production, Prog, Ingénierie Système)
-5. **Projets** — 4 cartes : Solder Pen · RobAFIS · TN06 · Nerf
+5. **Projets** — 7 cartes : Solder Pen · RobAFIS · TN06 · Nerf · AM25 Taipei 101 · CarDashboard · Training Tracker
 6. **Bénévolat & Associations**
 7. **Mon projet** — section AE03 / parcours Safran (vague, confidentiel)
 
