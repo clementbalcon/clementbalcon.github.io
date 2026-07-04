@@ -73,6 +73,19 @@ robafis.pdf, tn06.pdf, nerf_*.png/jpeg — assets projets
 Classe `.tl-logo` : `32×32px`, `object-fit: contain`
 Classe `.vol-icon` (bénévolat) : `44×44px`
 
+## Couleur signature par sous-page
+Chaque sous-page projet a sa propre couleur de fond, mais toutes à la MÊME saturation/profondeur (HSL S≈46% L≈32%) pour rester harmonieuses. Deux valeurs par page : `--bg` + `body{background}` (base) et le `radial-gradient` du `background-image` (highlight, base éclaircie ~L42%). `index.html` (page principale) et `sandbox.html` (jeu) ne suivent PAS cette palette.
+
+| Page | Base | Highlight | Teinte |
+|------|------|-----------|--------|
+| nerf.html | `#774F2C` | `#9C683A` | rouille |
+| robafis.html | `#2C6B77` | `#3A8C9C` | cyan |
+| tn06.html | `#77642C` | `#9C843A` | bronze |
+| matra.html | `#2C775C` | `#3A9C78` | vert |
+| am25.html | `#432C77` | `#573A9C` | indigo |
+| cardashboard.html | `#2C5277` | `#3A6B9C` | bleu nuit |
+| training.html | `#772C36` | `#9C3A47` (+ accent foncé `#592129`) | grenat |
+
 ## Sous-pages projets
 Toutes suivent le même template dark aerospace :
 - Nav fixe avec `← Portfolio` + titre

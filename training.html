@@ -6,7 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Training">
-    <meta name="theme-color" content="#40916C">
+    <meta name="theme-color" content="#772C36">
     <title>Training — Clément Balcon</title>
     <link rel="icon" href="/favicon-training.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/apple-touch-icon-training.png">
@@ -21,7 +21,7 @@
         button { touch-action: manipulation; }
 
         :root {
-            --bg: #40916C;
+            --bg: #772C36;
             --accent: rgba(255,255,255,0.92);
             --accent2: #fb923c;
             --text: #ffffff;
@@ -34,8 +34,8 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            background: #40916C;
-            background-image: radial-gradient(ellipse at 15% 0%, #52a87e 0%, transparent 60%);
+            background: #772C36;
+            background-image: radial-gradient(ellipse at 15% 0%, #9C3A47 0%, transparent 60%);
             color: var(--text);
             font-family: 'Inter', sans-serif;
             min-height: 100vh;
@@ -131,7 +131,7 @@
             justify-content: center;
             gap: 0.5rem;
             background: var(--accent);
-            color: #40916C;
+            color: #772C36;
             border: none;
             border-radius: 8px;
             font-family: 'Inter', sans-serif;
@@ -334,7 +334,7 @@
         .rep-chip.selected {
             background: var(--accent);
             border-color: var(--accent);
-            color: #40916C;
+            color: #772C36;
             font-weight: 700;
         }
 
@@ -634,7 +634,7 @@
             background: var(--accent);
             border: none;
             border-radius: 7px;
-            color: #40916C;
+            color: #772C36;
             cursor: pointer;
             font-family: 'Inter', sans-serif;
             font-size: 0.85rem;
@@ -2108,8 +2108,8 @@ function showMap(id) {
             attribution: '©OpenStreetMap ©CartoDB', maxZoom: 19
         }).addTo(mapInstance);
         const line = L.polyline(track, { color: 'rgba(255,255,255,0.92)', weight: 3, opacity: 0.9 }).addTo(mapInstance);
-        L.circleMarker(track[0], { radius: 6, color: 'rgba(255,255,255,0.92)', fillColor: '#40916C', fillOpacity: 1, weight: 2 }).addTo(mapInstance);
-        L.circleMarker(track[track.length-1], { radius: 6, color: '#fb923c', fillColor: '#40916C', fillOpacity: 1, weight: 2 }).addTo(mapInstance);
+        L.circleMarker(track[0], { radius: 6, color: 'rgba(255,255,255,0.92)', fillColor: '#772C36', fillOpacity: 1, weight: 2 }).addTo(mapInstance);
+        L.circleMarker(track[track.length-1], { radius: 6, color: '#fb923c', fillColor: '#772C36', fillOpacity: 1, weight: 2 }).addTo(mapInstance);
         mapInstance.fitBounds(line.getBounds(), { padding: [24, 24] });
     }, 50);
 }
@@ -2129,7 +2129,7 @@ function closeMap() {
     <div id="map"></div>
 </div>
 
-<div id="rest-overlay" style="display:none;position:fixed;inset:0;background:#2d6a4f;z-index:850;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem">
+<div id="rest-overlay" style="display:none;position:fixed;inset:0;background:#592129;z-index:850;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem">
     <div style="font-size:0.85rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.55)">Repos</div>
     <div id="rest-overlay-time" style="font-family:'Space Grotesk',sans-serif;font-size:6rem;font-weight:700;color:rgba(255,255,255,0.92);letter-spacing:0.04em;line-height:1">0:00</div>
     <button onclick="dismissRestOverlay()" style="margin-top:1rem;background:rgba(255,255,255,0.10);border:1px solid rgba(255,255,255,0.30);border-radius:12px;color:rgba(255,255,255,0.92);font-family:'Inter',sans-serif;font-size:1rem;font-weight:600;padding:0.9rem 2.5rem;cursor:pointer;letter-spacing:0.05em">Reprendre</button>
