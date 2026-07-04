@@ -8,18 +8,22 @@
 ## Stack
 - Site statique monofichier (`index.html`) + sous-pages HTML séparées
 - CSS embarqué dans chaque fichier, pas de framework
-- Fonts Google : Inter + Space Grotesk
-- Pas de JS framework — animations en CSS pur
+- Fonts Google : Inter + Bebas Neue
+- GSAP 3.15 + ScrollTrigger + Lenis (CDN jsdelivr — GSAP ≥3.14 absent de cdnjs) pour le jet hero uniquement
+
+## Jet hero (séquence Rafale scrubée au scroll, façon rideradian.com)
+- `#jet-hero` (350vh, 280vh mobile) > `.jet-sticky` (sticky 100vh) > `#jet-canvas` + `.jet-title`
+- 120 frames WebP transparentes 1920×1080 dans `frames/hero/` (~4,7 Mo), rendues avec Blender (EEVEE)
+- Scène Blender autonome (textures packées) : `blender/rafale_hero.blend` + scripts `setup_scene.py` / `animate_render.py`
+- Modèle 3D : « Dassault Rafale » par andertan (Sketchfab), CC Attribution — crédit obligatoire au footer
+- Trajectoire caméra : 3/4 avant (f1) → profil gauche (f60) → 3/4 arrière plongé, tuyères visibles (f120) ; nez du modèle vers -X
+- `prefers-reduced-motion` : hero réduit à 100vh, frame 1 statique
+- Pour re-rendre : `/Applications/Blender.app/Contents/MacOS/Blender -b blender/rafale_hero.blend -P blender/animate_render.py` (ajuster les chemins de sortie dans le script)
 
 ## Thème visuel
-- Fond : `#060c15` (dark aerospace / blueprint)
-- Accent bleu : `#38bdf8` (sky blue)
-- Accent orange : `#fb923c` (amber)
-- Grille de fond via `body::before` (CSS, `rgba(56,189,248,0.025)`)
-- Lueur radiale via `body::after`
-- Variables CSS : `--bg`, `--accent`, `--accent2`, `--text`, `--muted`, `--subtle`, `--card`, `--border`
-- Avions animés en `mix-blend-mode: screen` (effet blueprint)
-- Rafale uniquement : double traînée de fumée via `::before`/`::after` (deux moteurs)
+- Fond : `#40916C` (vert), highlight radial `#52a87e` — l'ancien thème dark aerospace `#060c15` n'est plus utilisé sur index
+- Variables CSS : `--bg`, `--white`, `--w70`, `--w40`, `--w20`
+- Curseur desktop : Rafale jouable (`rafale-game.js`, `Rafale.png`), `cursor: none`
 
 ## Structure des fichiers
 ```
@@ -45,7 +49,8 @@ robafis.pdf, tn06.pdf, nerf_*.png/jpeg — assets projets
 ```
 
 ## Sections index.html (dans l'ordre)
-1. **Hero** — nom, titre, drapeaux, bouton mailto
+0. **Jet hero** — séquence Rafale au scroll, nom + titre en overlay (hors `.wrap`)
+1. **Hero** — bio + langues (le nom/titre a migré dans le jet hero)
 2. **Qui suis-je** — présentation, langues
 3. **Expérience** — timeline Pro + Formation (côte à côte)
 4. **Ce que je maîtrise** — skill cards (CAO, Production, Prog, Ingénierie Système)

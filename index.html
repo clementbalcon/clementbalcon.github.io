@@ -72,6 +72,54 @@
             margin-bottom: 2.5rem;
         }
 
+        /* ── Jet hero (séquence scroll façon rideradian.com) ── */
+        #jet-hero { height: 350vh; position: relative; }
+        .jet-sticky {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .jet-title { position: relative; z-index: 1; text-align: center; pointer-events: none; }
+        .jet-title .hero-name { margin-bottom: 0.8rem; }
+        #jet-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .jet-hint {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            font-size: 0.62rem;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: var(--w40);
+            animation: jet-hint-pulse 2.2s ease-in-out infinite;
+        }
+        @keyframes jet-hint-pulse {
+            0%, 100% { opacity: 0.4; transform: translateX(-50%) translateY(0); }
+            50%      { opacity: 1;   transform: translateX(-50%) translateY(6px); }
+        }
+        @media (max-width: 640px) {
+            #jet-hero { height: 280vh; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            #jet-hero { height: 100vh; }
+            .jet-hint { animation: none; }
+        }
+        /* Lenis smooth scroll */
+        html.lenis, html.lenis body { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+
         /* ── Hero ── */
         #hero { padding: 6rem 0 5rem; }
 
@@ -384,13 +432,23 @@
 </head>
 <body>
 
+<!-- ─── JET HERO : séquence Rafale scrubée au scroll ─── -->
+<section id="jet-hero" aria-label="Rafale — séquence 3D">
+    <div class="jet-sticky">
+        <div class="jet-title">
+            <div class="hero-name">CLÉMENT<br>BALCON</div>
+            <div class="hero-role">Ingénieur Mécanique · PIL</div>
+            <div class="hero-tag">Apprenti Ingénieur · Safran Aircraft Engines · Châtellerault</div>
+        </div>
+        <canvas id="jet-canvas"></canvas>
+        <div class="jet-hint">Scroll</div>
+    </div>
+</section>
+
 <div class="wrap">
 
     <!-- ─── HERO ─── -->
     <section id="hero">
-        <div class="hero-name fade-in">CLÉMENT<br>BALCON</div>
-        <div class="hero-role fade-in">Ingénieur Mécanique · PIL</div>
-        <div class="hero-tag fade-in">Apprenti Ingénieur · Safran Aircraft Engines · Châtellerault</div>
         <p class="hero-bio fade-in">
             Étudiant ingénieur à l'<strong>UTC</strong> en filière <strong>PIL — Production Intégrée et Logistique</strong>, en alternance chez <strong>Safran Aircraft Engines</strong>. Passionné par la mécanique de précision, la production aéronautique et l'innovation industrielle.
         </p>
@@ -766,8 +824,109 @@
 </div>
 
 <footer>
-    <div class="wrap">© 2026 Clément Balcon · Ingénieur Mécanique · UTC</div>
+    <div class="wrap">© 2026 Clément Balcon · Ingénieur Mécanique · UTC<br>
+    <span style="font-size:0.68rem;color:var(--w40);">Modèle 3D « <a href="https://sketchfab.com/3d-models/dassault-rafale-fabb8472bc2e413282c80406b13ff1a7" style="color:var(--w40);" target="_blank" rel="noopener">Dassault Rafale</a> » par andertan — licence CC Attribution</span></div>
 </footer>
+
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.5/dist/lenis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js"></script>
+<script>
+// ─── Jet hero : canvas + séquence d'images scrubée au scroll ───
+(function () {
+    const canvas = document.getElementById('jet-canvas');
+    if (!canvas || !window.gsap) return;
+    const ctx = canvas.getContext('2d');
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const FRAME_COUNT = 120;
+    const src = i => `frames/hero/frame_${String(i + 1).padStart(4, '0')}.webp`;
+    const images = new Array(FRAME_COUNT).fill(null);
+    const state = { frame: 0 };
+
+    function loadFrame(i) {
+        if (images[i]) return images[i];
+        const img = new Image();
+        img.src = src(i);
+        images[i] = img;
+        return img;
+    }
+
+    // frame la plus proche déjà décodée (vers l'arrière, puis l'avant)
+    function nearestReady(i) {
+        for (let d = 0; d < FRAME_COUNT; d++) {
+            for (const j of [i - d, i + d]) {
+                const im = images[j];
+                if (im && im.complete && im.naturalWidth) return im;
+            }
+        }
+        return null;
+    }
+
+    function draw() {
+        const img = nearestReady(Math.round(state.frame));
+        if (!img) return;
+        const cw = canvas.width, ch = canvas.height;
+        ctx.clearRect(0, 0, cw, ch);
+        const scale = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
+        const w = img.naturalWidth * scale, h = img.naturalHeight * scale;
+        ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
+    }
+
+    function resize() {
+        const dpr = Math.min(window.devicePixelRatio || 1, window.innerWidth < 640 ? 1.5 : 2);
+        canvas.width = canvas.clientWidth * dpr;
+        canvas.height = canvas.clientHeight * dpr;
+        draw();
+    }
+    window.addEventListener('resize', resize);
+
+    // priorité à la première frame, puis chargement du reste
+    loadFrame(0).onload = () => { resize(); };
+    for (let i = 1; i < FRAME_COUNT; i++) {
+        const im = loadFrame(i);
+        im.onload = () => { if (Math.abs(i - state.frame) < 2) draw(); };
+    }
+    resize();
+
+    if (reduced) return; // hero statique : frame 1 seule
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    // smooth scroll (desktop uniquement — natif sur touch)
+    if (window.Lenis && !window.matchMedia('(hover: none)').matches) {
+        const lenis = new Lenis();
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add(t => lenis.raf(t * 1000));
+        gsap.ticker.lagSmoothing(0);
+    }
+
+    gsap.to(state, {
+        frame: FRAME_COUNT - 1,
+        ease: 'none',
+        scrollTrigger: {
+            trigger: '#jet-hero',
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: 0.5,
+        },
+        onUpdate: draw,
+    });
+
+    // le titre et le hint s'estompent sur le premier tiers du scroll
+    gsap.to(['.jet-title', '.jet-hint'], {
+        opacity: 0,
+        y: -50,
+        ease: 'none',
+        scrollTrigger: {
+            trigger: '#jet-hero',
+            start: 'top top',
+            end: () => '+=' + window.innerHeight * 1.1,
+            scrub: true,
+        },
+    });
+})();
+</script>
 
 <script>
     const observer = new IntersectionObserver((entries) => {
