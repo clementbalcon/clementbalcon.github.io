@@ -73,7 +73,7 @@
         }
 
         /* ── Jet hero (séquence scroll façon rideradian.com) ── */
-        #jet-hero { height: 350vh; position: relative; }
+        #jet-hero { height: 450vh; position: relative; }
         .jet-sticky {
             position: sticky;
             top: 0;
@@ -83,7 +83,10 @@
             align-items: center;
             justify-content: center;
         }
-        .jet-title { position: relative; z-index: 1; text-align: center; pointer-events: none; }
+        /* Le titre démarre DEVANT l'avion (z-index 3) ; passe derrière (.behind) quand
+           l'avion, en approchant, devient plus gros que le texte. */
+        .jet-title { position: relative; z-index: 3; text-align: center; pointer-events: none; }
+        .jet-title.behind { z-index: 1; }
         .jet-title .hero-name { margin-bottom: 0.8rem; }
         #jet-canvas {
             position: absolute;
@@ -105,12 +108,14 @@
             color: var(--w40);
             animation: jet-hint-pulse 2.2s ease-in-out infinite;
         }
+        /* pendant le fondu piloté par le scroll, l'animation CSS ne doit plus reprendre la main */
+        .jet-hint.fading { animation: none; }
         @keyframes jet-hint-pulse {
             0%, 100% { opacity: 0.4; transform: translateX(-50%) translateY(0); }
             50%      { opacity: 1;   transform: translateX(-50%) translateY(6px); }
         }
         @media (max-width: 640px) {
-            #jet-hero { height: 280vh; }
+            #jet-hero { height: 360vh; }
         }
         @media (prefers-reduced-motion: reduce) {
             #jet-hero { height: 100vh; }
@@ -839,8 +844,8 @@
     const ctx = canvas.getContext('2d');
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    const FRAME_COUNT = 120;
-    const src = i => `frames/hero/frame_${String(i + 1).padStart(4, '0')}.webp`;
+    const FRAME_COUNT = 150;
+    const src = i => `frames/hero/frame_${String(i + 1).padStart(4, '0')}.webp?v=2`;
     const images = new Array(FRAME_COUNT).fill(null);
     const state = { frame: 0 };
 
@@ -901,6 +906,58 @@
         gsap.ticker.lagSmoothing(0);
     }
 
+    // Le titre commence DEVANT l'avion. Vers 28-40% du scroll, l'avion (qui approche)
+    // devient plus gros que le texte : bascule de z-index puis fondu du titre.
+    const jetTitle = document.querySelector('.jet-title');
+    const jetHint = document.querySelector('.jet-hint');
+    const PASS_START = 0.28, PASS_END = 0.40;
+
+    function updateTitle(progress) {
+        jetTitle.classList.toggle('behind', progress >= PASS_START);
+        const t = Math.min(1, Math.max(0, (progress - PASS_START) / (PASS_END - PASS_START)));
+        jetTitle.style.opacity = 1 - t;
+        jetTitle.style.transform = `translateY(${-50 * t}px)`;
+
+        // le hint garde son pulse CSS tant qu'il est pleinement visible ;
+        // au-delà du seuil, on coupe l'animation pour piloter son fondu depuis le scroll
+        if (progress > PASS_START) {
+            jetHint.classList.add('fading');
+            jetHint.style.opacity = 1 - t;
+        } else {
+            jetHint.classList.remove('fading');
+            jetHint.style.opacity = '';
+        }
+    }
+
+    // Rect d'atterrissage de l'avion à la frame finale (mesuré une fois par PCA sur le
+    // masque alpha de frame_0150.webp), exprimé en fractions de la frame source 1920×1080,
+    // reconverti ici en coordonnées écran via le même calcul "cover" que draw().
+    const LANDING = { cx: 0.4867, cy: 0.5449, wFrac: 0.1953 };
+    function jetLandingRect() {
+        const cw = canvas.clientWidth, ch = canvas.clientHeight;
+        const scale = Math.max(cw / 1920, ch / 1080);
+        const fw = 1920 * scale, fh = 1080 * scale;
+        const offX = (cw - fw) / 2, offY = (ch - fh) / 2;
+        return { cx: offX + LANDING.cx * fw, cy: offY + LANDING.cy * fh, wPx: LANDING.wFrac * fw };
+    }
+
+    // Sur mobile (pas de jeu curseur, window.__jetSpawn absent) : pas de morph,
+    // le canvas reste affiché sur sa dernière frame — cf. plan hero v2.
+    let morphed = false;
+    function morphForward() {
+        if (morphed || !window.__jetSpawn) return;
+        morphed = true;
+        window.__jetSpawn(jetLandingRect());
+        canvas.style.transition = 'opacity 0.5s ease';
+        canvas.style.opacity = '0';
+    }
+    function morphBack() {
+        if (!morphed) return;
+        morphed = false;
+        canvas.style.opacity = '1';
+        if (window.__jetDespawn) window.__jetDespawn();
+    }
+
     gsap.to(state, {
         frame: FRAME_COUNT - 1,
         ease: 'none',
@@ -909,20 +966,12 @@
             start: 'top top',
             end: 'bottom bottom',
             scrub: 0.5,
+            onLeave: morphForward,
+            onEnterBack: morphBack,
         },
-        onUpdate: draw,
-    });
-
-    // le titre et le hint s'estompent sur le premier tiers du scroll
-    gsap.to(['.jet-title', '.jet-hint'], {
-        opacity: 0,
-        y: -50,
-        ease: 'none',
-        scrollTrigger: {
-            trigger: '#jet-hero',
-            start: 'top top',
-            end: () => '+=' + window.innerHeight * 1.1,
-            scrub: true,
+        onUpdate: function () {
+            draw();
+            updateTitle(this.scrollTrigger.progress);
         },
     });
 })();
@@ -970,22 +1019,21 @@ if (_isTouch) {
     document.body.appendChild(cvs);
     const ctx = cvs.getContext('2d');
 
-    // Élément avion
+    // Élément avion — reste caché tant que le hero-jet 3D n'a pas "atterri" dessus (voir __jetSpawn)
     const wrap = document.createElement('div');
-    wrap.style.cssText = 'position:fixed;z-index:10;pointer-events:none;width:120px;height:96px;';
+    wrap.style.cssText = 'position:fixed;z-index:10;pointer-events:none;width:120px;height:96px;opacity:0;';
     const img = document.createElement('img');
     img.src = 'Rafale.png';
     img.style.cssText = 'width:120px;display:block;filter:brightness(0) invert(1);opacity:0.80;transform-origin:center center;';
     wrap.appendChild(img);
     document.body.appendChild(wrap);
 
-    // Hint clavier
+    // Hint clavier — masqué jusqu'au spawn, puis s'efface après 5s
     const hint = document.createElement('div');
     hint.id = 'rafale-hint';
     hint.textContent = 'ZQSD · Entrée/Clic tirer · ESPACE post-combustion';
-    hint.style.cssText = 'position:fixed;bottom:1.4rem;right:1.5rem;font-size:0.68rem;font-family:Inter,sans-serif;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.42);z-index:20;pointer-events:none;transition:opacity 1.2s;';
+    hint.style.cssText = 'position:fixed;bottom:1.4rem;right:1.5rem;font-size:0.68rem;font-family:Inter,sans-serif;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.42);z-index:20;pointer-events:none;opacity:0;transition:opacity 1.2s;';
     document.body.appendChild(hint);
-    setTimeout(() => { hint.style.opacity = '0'; }, 5000);
 
     // HUD kills
     const hud = document.createElement('div');
@@ -1011,6 +1059,31 @@ if (_isTouch) {
     let px = W * 0.88, py = H * 0.10;
     let vx = -2, vy = 1;
     let angle = Math.PI;
+
+    // ── Morph depuis le jet-hero 3D : le curseur-avion "atterrit" exactement là où
+    // la séquence scroll s'est arrêtée, puis prend le relais (voir jetLandingRect côté hero) ──
+    let gameStarted = false;
+    window.__jetSpawn = function (rect) {
+        px = rect.cx; py = rect.cy;
+        angle = Math.PI; vx = -2; vy = 1;
+        wrap.style.transition = 'none';
+        wrap.style.left = (px - HALF_W) + 'px';
+        wrap.style.top = (py - HALF_H) + 'px';
+        wrap.style.transform = `scale(${Math.max(1, rect.wPx / 120)})`;
+        wrap.offsetHeight; // force le reflow avant de réactiver la transition
+        requestAnimationFrame(() => {
+            wrap.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            wrap.style.opacity = '1';
+            wrap.style.transform = 'scale(1)';
+        });
+        hint.style.opacity = '1';
+        setTimeout(() => { hint.style.opacity = '0'; }, 5000);
+        if (!gameStarted) { gameStarted = true; tick(); }
+    };
+    window.__jetDespawn = function () {
+        wrap.style.transition = 'opacity 0.4s ease';
+        wrap.style.opacity = '0';
+    };
 
     const ACC_N = 0.30, ACC_AB = 1.0;
     const SPD_N = 6.5,  SPD_AB = 20;
@@ -1302,7 +1375,7 @@ if (_isTouch) {
         requestAnimationFrame(tick);
     }
 
-    tick();
+    // démarrage différé : voir window.__jetSpawn plus haut (morph depuis le jet-hero)
 })();
 } // end !_isTouch
 </script>

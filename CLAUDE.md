@@ -11,14 +11,33 @@
 - Fonts Google : Inter + Bebas Neue
 - GSAP 3.15 + ScrollTrigger + Lenis (CDN jsdelivr — GSAP ≥3.14 absent de cdnjs) pour le jet hero uniquement
 
-## Jet hero (séquence Rafale scrubée au scroll, façon rideradian.com)
-- `#jet-hero` (350vh, 280vh mobile) > `.jet-sticky` (sticky 100vh) > `#jet-canvas` + `.jet-title`
-- 120 frames WebP transparentes 1920×1080 dans `frames/hero/` (~4,7 Mo), rendues avec Blender (EEVEE)
-- Scène Blender autonome (textures packées) : `blender/rafale_hero.blend` + scripts `setup_scene.py` / `animate_render.py`
+## Jet hero (séquence Rafale scrubée au scroll, façon rideradian.com) — v2
+- `#jet-hero` (450vh, 360vh mobile) > `.jet-sticky` (sticky 100vh) > `#jet-canvas` + `.jet-title`
+- 150 frames WebP transparentes 1920×1080 dans `frames/hero/` (~4,2 Mo), rendues avec Blender (EEVEE)
+- Scène Blender autonome (textures packées) : `blender/rafale_hero.blend` + script `blender/animate_render_v2.py`
+  (`setup_scene.py` / `animate_render.py` = ancienne v1, gardés pour référence)
 - Modèle 3D : « Dassault Rafale » par andertan (Sketchfab), CC Attribution — crédit obligatoire au footer
-- Trajectoire caméra : 3/4 avant (f1) → profil gauche (f60) → 3/4 arrière plongé, tuyères visibles (f120) ; nez du modèle vers -X
-- `prefers-reduced-motion` : hero réduit à 100vh, frame 1 statique
-- Pour re-rendre : `/Applications/Blender.app/Contents/MacOS/Blender -b blender/rafale_hero.blend -P blender/animate_render.py` (ajuster les chemins de sortie dans le script)
+- Trajectoire caméra (LINEAR, `cam.location`, world-space) : face lointaine (f1, titre devant l'avion)
+  → face proche (f45, bascule z-index + fondu du titre entre 28-40% de scroll) → 3/4 avant (f75)
+  → profil (f105) → vue plongeante petite (f150, ~19,5% de large). Nez du modèle vers -X.
+- Rotation Z de la MESH (pas du pivot — `HeroPivot` est un empty non parenté, tourner le pivot ne
+  fait rien) de 0 à 57.42° entre f105 et f150 : corrige le roulis imprévisible de la contrainte
+  TRACK_TO en vue quasi verticale pour finir exactement horizontal, nez à gauche (convention de
+  `Rafale.png`, qui est une vue de DESSUS, pas un profil).
+- **Morph vers le curseur-jeu** : à la fin du scroll (`onLeave` du ScrollTrigger principal),
+  `jetLandingRect()` calcule où l'avion finit à l'écran (même math "cover" que le dessin canvas)
+  et appelle `window.__jetSpawn(rect)` — défini par le jeu inline plus bas dans le fichier (PAS
+  `rafale-game.js`, qui sert aux sous-pages) — qui positionne le curseur-avion (`wrap`, normalement
+  caché à `opacity:0` et dont la boucle `tick()` ne démarre qu'au premier spawn) à cet endroit avec
+  un effet de pop-in, puis fond le canvas vers transparent. `onEnterBack` fait l'inverse
+  (`window.__jetDespawn()`). Sur mobile (pas de jeu, `window.__jetSpawn` indéfini) : pas de morph,
+  le canvas reste affiché sur sa dernière frame.
+- `prefers-reduced-motion` : hero réduit à 100vh, frame 1 statique, pas de morph ni de curseur-jeu.
+- Pour re-rendre : `/Applications/Blender.app/Contents/MacOS/Blender -b blender/rafale_hero.blend -P blender/animate_render_v2.py`
+- Piège de vérification : dans l'outil de preview utilisé pour développer ceci, `requestAnimationFrame`
+  ne se déclenche pas tout seul (tab non visible) — ni le ticker GSAP ni les transitions CSS n'avancent
+  sans être forcés (`gsap.ticker.tick()` en boucle). Sur un navigateur normal, aucun souci : c'est
+  une limite de l'outil de test, pas du site.
 
 ## Thème visuel
 - Fond : `#40916C` (vert), highlight radial `#52a87e` — l'ancien thème dark aerospace `#060c15` n'est plus utilisé sur index
