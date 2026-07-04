@@ -26,8 +26,8 @@ if (window.matchMedia('(hover: none)').matches) {
     const wrap = document.createElement('div');
     wrap.style.cssText = 'position:fixed;z-index:10;pointer-events:none;width:120px;height:96px;';
     const img = document.createElement('img');
-    img.src = 'Rafale.png';
-    img.style.cssText = 'width:120px;display:block;filter:brightness(0) invert(1);opacity:0.80;transform-origin:center center;';
+    img.src = 'rafale_top.webp';
+    img.style.cssText = 'width:120px;display:block;transform-origin:center center;';
     wrap.appendChild(img);
     document.body.appendChild(wrap);
 
