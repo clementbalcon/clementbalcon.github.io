@@ -16,6 +16,11 @@ if (window.matchMedia('(hover: none)').matches) {
 (function () {
     const cfg = window.RAFALE_OPTS || {};
 
+    // Le curseur natif doit disparaître : l'avion en tient lieu (sinon les deux se cumulent)
+    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+        document.body.style.cursor = 'none';
+    }
+
     // ── Canvas fumée ──
     const cvs = document.createElement('canvas');
     cvs.style.cssText = 'position:fixed;inset:0;z-index:9;pointer-events:none;';

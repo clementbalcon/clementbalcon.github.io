@@ -899,10 +899,11 @@
     gsap.registerPlugin(ScrollTrigger);
 
     // smooth scroll (desktop uniquement — natif sur touch)
+    let lenisInstance = null;
     if (window.Lenis && !window.matchMedia('(hover: none)').matches) {
-        const lenis = new Lenis();
-        lenis.on('scroll', ScrollTrigger.update);
-        gsap.ticker.add(t => lenis.raf(t * 1000));
+        lenisInstance = new Lenis();
+        lenisInstance.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add(t => lenisInstance.raf(t * 1000));
         gsap.ticker.lagSmoothing(0);
     }
 
@@ -958,7 +959,7 @@
         if (window.__jetDespawn) window.__jetDespawn();
     }
 
-    gsap.to(state, {
+    const heroTween = gsap.to(state, {
         frame: FRAME_COUNT - 1,
         ease: 'none',
         scrollTrigger: {
@@ -974,6 +975,52 @@
             updateTitle(this.scrollTrigger.progress);
         },
     });
+
+    // ── Lecture automatique dès la première interaction : la séquence se joue jusqu'au
+    // bout toute seule (scroll bloqué pendant ce temps), puis rend la main au scroll normal. ──
+    const AUTOPLAY_DURATION = 4.5; // secondes — ajuster au goût
+    let autoplayTriggered = false;
+
+    function blockScrollInput(e) { if (e.cancelable) e.preventDefault(); }
+    function lockScroll() {
+        window.addEventListener('wheel', blockScrollInput, { passive: false });
+        window.addEventListener('touchmove', blockScrollInput, { passive: false });
+        window.addEventListener('keydown', blockScrollInput);
+    }
+    function unlockScroll() {
+        window.removeEventListener('wheel', blockScrollInput, { passive: false });
+        window.removeEventListener('touchmove', blockScrollInput, { passive: false });
+        window.removeEventListener('keydown', blockScrollInput);
+    }
+
+    function startAutoplay() {
+        if (autoplayTriggered || morphed) return;
+        autoplayTriggered = true;
+        lockScroll();
+        const target = heroTween.scrollTrigger.end;
+        const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
+        if (lenisInstance) {
+            lenisInstance.scrollTo(target, { duration: AUTOPLAY_DURATION, easing: easeOutCubic, lock: true, onComplete: unlockScroll });
+        } else {
+            const proxy = { y: window.scrollY };
+            gsap.to(proxy, {
+                y: target, duration: AUTOPLAY_DURATION, ease: 'power3.out',
+                onUpdate: () => window.scrollTo(0, proxy.y),
+                onComplete: unlockScroll,
+            });
+        }
+    }
+
+    // Ne s'active que si on démarre bien en haut de la page (pas de deep-link plus bas).
+    if (window.scrollY < 50) {
+        const INTENT_EVENTS = ['wheel', 'touchstart', 'keydown'];
+        const onFirstIntent = e => {
+            if (e.cancelable) e.preventDefault();
+            INTENT_EVENTS.forEach(ev => window.removeEventListener(ev, onFirstIntent, { capture: true }));
+            startAutoplay();
+        };
+        INTENT_EVENTS.forEach(ev => window.addEventListener(ev, onFirstIntent, { capture: true, passive: false }));
+    }
 })();
 </script>
 
