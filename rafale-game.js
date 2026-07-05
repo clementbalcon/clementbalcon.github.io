@@ -1,4 +1,4 @@
-// rafale-game.js — Rafale jouable ZQSD / ESPACE / Entrée / Clic
+// rafale-game.js — Rafale jouable : le curseur EST l'avion, clic pour tirer
 // Config optionnelle : window.RAFALE_OPTS = { spawnFromPortal: true }
 
 if (window.matchMedia('(hover: none)').matches) {
@@ -33,7 +33,7 @@ if (window.matchMedia('(hover: none)').matches) {
 
     // ── Hint ──
     const hint = document.createElement('div');
-    hint.textContent = 'ZQSD · Entrée/Clic tirer · ESPACE post-combustion';
+    hint.textContent = 'L\'avion suit ton curseur · Clic : tirer · Vitesse : post-combustion';
     hint.style.cssText = 'position:fixed;bottom:1.4rem;right:1.5rem;font-size:0.63rem;font-family:Inter,sans-serif;text-transform:uppercase;letter-spacing:0.09em;color:rgba(255,255,255,0.42);z-index:20;pointer-events:none;transition:opacity 1.2s;';
     document.body.appendChild(hint);
     setTimeout(() => { hint.style.opacity = '0'; }, 5000);
@@ -74,25 +74,12 @@ if (window.matchMedia('(hover: none)').matches) {
     }
     initSpawn();
 
-    // ── Physique ──
-    const ACC_N = 0.30, ACC_AB = 1.0;
-    const SPD_N = 6.5,  SPD_AB = 20;
-    const FRICTION = 0.925;
-
-    const keys = {};
+    // ── Le curseur EST l'avion : ressort-amorti vers la position de la souris ──
+    const SPRING_K = 0.045, SPRING_D = 0.90, MAX_SPD = 24;
+    const AB_ON = 13, AB_OFF = 9; // hystérésis : post-combustion auto selon la vitesse
+    let mx = px, my = py;
     let ab = false;
-
-    addEventListener('keydown', e => {
-        const k = e.key.toLowerCase();
-        if (['z','q','s','d'].includes(k)) { e.preventDefault(); keys[k] = true; }
-        if (e.code === 'Space') { e.preventDefault(); ab = true; }
-        if (k === 'enter') { e.preventDefault(); fireMica(); }
-    });
-    addEventListener('keyup', e => {
-        const k = e.key.toLowerCase();
-        keys[k] = false;
-        if (e.code === 'Space') ab = false;
-    });
+    addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
     addEventListener('mousedown', e => { if (e.button === 0) fireMica(); });
 
     // ── Fumée ──
@@ -103,12 +90,11 @@ if (window.matchMedia('(hover: none)').matches) {
         const rx = px + Math.cos(ra) * 44;
         const ry = py + Math.sin(ra) * 44;
         const perpX = Math.cos(pa), perpY = Math.sin(pa);
-        const fcx = perpX * 4.6, fcy = perpY * 4.6;
         for (let s = -1; s <= 1; s += 2) {
             for (let i = 0; i < (ab ? 2 : 1); i++) {
                 parts.push({
-                    x: rx + fcx + perpX * 6 * s + (Math.random() - 0.5) * 2,
-                    y: ry + fcy + perpY * 6 * s + (Math.random() - 0.5) * 2,
+                    x: rx + perpX * 4 * s + (Math.random() - 0.5) * 2,
+                    y: ry + perpY * 4 * s + (Math.random() - 0.5) * 2,
                     vx: Math.cos(ra) * (1.5 + Math.random() * 1.5),
                     vy: Math.sin(ra) * (1.5 + Math.random() * 1.5),
                     life: 1.0,
@@ -131,9 +117,9 @@ if (window.matchMedia('(hover: none)').matches) {
         lastFire = now;
         const pa = angle + Math.PI / 2;
         const perpX = Math.cos(pa), perpY = Math.sin(pa);
-        const wX = px + Math.cos(angle) * 8;
-        const wY = py + Math.sin(angle) * 8;
-        const fcx = perpX * 4.6, fcy = perpY * 4.6;
+        // Position de départ : sous les ailes (léger recul, latéral resserré)
+        const wX = px - Math.cos(angle) * 6;
+        const wY = py - Math.sin(angle) * 6;
         for (let s = -1; s <= 1; s += 2) {
             const el = document.createElement('div');
             el.style.cssText = 'position:fixed;z-index:11;pointer-events:none;';
@@ -141,7 +127,7 @@ if (window.matchMedia('(hover: none)').matches) {
             mi.src = 'mica.png';
             mi.style.cssText = `width:${MICA_W}px;display:block;filter:brightness(0) invert(1);opacity:0.9;transform-origin:center center;`;
             el.appendChild(mi); document.body.appendChild(el);
-            missiles.push({ x: wX + fcx + perpX*34*s, y: wY + fcy + perpY*34*s,
+            missiles.push({ x: wX + perpX*26*s, y: wY + perpY*26*s,
                 vx: Math.cos(angle)*13, vy: Math.sin(angle)*13,
                 angle, life: 200, el, img: mi });
         }
@@ -272,37 +258,17 @@ if (window.matchMedia('(hover: none)').matches) {
     let frame = 0;
 
     function tick() {
-        const acc    = ab ? ACC_AB : ACC_N;
-        const maxSpd = ab ? SPD_AB : SPD_N;
-
-        if (keys['z']) vy -= acc;
-        if (keys['s']) vy += acc;
-        if (keys['q']) vx -= acc;
-        if (keys['d']) vx += acc;
+        vx += (mx - px) * SPRING_K;
+        vy += (my - py) * SPRING_K;
+        vx *= SPRING_D; vy *= SPRING_D;
 
         const spd = Math.sqrt(vx*vx + vy*vy);
-        if (spd > maxSpd) { vx = vx/spd*maxSpd; vy = vy/spd*maxSpd; }
+        if (spd > MAX_SPD) { vx = vx/spd*MAX_SPD; vy = vy/spd*MAX_SPD; }
 
-        vx *= FRICTION; vy *= FRICTION;
         px += vx; py += vy;
 
-        if (px < -HALF_W) px = W + HALF_W;
-        else if (px > W + HALF_W) px = -HALF_W;
-        if (py < -HALF_H) py = H + HALF_H;
-
-        const sf = ab ? 15 : 5;
-        const scrollZone = H * 0.85;
-        if (py > scrollZone && keys['s']) {
-            window.scrollBy({ top: sf, behavior: 'instant' });
-            if (py > H * 0.95) py = H * 0.95;
-        }
-        const scrollUpZone = H * 0.15;
-        if (py < scrollUpZone && keys['z']) {
-            window.scrollBy({ top: -sf, behavior: 'instant' });
-            if (py < 0) py = 0;
-        }
-
         const curSpd = Math.sqrt(vx*vx + vy*vy);
+        if (curSpd > AB_ON) ab = true; else if (curSpd < AB_OFF) ab = false;
         if (curSpd > 0.25) {
             const target = Math.atan2(vy, vx);
             let diff = target - angle;
