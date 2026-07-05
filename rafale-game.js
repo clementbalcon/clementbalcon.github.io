@@ -74,10 +74,13 @@ if (window.matchMedia('(hover: none)').matches) {
     }
     initSpawn();
 
-    // ── Le curseur EST l'avion : ressort-amorti vers la position de la souris ──
-    const SPRING_K = 0.045, SPRING_D = 0.90, MAX_SPD = 24;
-    const AB_ON = 13, AB_OFF = 9; // hystérésis : post-combustion auto selon la vitesse
+    // ── Le curseur EST l'avion : position calée 1:1 sur la souris. On laisse d'abord
+    // l'élan initial (sortie du portail) se dissiper quelques frames avant d'activer
+    // le suivi strict, pour garder un petit effet d'envol plutôt qu'un télétransport. ──
+    const AB_ON = 13, AB_OFF = 9; // hystérésis : post-combustion auto selon la vitesse du curseur
     let mx = px, my = py;
+    let followMouse = false;
+    let introFrames = 40;
     let ab = false;
     addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
     addEventListener('mousedown', e => { if (e.button === 0) fireMica(); });
@@ -258,14 +261,15 @@ if (window.matchMedia('(hover: none)').matches) {
     let frame = 0;
 
     function tick() {
-        vx += (mx - px) * SPRING_K;
-        vy += (my - py) * SPRING_K;
-        vx *= SPRING_D; vy *= SPRING_D;
-
-        const spd = Math.sqrt(vx*vx + vy*vy);
-        if (spd > MAX_SPD) { vx = vx/spd*MAX_SPD; vy = vy/spd*MAX_SPD; }
-
-        px += vx; py += vy;
+        if (!followMouse) {
+            // laisse l'élan initial (sortie du portail) se dissiper avant de coller au curseur
+            vx *= 0.96; vy *= 0.96;
+            px += vx; py += vy;
+            if (--introFrames <= 0) followMouse = true;
+        } else {
+            vx = mx - px; vy = my - py; // déplacement de ce tick = vitesse mesurée du curseur
+            px = mx; py = my;
+        }
 
         const curSpd = Math.sqrt(vx*vx + vy*vy);
         if (curSpd > AB_ON) ab = true; else if (curSpd < AB_OFF) ab = false;

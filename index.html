@@ -1046,14 +1046,6 @@ if (_isTouch) {
     resize();
     addEventListener('resize', resize);
 
-    // ── Curseur point blanc ──
-    const dot = document.createElement('div');
-    dot.style.cssText = 'position:fixed;z-index:9999;width:7px;height:7px;border-radius:50%;background:#fff;pointer-events:none;transform:translate(-50%,-50%);transition:opacity 0.15s;';
-    document.body.appendChild(dot);
-    addEventListener('mousemove', e => { dot.style.left = e.clientX + 'px'; dot.style.top = e.clientY + 'px'; });
-    addEventListener('mouseleave', () => { dot.style.opacity = '0'; });
-    addEventListener('mouseenter', () => { dot.style.opacity = '1'; });
-
     // État du Rafale
     const HALF_W = 60, HALF_H = 48;
     let px = W * 0.88, py = H * 0.10;
@@ -1065,7 +1057,8 @@ if (_isTouch) {
     let gameStarted = false;
     window.__jetSpawn = function (rect) {
         px = rect.cx; py = rect.cy;
-        angle = Math.PI; vx = -2; vy = 1;
+        angle = Math.PI; vx = 0; vy = 0;
+        followMouse = false;
         wrap.style.transition = 'none';
         wrap.style.left = (px - HALF_W) + 'px';
         wrap.style.top = (py - HALF_H) + 'px';
@@ -1078,6 +1071,8 @@ if (_isTouch) {
         });
         hint.style.opacity = '1';
         setTimeout(() => { hint.style.opacity = '0'; }, 5000);
+        // laisse le pop-in se jouer avant que l'avion ne colle strictement au curseur
+        setTimeout(() => { followMouse = true; }, 500);
         if (!gameStarted) { gameStarted = true; tick(); }
     };
     window.__jetDespawn = function () {
@@ -1085,10 +1080,11 @@ if (_isTouch) {
         wrap.style.opacity = '0';
     };
 
-    // Le curseur EST l'avion : ressort-amorti vers la position de la souris.
-    const SPRING_K = 0.045, SPRING_D = 0.90, MAX_SPD = 24;
-    const AB_ON = 13, AB_OFF = 9; // hystérésis : post-combustion auto selon la vitesse
+    // Le curseur EST l'avion : position calée 1:1 sur la souris (l'orientation reste
+    // lissée pour éviter un avion qui claque à chaque à-coup).
+    const AB_ON = 13, AB_OFF = 9; // hystérésis : post-combustion auto selon la vitesse du curseur
     let mx = px, my = py;
+    let followMouse = false;
     let ab = false;
     addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
     addEventListener('mousedown', e => { if (e.button === 0) fireMica(); });
@@ -1292,14 +1288,12 @@ if (_isTouch) {
             returnPortalEl = null;
         }
 
-        vx += (mx - px) * SPRING_K;
-        vy += (my - py) * SPRING_K;
-        vx *= SPRING_D; vy *= SPRING_D;
-
-        const spd = Math.sqrt(vx * vx + vy * vy);
-        if (spd > MAX_SPD) { vx = vx / spd * MAX_SPD; vy = vy / spd * MAX_SPD; }
-
-        px += vx; py += vy;
+        if (followMouse) {
+            vx = mx - px; vy = my - py; // déplacement de ce tick = vitesse mesurée du curseur
+            px = mx; py = my;
+        } else {
+            vx = 0; vy = 0;
+        }
 
         const curSpd = Math.sqrt(vx * vx + vy * vy);
         if (curSpd > AB_ON) ab = true; else if (curSpd < AB_OFF) ab = false;
