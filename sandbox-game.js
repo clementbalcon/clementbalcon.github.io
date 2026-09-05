@@ -45,6 +45,7 @@
     }
 
     addEventListener('keydown', e => {
+        if (e.target instanceof Element && e.target.closest('a, button, input, select, textarea')) return;
         const k = e.key.toLowerCase();
         if (['z','q','s','d'].includes(k)) { e.preventDefault(); keys[k] = true; }
         if (e.code === 'Space') { e.preventDefault(); ab = true; }

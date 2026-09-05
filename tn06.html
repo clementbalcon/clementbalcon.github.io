@@ -118,6 +118,12 @@
         footer a:hover { color: var(--white); }
 
         @media(max-width: 600px) { .wrap { padding: 0 1.2rem; } }
+        a:focus-visible, .portal:focus-visible, iframe:focus { outline: 2px solid #ffe066; outline-offset: 4px; }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+            body { cursor: auto !important; }
+            .fade-in { opacity: 1 !important; transform: none !important; }
+        }
     </style>
 </head>
 <body>
@@ -129,7 +135,7 @@
     </a>
 </div>
 
-<div class="portal" data-href="index.html#tn06">
+<div class="portal" data-href="index.html#tn06" role="link" tabindex="0" aria-label="Retour au projet dans le portfolio">
     <span class="portal-label">Sortie</span>
 </div>
 

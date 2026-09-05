@@ -1,10 +1,20 @@
 // rafale-game.js — Rafale jouable : le curseur EST l'avion, clic pour tirer
 // Config optionnelle : window.RAFALE_OPTS = { spawnFromPortal: true }
 
-if (window.matchMedia('(hover: none)').matches) {
+const rafaleReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+document.querySelectorAll('.portal[data-href]').forEach(p => {
+    p.addEventListener('keydown', e => {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        e.preventDefault();
+        location.href = p.dataset.href;
+    });
+});
+
+if (rafaleReducedMotion || window.matchMedia('(hover: none)').matches) {
     // Mobile : portail cliquable seulement
     document.querySelectorAll('.portal[data-href]').forEach(p => {
         p.addEventListener('click', () => {
+            if (rafaleReducedMotion) { location.href = p.dataset.href; return; }
             const f = document.createElement('div');
             f.style.cssText = 'position:fixed;inset:0;background:#fff;opacity:0;z-index:9999;transition:opacity 0.25s ease;pointer-events:none;';
             document.body.appendChild(f);

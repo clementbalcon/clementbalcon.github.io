@@ -92,6 +92,13 @@
             letter-spacing: 0.07em; color: rgba(255,255,255,0.40);
             white-space: nowrap; font-family: var(--font-body);
         }
+        .portal:focus-visible, button:focus-visible { outline: 2px solid #ffe066; outline-offset: 4px; }
+        #intro { padding: 1.5rem; text-align: center; }
+        #intro h1 { overflow-wrap: anywhere; font-size: clamp(2.2rem, 9vw, 7rem); }
+        #start-game { pointer-events: auto; padding: .8rem 1rem; border: 1px solid currentColor; background: #fff; color: #06090f; font: inherit; cursor: pointer; }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation: none !important; transition: none !important; }
+        }
     </style>
 </head>
 <body>
@@ -99,11 +106,12 @@
 <div id="intro">
     <h1>Zone de Combat</h1>
     <p>ZQSD · Voler &nbsp;·&nbsp; Entrée/Clic · Tirer &nbsp;·&nbsp; ESPACE · Post-combustion</p>
+    <button id="start-game" type="button" hidden>Lancer le jeu animé</button>
 </div>
 
-<div class="portal" data-href="index.html#sandbox">
+<a class="portal" href="index.html#sandbox" data-href="index.html#sandbox" aria-label="Retour au portfolio">
     <span class="portal-label">Sortie</span>
-</div>
+</a>
 
 <script>
 if (window.matchMedia('(hover: none)').matches) {
@@ -115,7 +123,16 @@ if (window.matchMedia('(hover: none)').matches) {
     document.querySelector('.portal[data-href]').addEventListener('click', () => {
         location.href = document.querySelector('.portal[data-href]').dataset.href;
     });
+} else if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelector('#intro p').textContent = 'Animations réduites : le jeu démarre uniquement à votre demande.';
+    const start = document.getElementById('start-game');
+    start.hidden = false;
+    start.addEventListener('click', startGame, { once: true });
 } else {
+    startGame();
+}
+function startGame() {
+    document.getElementById('start-game').hidden = true;
     setTimeout(() => {
         const intro = document.getElementById('intro');
         intro.classList.add('hidden');

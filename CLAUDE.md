@@ -1,5 +1,48 @@
 # Portfolio — clementbalcon.github.io
 
+## État actuel — septembre 2026
+- Copie de travail : `/Users/ClementBalcon/Documents/Pro/clementbalcon.github.io`.
+  Éviter la copie Desktop (commandes Git susceptibles de rester bloquées).
+- Le commit `0819bb8` a remplacé le long accueil par un hero statique, une grille
+  de sept projets, un parcours condensé et une présentation. Thème vert sombre
+  `#0c1713`, accent `#d8f56a`, curseur natif sur l'accueil.
+- `index.html` ne charge plus GSAP, ScrollTrigger, Lenis ni le jeu curseur.
+  La couverture utilise uniquement `frames/hero/frame_0075.webp`. Aucun chargement
+  des 150 frames, verrouillage du scroll, autoplay ou morph vers le curseur.
+  Les fichiers Blender et les frames n'ont pas été modifiés. Le crédit du modèle
+  reste obligatoire même pour cette image statique.
+- Les ancres des cartes (`#matra`, `#robafis`, etc.), `#projects`, `#experience`,
+  `#skills` et `#sandbox` permettent les retours et anciens liens directs.
+- Les pages projets conservent le jeu curseur en mode normal. Avec
+  `prefers-reduced-motion: reduce`, elles utilisent le curseur natif et des
+  portails statiques activables au clavier. Le sandbox attend alors un clic
+  explicite sur « Lancer le jeu animé ».
+- Vérifier les huit pages portfolio et l'écran public de `training.html` aux
+  largeurs 375 / 680 / 1440, dans les deux modes de mouvement. Ne pas considérer
+  un simple parsing HTML comme une validation responsive.
+- En environnement Codex, serveur local ET Chromium doivent s'exécuter dans le
+  même contexte autorisé hors bac à sable : un serveur autorisé peut être
+  inaccessible depuis un `curl` resté dans le bac à sable. Playwright et Chromium
+  sont déjà présents dans `/private/tmp/pw-check` et `~/Library/Caches/ms-playwright`.
+- Ne pas pousser sans accord de Clément. Les contraintes de confidentialité
+  ci-dessous restent applicables.
+
+### Validation des corrections de la refonte — 5 septembre 2026
+- Chromium / Playwright : 54 combinaisons (9 pages × 3 largeurs × 2 modes),
+  sans débordement horizontal, image manquante ou erreur JavaScript détectée.
+- Aucun effet CSS actif en mode mouvement réduit au chargement ; le jeu curseur
+  des sous-pages n'est pas initialisé dans ce mode. Le jeu du sandbox est opt-in.
+- Focus clavier visible, activation Entrée des sept portails de retour vérifiée
+  en desktop dans les deux modes ; ancres de destination contrôlées.
+- Rapport et captures locaux : `/private/tmp/pw-check/portfolio-audit/`.
+  Lanceur : `node /private/tmp/pw-check/portfolio-audit.cjs` hors bac à sable.
+- Limites : tests sous Chromium, sans session authentifiée Training. Les liens
+  vers les PDF existent ; le lecteur PDF natif headless peut interrompre ses
+  requêtes (`ERR_ABORTED`), ce qui ne constitue pas une validation visuelle des PDF.
+
+Les descriptions détaillées du hero et de l'ancien accueil ci-dessous sont une
+référence historique antérieure à `0819bb8`, pas la mécanique actuellement chargée.
+
 ## Repo & déploiement
 - GitHub Pages : `clementbalcon/clementbalcon.github.io`, branche `main`, push SSH
 - Dossier local : `/Users/ClementBalcon/Desktop/clementbalcon.github.io/`
