@@ -441,6 +441,29 @@
 
         /* ── Fade in ── */
         .fade-in { opacity: 0; transform: translateY(18px); transition: opacity 0.55s ease, transform 0.55s ease; }
+
+        /* ── Barre de contact permanente ── */
+        /* Contact est repoussé en fin de page (chantier 3) : cette barre discrète garde les
+           coordonnées accessibles en permanence sans réintroduire le bloc en haut de page.
+           Liens réels (pointer-events normal) : le curseur-avion (cursor:none, wrap/HUD du
+           jeu) est lui-même pointer-events:none, donc aucun conflit de clic. */
+        .contact-bar {
+            position: fixed;
+            left: 1.1rem;
+            bottom: 1rem;
+            z-index: 15;
+            display: flex;
+            gap: 0.9rem;
+        }
+        .contact-bar a {
+            font-size: 0.62rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--w40);
+            text-decoration: none;
+            transition: color 0.18s;
+        }
+        .contact-bar a:hover { color: var(--white); }
         .fade-in.visible { opacity: 1; transform: translateY(0); }
 
         /* ── Responsive ── */
@@ -489,6 +512,11 @@
     </div>
 </section>
 
+<div class="contact-bar">
+    <a href="https://www.linkedin.com/in/cl%C3%A9ment-balcon" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="mailto:clement.balcon29@gmail.com">Email</a>
+</div>
+
 <div class="wrap">
 
     <!-- ─── HERO ─── -->
@@ -500,15 +528,6 @@
             <span>🇫🇷 Français — natif</span>
             <span>🇧🇷 Português — C1</span>
             <span>🇬🇧 English — C1 · IELTS</span>
-        </div>
-    </section>
-
-    <!-- ─── CONTACT ─── -->
-    <section class="section fade-in">
-        <div class="section-title">Contact</div>
-        <div class="btn-group">
-            <a href="https://www.linkedin.com/in/cl%C3%A9ment-balcon" class="btn-outline" target="_blank" rel="noopener">LinkedIn</a>
-<a href="mailto:clement.balcon29@gmail.com" class="btn-outline">clement.balcon29@gmail.com</a>
         </div>
     </section>
 
@@ -857,6 +876,15 @@
 
         <div class="callout">
             Chaque étape prépare la suivante. La formation d'ingénieur structure et pilote ; l'apprentissage chez Safran la met en pratique à grande échelle ; la formation UIMM donne la légitimité du terrain ; les années aux côtés de mon oncle construiront la maîtrise du métier. Un chemin cohérent au service d'un seul objectif.
+        </div>
+    </section>
+
+    <!-- ─── CONTACT ─── -->
+    <section class="section fade-in">
+        <div class="section-title">Contact</div>
+        <div class="btn-group">
+            <a href="https://www.linkedin.com/in/cl%C3%A9ment-balcon" class="btn-outline" target="_blank" rel="noopener">LinkedIn</a>
+<a href="mailto:clement.balcon29@gmail.com" class="btn-outline">clement.balcon29@gmail.com</a>
         </div>
     </section>
 
