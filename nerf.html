@@ -8,11 +8,13 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon-portfolio.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62.5..125,100..900&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
+            --font-display: 'Archivo', sans-serif;
+            --font-body: 'Archivo', sans-serif;
             --bg: #774F2C;
             --white: #ffffff;
             --w70: rgba(255,255,255,0.70);
@@ -25,7 +27,7 @@
             background: #774F2C;
             background-image: radial-gradient(ellipse at 15% 0%, #9C683A 0%, transparent 60%);
             color: var(--white);
-            font-family: 'Inter', sans-serif;
+            font-family: var(--font-body);
             font-weight: 400; line-height: 1.65;
             -webkit-font-smoothing: antialiased;
         }
@@ -47,7 +49,7 @@
         .portal { position:fixed;top:1.2rem;right:1.5rem;z-index:100;width:70px;height:70px;border-radius:50%;background:radial-gradient(circle,rgba(8,20,12,0.85) 0%,rgba(255,255,255,0.06) 55%,rgba(255,255,255,0.6) 80%,rgba(255,255,255,0.88) 100%);border:2px solid rgba(255,255,255,0.88);animation:portal-pulse 2.8s ease-in-out infinite;cursor:pointer; }
         .portal::before { content:'';position:absolute;inset:5px;border-radius:50%;border:2px solid transparent;border-top-color:rgba(255,255,255,0.95);border-right-color:rgba(255,255,255,0.4);animation:portal-spin 3s linear infinite; }
         .portal::after  { content:'';position:absolute;inset:14px;border-radius:50%;border:1px dashed rgba(255,255,255,0.55);animation:portal-spin-rev 6s linear infinite; }
-        .portal-label { position:absolute;bottom:-1.3rem;left:50%;transform:translateX(-50%);font-size:0.55rem;text-transform:uppercase;letter-spacing:0.07em;color:var(--w40);white-space:nowrap;font-family:'Inter',sans-serif; }
+        .portal-label { position:absolute;bottom:-1.3rem;left:50%;transform:translateX(-50%);font-size:0.55rem;text-transform:uppercase;letter-spacing:0.07em;color:var(--w40);white-space:nowrap;font-family: var(--font-body); }
 
         /* ── Hero ── */
         .hero { padding: 3rem 0 2rem; border-bottom: 1px solid var(--w20); margin-bottom: 3rem; }
@@ -58,7 +60,8 @@
             border: 1px solid var(--w40); display: inline-block; padding: 0.2rem 0.65rem;
         }
         .hero h1 {
-            font-family: 'Bebas Neue', sans-serif;
+            font-family: var(--font-display); font-weight: 800; font-stretch: 125%;
+            overflow-wrap: break-word;
             font-size: clamp(2.5rem, 7vw, 5rem);
             line-height: 0.95; letter-spacing: 0.03em; margin-bottom: 1.2rem;
         }
@@ -71,7 +74,7 @@
 
         /* ── Sections ── */
         .section-title {
-            font-family: 'Bebas Neue', sans-serif; font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-family: var(--font-display); font-weight: 800; font-stretch: 125%; font-size: clamp(1.8rem, 4vw, 2.5rem);
             letter-spacing: 0.04em; margin-bottom: 1.2rem; padding-bottom: 0.5rem;
             border-bottom: 1px solid var(--w20);
         }

@@ -8,7 +8,9 @@
 ## Stack
 - Site statique monofichier (`index.html`) + sous-pages HTML séparées
 - CSS embarqué dans chaque fichier, pas de framework
-- Fonts Google : Inter + Bebas Neue
+- Fonts Google : Archivo (variable, axes `wght` 100-900 + `wdth` 62.5-125%) — remplace Inter + Bebas Neue.
+  `--font-display` (titres, `font-weight:800; font-stretch:125%`) et `--font-body` (texte courant, poids par défaut),
+  déclarées en variables CSS dans chacun des 8 fichiers HTML (hors `training.html`, non concerné).
 - GSAP 3.15 + ScrollTrigger + Lenis (CDN jsdelivr — GSAP ≥3.14 absent de cdnjs) pour le jet hero uniquement
 
 ## Jet hero (séquence Rafale scrubée au scroll, façon rideradian.com) — v2

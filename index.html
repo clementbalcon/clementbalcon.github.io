@@ -8,11 +8,13 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon-portfolio.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62.5..125,100..900&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
+            --font-display: 'Archivo', sans-serif;
+            --font-body: 'Archivo', sans-serif;
             --bg: #40916C;
             --white: #ffffff;
             --w70: rgba(255,255,255,0.70);
@@ -26,7 +28,7 @@
             background: #40916C;
             background-image: radial-gradient(ellipse at 15% 0%, #52a87e 0%, transparent 60%);
             color: var(--white);
-            font-family: 'Inter', sans-serif;
+            font-family: var(--font-body);
             font-weight: 400;
             line-height: 1.65;
             -webkit-font-smoothing: antialiased;
@@ -46,7 +48,7 @@
             align-items: start;
         }
         .col-head {
-            font-family: 'Bebas Neue', sans-serif;
+            font-family: var(--font-display); font-weight: 800; font-stretch: 125%;
             font-size: clamp(1.6rem, 3vw, 2.2rem);
             letter-spacing: 0.05em;
             color: var(--w70);
@@ -65,8 +67,11 @@
 
         /* ── Section title ── */
         .section-title {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: clamp(2.8rem, 7vw, 4.5rem);
+            font-family: var(--font-display); font-weight: 800; font-stretch: 125%;
+            /* "Compétences" (mot unique, incassable) débordait à 375px avec Archivo Expanded :
+               clamp() resserré + overflow-wrap en filet de sécurité pour tout mot long. */
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            overflow-wrap: break-word;
             letter-spacing: 0.04em;
             line-height: 1;
             margin-bottom: 2.5rem;
@@ -129,8 +134,11 @@
         #hero { padding: 6rem 0 5rem; }
 
         .hero-name {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: clamp(2.6rem, 12vw, 6.5rem);
+            font-family: var(--font-display); font-weight: 800; font-stretch: 125%;
+            /* Archivo Expanded est ~2,2× plus large que Bebas Neue à taille égale (glyphes
+               non condensés) : clamp() resserré pour que "CLÉMENT BALCON" en nowrap tienne
+               sur une ligne à 375px de large, cf. mesure isolée hors flex shrink-to-fit. */
+            font-size: clamp(1.6rem, 6.5vw, 6rem);
             line-height: 0.88;
             letter-spacing: 0.02em;
             margin-bottom: 1.2rem;
@@ -138,7 +146,7 @@
         }
 
         .hero-role {
-            font-family: 'Bebas Neue', sans-serif;
+            font-family: var(--font-display); font-weight: 800; font-stretch: 125%;
             font-size: clamp(1.4rem, 4vw, 2.2rem);
             letter-spacing: 0.08em;
             color: var(--w70);
@@ -176,7 +184,7 @@
             padding: 0.55rem 1.4rem;
             border: 1.5px solid var(--white);
             color: var(--white);
-            font-family: 'Inter', sans-serif;
+            font-family: var(--font-body);
             font-size: 0.75rem;
             font-weight: 600;
             text-transform: uppercase;
@@ -222,7 +230,7 @@
         }
 
         .entry-name {
-            font-family: 'Bebas Neue', sans-serif;
+            font-family: var(--font-display); font-weight: 800; font-stretch: 125%;
             font-size: clamp(1.35rem, 3vw, 1.85rem);
             letter-spacing: 0.04em;
             margin-bottom: 0.35rem;
@@ -254,7 +262,7 @@
         .project:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
 
         .project-name {
-            font-family: 'Bebas Neue', sans-serif;
+            font-family: var(--font-display); font-weight: 800; font-stretch: 125%;
             font-size: clamp(1.5rem, 4vw, 2.1rem);
             letter-spacing: 0.04em;
             margin-bottom: 0.4rem;
@@ -318,7 +326,7 @@
         }
         .portal-label {
             font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.07em;
-            color: var(--w40); font-family: 'Inter', sans-serif;
+            color: var(--w40); font-family: var(--font-body);
         }
 
         /* ── Skills ── */
@@ -326,7 +334,7 @@
         .skills-group:last-child { margin-bottom: 0; }
 
         .skills-group-title {
-            font-family: 'Bebas Neue', sans-serif;
+            font-family: var(--font-display); font-weight: 800; font-stretch: 125%;
             font-size: 1.25rem;
             letter-spacing: 0.06em;
             color: var(--w70);
@@ -348,7 +356,7 @@
         .vol-entry { margin-bottom: 2.2rem; }
         .vol-entry:last-child { margin-bottom: 0; }
         .vol-name {
-            font-family: 'Bebas Neue', sans-serif;
+            font-family: var(--font-display); font-weight: 800; font-stretch: 125%;
             font-size: clamp(1.3rem, 2.5vw, 1.7rem);
             letter-spacing: 0.04em;
             margin-bottom: 0.3rem;
@@ -374,7 +382,7 @@
             padding-top: 0.15rem;
         }
         .phase-title {
-            font-family: 'Bebas Neue', sans-serif;
+            font-family: var(--font-display); font-weight: 800; font-stretch: 125%;
             font-size: 1.25rem;
             letter-spacing: 0.04em;
             margin-bottom: 0.35rem;
@@ -826,7 +834,7 @@
 
 <div style="display:flex;flex-direction:column;align-items:center;gap:0.6rem;padding:3rem 0 4rem;">
     <div class="portal" data-href="sandbox.html"></div>
-    <div style="font-size:0.58rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.35);font-family:'Inter',sans-serif;">Zone de combat</div>
+    <div style="font-size:0.58rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.35);font-family: var(--font-body);">Zone de combat</div>
 </div>
 
 <footer>
@@ -1080,12 +1088,12 @@ if (_isTouch) {
     const hint = document.createElement('div');
     hint.id = 'rafale-hint';
     hint.textContent = 'L\'avion suit ton curseur · Clic : tirer · Vitesse : post-combustion';
-    hint.style.cssText = 'position:fixed;bottom:1.4rem;right:1.5rem;font-size:0.68rem;font-family:Inter,sans-serif;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.42);z-index:20;pointer-events:none;opacity:0;transition:opacity 1.2s;';
+    hint.style.cssText = 'position:fixed;bottom:1.4rem;right:1.5rem;font-size:0.68rem;font-family: var(--font-body);text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.42);z-index:20;pointer-events:none;opacity:0;transition:opacity 1.2s;';
     document.body.appendChild(hint);
 
     // HUD kills
     const hud = document.createElement('div');
-    hud.style.cssText = 'position:fixed;top:1.2rem;right:1.5rem;font-family:"Bebas Neue",sans-serif;font-size:1.6rem;letter-spacing:0.07em;color:rgba(255,255,255,0.85);z-index:50;pointer-events:none;opacity:0;transition:opacity 0.4s;';
+    hud.style.cssText = 'position:fixed;top:1.2rem;right:1.5rem;font-family: var(--font-display); font-weight: 800; font-stretch: 125%;font-size:1.6rem;letter-spacing:0.07em;color:rgba(255,255,255,0.85);z-index:50;pointer-events:none;opacity:0;transition:opacity 0.4s;';
     document.body.appendChild(hud);
 
     // Redimensionnement
