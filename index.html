@@ -418,8 +418,22 @@
         }
 
         /* ── Mon projet phases ── */
-        .phase-list { margin-top: 2rem; }
+        /* Timeline : les 3 phases sont une séquence chronologique/causale réelle (Safran →
+           UIMM → MECA V.A), la ligne qui se dessine encode une vraie progression, elle ne
+           décore pas. Une seule animation orchestrée (voir script phase-line plus bas) pilote
+           à la fois la hauteur du trait et l'allumage des puces — pas 3 effets indépendants. */
+        .phase-list { position: relative; margin-top: 2rem; --line-x: 140px; }
+        .phase-line-track, .phase-line-fill {
+            position: absolute;
+            left: var(--line-x);
+            top: 0.4rem;
+            width: 2px;
+            transform: translateX(-50%);
+        }
+        .phase-line-track { bottom: 0.4rem; background: var(--w20); }
+        .phase-line-fill { height: 0%; background: var(--signal); }
         .phase {
+            position: relative;
             display: grid;
             grid-template-columns: 140px 1fr;
             gap: 1.5rem;
@@ -428,6 +442,26 @@
             border-bottom: 1px solid var(--w20);
         }
         .phase:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+        .phase::before {
+            content: '';
+            position: absolute;
+            left: var(--line-x);
+            top: 0.35rem;
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            transform: translateX(-50%);
+            background: var(--deep);
+            border: 2px solid var(--w40);
+            transition: background 0.3s, border-color 0.3s;
+        }
+        .phase.lit::before { background: var(--signal); border-color: var(--signal); }
+        @media (max-width: 640px) {
+            /* Le trait/puces restent alignés sur le bord gauche de .phase-list (repère
+               commun) ; .phase, lui, est décalé par le padding — d'où le left différent. */
+            .phase-list { --line-x: 0px; padding-left: 1.1rem; }
+            .phase::before { left: -1.1rem; }
+        }
         .phase-period {
             font-size: 0.72rem;
             font-weight: 600;
@@ -881,6 +915,8 @@
         </div>
 
         <div class="phase-list">
+            <div class="phase-line-track"></div>
+            <div class="phase-line-fill"></div>
             <div class="phase">
                 <div class="phase-period">Sept — Nov 2026</div>
                 <div>
@@ -1128,6 +1164,41 @@
         });
     }, { threshold: 0.08 });
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+<script>
+// ─── Mon Projet : ligne de timeline qui se dessine au scroll ───
+// Une seule animation orchestrée (un seul ScrollTrigger) pilote à la fois la hauteur
+// du trait et l'allumage des puces de phase, plutôt que 3 effets indépendants empilés.
+(function () {
+    const list = document.querySelector('.phase-list');
+    const fill = list && list.querySelector('.phase-line-fill');
+    const phases = list ? Array.from(list.querySelectorAll('.phase')) : [];
+    if (!list || !fill || !phases.length || !window.gsap || !window.ScrollTrigger) return;
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) {
+        fill.style.height = '100%';
+        phases.forEach(p => p.classList.add('lit'));
+        return;
+    }
+
+    ScrollTrigger.create({
+        trigger: list,
+        start: 'top 75%',
+        end: 'bottom 65%',
+        scrub: 0.4,
+        onUpdate(self) {
+            fill.style.height = (self.progress * 100) + '%';
+            const listTop = list.getBoundingClientRect().top;
+            const listHeight = list.getBoundingClientRect().height;
+            phases.forEach(p => {
+                const relTop = (p.getBoundingClientRect().top - listTop) / listHeight;
+                p.classList.toggle('lit', self.progress >= relTop);
+            });
+        }
+    });
+})();
 </script>
 
 <script>
