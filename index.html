@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clément Balcon — Ingénieur Mécanique</title>
+    <meta name="description" content="Étudiant ingénieur UTC (PIL), apprenti chez Safran Aircraft Engines. Portfolio de projets en mécanique de précision, CAO et production industrielle.">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Clément Balcon — Ingénieur Mécanique">
+    <meta property="og:description" content="Étudiant ingénieur UTC (PIL), apprenti chez Safran Aircraft Engines. Portfolio de projets en mécanique de précision, CAO et production industrielle.">
+    <meta property="og:url" content="https://clementbalcon.fr/">
+    <meta property="og:image" content="https://clementbalcon.fr/og-index.jpg">
+    <meta name="twitter:card" content="summary_large_image">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/apple-touch-icon-portfolio.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -353,6 +360,9 @@
             animation: portal-pulse 2.8s ease-in-out infinite;
             cursor: pointer;
         }
+        /* cursor:none masque le curseur souris mais pas le focus clavier : anneau visible
+           dédié plutôt que de compter sur l'outline navigateur par défaut. */
+        .portal:focus-visible { outline: 2px solid var(--signal); outline-offset: 4px; }
         .portal::before {
             content: ''; position: absolute; inset: 4px; border-radius: 50%;
             border: 1.5px solid transparent;
@@ -707,7 +717,7 @@
                     <a href="matra.html" class="arrow-link">Voir le projet →</a>
                 </div>
                 <div class="portal-wrap">
-                    <div class="portal" data-href="matra.html"></div>
+                    <div class="portal" data-href="matra.html" role="link" tabindex="0" aria-label="Entrer — voir le projet Solder Pen"></div>
                     <div class="portal-label">Entrer</div>
                 </div>
             </div>
@@ -726,7 +736,7 @@
                     <a href="robafis.html" class="arrow-link">Voir la revue →</a>
                 </div>
                 <div class="portal-wrap">
-                    <div class="portal" data-href="robafis.html"></div>
+                    <div class="portal" data-href="robafis.html" role="link" tabindex="0" aria-label="Entrer — voir le projet RobAFIS"></div>
                     <div class="portal-label">Entrer</div>
                 </div>
             </div>
@@ -745,7 +755,7 @@
                     <a href="tn06.html" class="arrow-link">Voir l'étude →</a>
                 </div>
                 <div class="portal-wrap">
-                    <div class="portal" data-href="tn06.html"></div>
+                    <div class="portal" data-href="tn06.html" role="link" tabindex="0" aria-label="Entrer — voir l'étude Cric Hydraulique TN06"></div>
                     <div class="portal-label">Entrer</div>
                 </div>
             </div>
@@ -764,7 +774,7 @@
                     <a href="nerf.html" class="arrow-link">Voir la revue →</a>
                 </div>
                 <div class="portal-wrap">
-                    <div class="portal" data-href="nerf.html"></div>
+                    <div class="portal" data-href="nerf.html" role="link" tabindex="0" aria-label="Entrer — voir le projet Nerf Rider CS-35"></div>
                     <div class="portal-label">Entrer</div>
                 </div>
             </div>
@@ -782,7 +792,7 @@
                     <a href="am25.html" class="arrow-link">Voir l'étude →</a>
                 </div>
                 <div class="portal-wrap">
-                    <div class="portal" data-href="am25.html"></div>
+                    <div class="portal" data-href="am25.html" role="link" tabindex="0" aria-label="Entrer — voir l'étude Taipei 101"></div>
                     <div class="portal-label">Entrer</div>
                 </div>
             </div>
@@ -801,7 +811,7 @@
                     <a href="cardashboard.html" class="arrow-link">Voir le projet →</a>
                 </div>
                 <div class="portal-wrap">
-                    <div class="portal" data-href="cardashboard.html"></div>
+                    <div class="portal" data-href="cardashboard.html" role="link" tabindex="0" aria-label="Entrer — voir le projet CarDashboard"></div>
                     <div class="portal-label">Entrer</div>
                 </div>
             </div>
@@ -957,7 +967,7 @@
 </div>
 
 <div style="display:flex;flex-direction:column;align-items:center;gap:0.6rem;padding:3rem 0 4rem;">
-    <div class="portal" data-href="sandbox.html"></div>
+    <div class="portal" data-href="sandbox.html" role="link" tabindex="0" aria-label="Entrer — Zone de combat, mini-jeu caché"></div>
     <div style="font-size:0.58rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.35);font-family: var(--font-body);">Zone de combat</div>
 </div>
 
@@ -1199,6 +1209,26 @@
         }
     });
 })();
+</script>
+
+<script>
+// ─── Portails : activation clavier (Entrée / Espace) ───
+// Sur desktop, la navigation se fait normalement en pilotant l'avion-curseur jusqu'au
+// portail (voir plus bas) — un mécanisme purement pointeur, sans équivalent clavier.
+// sandbox.html n'a par ailleurs aucun autre lien d'accès sur la page (contrairement aux
+// projets, qui ont chacun un .arrow-link classique) : sans ceci il serait inatteignable
+// au clavier. Indépendant du reste du jeu pour rester fiable quel que soit le device.
+document.querySelectorAll('.portal[data-href]').forEach(p => {
+    p.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        e.preventDefault();
+        const f = document.createElement('div');
+        f.style.cssText = 'position:fixed;inset:0;background:#fff;opacity:0;z-index:9999;transition:opacity 0.25s ease;pointer-events:none;';
+        document.body.appendChild(f);
+        requestAnimationFrame(() => { f.style.opacity = '1'; });
+        setTimeout(() => { location.href = p.dataset.href; }, 280);
+    });
+});
 </script>
 
 <script>
