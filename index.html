@@ -333,6 +333,17 @@
         .project-row { display: flex; align-items: center; gap: 2.5rem; }
         .project-content { flex: 1; min-width: 0; }
 
+        /* Vignette : s'ajoute au contenu, ne remplace pas le portail (.portal reste le
+           vrai point d'entrée cliquable vers la sous-page). */
+        .project-thumb {
+            width: 128px;
+            height: 72px;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 1px solid var(--w20);
+        }
+        @media (max-width: 640px) { .project-thumb { width: 100%; height: auto; aspect-ratio: 16/9; } }
+
         .portal-wrap { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 0.35rem; }
         .portal {
             width: 54px; height: 54px; border-radius: 50%;
@@ -651,6 +662,7 @@
 
         <div class="project">
             <div class="project-row">
+                <img class="project-thumb" src="solder_pen_thumb.webp" alt="Rendu 3D du Solder Pen">
                 <div class="project-content">
                     <div class="project-name">Solder Pen — Outillage de Brasage</div>
                     <div class="entry-meta">
@@ -669,6 +681,7 @@
 
         <div class="project">
             <div class="project-row">
+                <img class="project-thumb" src="robafis_thumb.webp" alt="Robot mobile RobAFIS">
                 <div class="project-content">
                     <div class="project-name">RobAFIS — Robot Mobile Autonome</div>
                     <div class="entry-meta">
@@ -687,6 +700,7 @@
 
         <div class="project">
             <div class="project-row">
+                <img class="project-thumb" src="tn06_thumb.webp" alt="Cric hydraulique étudié en TN06">
                 <div class="project-content">
                     <div class="project-name">Cric Hydraulique — Étude de Statique</div>
                     <div class="entry-meta">
@@ -705,6 +719,7 @@
 
         <div class="project">
             <div class="project-row">
+                <img class="project-thumb" src="nerf_thumb.webp" alt="Rendu CATIA du Nerf Rider CS-35">
                 <div class="project-content">
                     <div class="project-name">Rétro-modélisation Nerf Rider CS-35</div>
                     <div class="entry-meta">
@@ -741,6 +756,7 @@
 
         <div class="project">
             <div class="project-row">
+                <img class="project-thumb" src="cardashboard_thumb.webp" alt="Interface CarDashboard sur iPad">
                 <div class="project-content">
                     <div class="project-name">CarDashboard — CarPlay Maison sur iPad</div>
                     <div class="entry-meta">
