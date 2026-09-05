@@ -374,6 +374,7 @@
         .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 
         .tag {
+            display: inline-block;
             border: 1px solid var(--w40);
             color: var(--white);
             font-size: 0.78rem;
@@ -381,6 +382,19 @@
             letter-spacing: 0.04em;
             padding: 0.3rem 0.8rem;
         }
+        /* Compétence adossée à une preuve consultable : lien réel vers le projet qui la
+           démontre, plutôt qu'un nuage d'étiquettes sans justification. */
+        a.tag {
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            text-decoration-color: var(--w40);
+            border-color: var(--w70);
+            transition: border-color 0.18s, text-decoration-color 0.18s, background 0.18s;
+        }
+        a.tag:hover { border-color: var(--white); text-decoration-color: var(--white); background: rgba(255,255,255,0.06); }
+        .tag-proof-group { border-color: var(--w70); }
+        .tag-proof-group a { color: var(--white); text-decoration-color: var(--w40); transition: text-decoration-color 0.18s; }
+        .tag-proof-group a:hover { text-decoration-color: var(--white); }
 
         /* ── Volunteer ── */
         .vol-entry { margin-bottom: 2.2rem; }
@@ -761,11 +775,11 @@
         <div class="skills-group">
             <div class="skills-group-title">CAO &amp; Simulation</div>
             <div class="tags">
-                <span class="tag">CATIA V5</span>
+                <span class="tag tag-proof-group">CATIA V5 — <a href="nerf.html">Nerf</a> · <a href="matra.html">Solder Pen</a></span>
                 <span class="tag">CREO</span>
                 <span class="tag">SolidWorks</span>
                 <span class="tag">Onshape</span>
-                <span class="tag">Abaqus</span>
+                <a class="tag" href="am25.html">Abaqus — Taipei 101</a>
             </div>
         </div>
 
@@ -787,8 +801,8 @@
                 <span class="tag">Python</span>
                 <span class="tag">MATLAB</span>
                 <span class="tag">VBA</span>
-                <span class="tag">Power BI</span>
-                <span class="tag">Power Query</span>
+                <a class="tag" href="#experience">Power BI — Safran</a>
+                <a class="tag" href="#experience">Power Query — Safran</a>
                 <span class="tag">HTML · CSS · JS</span>
             </div>
         </div>
@@ -797,10 +811,8 @@
             <div class="skills-group-title">Ingénierie Système</div>
             <div class="tags">
                 <span class="tag">Conduite de projet</span>
-                <span class="tag">IVV</span>
-                <span class="tag">V&amp;V</span>
-                <span class="tag">Leadership</span>
-                <span class="tag">Adaptabilité</span>
+                <a class="tag" href="robafis.html">IVV — RobAFIS</a>
+                <a class="tag" href="robafis.html">V&amp;V — RobAFIS</a>
             </div>
         </div>
     </section>
@@ -816,6 +828,7 @@
                 <span class="entry-sub">Responsable &amp; Coach · 2 ans</span>
             </div>
             <p class="entry-desc">Organisation des entraînements, gestion des engagements en compétitions universitaires (FFSU), coordination avec le service des sports.</p>
+            <div class="tags" style="margin-top:0.6rem"><span class="tag">Leadership</span></div>
         </div>
 
         <div class="vol-entry">
@@ -825,6 +838,7 @@
                 <span class="entry-sub">Secrétaire · 1 400 étudiants en 2025</span>
             </div>
             <p class="entry-desc">Gestion administrative et coordination logistique d'une des plus grandes soirées étudiantes de l'UTC.</p>
+            <div class="tags" style="margin-top:0.6rem"><span class="tag">Adaptabilité</span></div>
         </div>
 
         <div class="vol-entry">
