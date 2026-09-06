@@ -1,10 +1,10 @@
-<svg viewBox="0 0 720 1180" role="img" aria-labelledby="at-m-title at-m-desc" xmlns="http://www.w3.org/2000/svg">
+<svg class="atelier-scene atelier-scene--mobile" viewBox="0 0 720 1180" role="group" aria-labelledby="at-m-title at-m-desc" xmlns="http://www.w3.org/2000/svg">
   <title id="at-m-title">L'atelier de Clément Balcon</title>
   <desc id="at-m-desc">Un établi avec un outil de brasage, un robot mobile, un poste de CAO, un cric hydraulique, une maquette de tour avec pendule, une tablette et un carnet d'entraînement — chacun ouvre un projet.</desc>
   <rect x="0" y="0" width="720" height="1180" fill="#eeece4"/>
 
   <!-- établi + solder pen -->
-  <a href="#matra" aria-label="Solder Pen — outillage de brasage, projet Matra" class="hotspot">
+  <a href="matra.html" data-hotspot="matra" aria-label="Solder Pen — outillage de brasage, projet Matra" class="hotspot">
     <g class="obj-etabli">
       <rect x="120" y="270" width="480" height="90" class="furn-front"/>
       <line x1="150" y1="360" x2="150" y2="400" class="ink-line"/>
@@ -26,7 +26,7 @@
   </a>
 
   <!-- robot -->
-  <a href="#robafis" aria-label="RobAFIS — robot mobile autonome, concours national" class="hotspot">
+  <a href="robafis.html" data-hotspot="robafis" aria-label="RobAFIS — robot mobile autonome, concours national" class="hotspot">
     <g class="obj-robot">
       <rect x="40" y="555" width="300" height="70" class="furn-front"/>
       <line x1="70" y1="625" x2="70" y2="655" class="ink-line"/>
@@ -52,7 +52,7 @@
   </a>
 
   <!-- CAO -->
-  <a href="#nerf" aria-label="Nerf Rider CS-35 — rétro-conception CATIA V5" class="hotspot">
+  <a href="nerf.html" data-hotspot="nerf" aria-label="Nerf Rider CS-35 — rétro-conception CATIA V5" class="hotspot">
     <g class="obj-cao">
       <rect x="400" y="490" width="240" height="60" class="furn-front"/>
       <line x1="420" y1="550" x2="420" y2="580" class="ink-line"/>
@@ -71,7 +71,7 @@
   </a>
 
   <!-- cric -->
-  <a href="#tn06" aria-label="Cric hydraulique — étude de statique TN06" class="hotspot">
+  <a href="tn06.html" data-hotspot="tn06" aria-label="Cric hydraulique — étude de statique TN06" class="hotspot">
     <g class="obj-jack">
       <rect x="70" y="782" width="230" height="16" class="furn-front"/>
       <path d="M110 745 L250 745 L235 782 L120 782 Z" class="jack-body"/>
@@ -85,7 +85,7 @@
   </a>
 
   <!-- tour / pendule -->
-  <a href="#am25" aria-label="Taipei 101 — analyse dynamique, pendule anti-vibratoire" class="hotspot">
+  <a href="am25.html" data-hotspot="am25" aria-label="Taipei 101 — analyse dynamique, pendule anti-vibratoire" class="hotspot">
     <g class="obj-shelf">
       <rect x="368" y="793" width="220" height="14" class="furn-front"/>
       <line x1="382" y1="807" x2="382" y2="835" class="ink-line"/>
@@ -101,7 +101,7 @@
   </a>
 
   <!-- tablette -->
-  <a href="#cardashboard" aria-label="CarDashboard — CarPlay maison sur iPad" class="hotspot">
+  <a href="cardashboard.html" data-hotspot="cardashboard" aria-label="CarDashboard — CarPlay maison sur iPad" class="hotspot">
     <g class="obj-tablet">
       <rect x="140" y="1032" width="90" height="18" class="furn-front"/>
       <rect x="150" y="945" width="68" height="94" rx="6" class="screen" transform="rotate(-4 184 992)"/>
@@ -113,7 +113,7 @@
   </a>
 
   <!-- carnet + sac -->
-  <a href="#training" aria-label="Training Tracker — suivi d'entraînements" class="hotspot">
+  <a href="training.html" data-hotspot="training" aria-label="Training Tracker — suivi d'entraînements" class="hotspot">
     <g class="obj-training">
       <path d="M400 1040 Q390 985 440 980 Q500 975 508 1015 Q513 1048 478 1052 Z" class="bag-shape"/>
       <line x1="420" y1="992" x2="460" y2="1055" class="ink-thin"/>
