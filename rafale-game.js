@@ -94,10 +94,11 @@ if (rafaleReducedMotion || window.matchMedia('(hover: none)').matches) {
     // le suivi strict, pour garder un petit effet d'envol plutôt qu'un télétransport. ──
     const AB_ON = 13, AB_OFF = 9; // hystérésis : post-combustion auto selon la vitesse du curseur
     let mx = px, my = py;
+    let hasPointerInput = false;
     let followMouse = false;
     let introFrames = 40;
     let ab = false;
-    addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+    addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; hasPointerInput = true; });
     addEventListener('mousedown', e => { if (e.button === 0) fireMica(); });
 
     // ── Fumée ──
@@ -252,7 +253,9 @@ if (rafaleReducedMotion || window.matchMedia('(hover: none)').matches) {
         // Portails
         if (!portalNavigating) {
             if (portalCooldown > 0) { portalCooldown--; }
-            else {
+            // Le spawn est au centre du portail : il ne constitue pas un choix
+            // de navigation, notamment pendant une lecture au clavier.
+            else if (hasPointerInput) {
                 for (const pel of portalEls) {
                     const r = pel.getBoundingClientRect();
                     const cx = r.left + r.width / 2;
