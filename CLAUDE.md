@@ -1,13 +1,60 @@
 # Portfolio — clementbalcon.github.io
 
-## Prochaine refonte demandée — atelier immersif
+## L'atelier — état réel au 6 septembre 2026
 
-Clément souhaite désormais un accueil représentant un atelier de mécanique de
-précision, dont les objets surlignés ouvrent les projets. Lire
-[PLAN_ATELIER_IMMERSIF.md](PLAN_ATELIER_IMMERSIF.md) pour le brief, le plan
-détaillé, la stratégie d’assets, la navigation et les critères de validation.
-Ce concept a été accepté, mais la scène n’est pas encore produite ni intégrée.
-L’état décrit ci-dessous est celui de l’interface papier existante à `338234d`.
+L'accueil (`index.html`) est désormais l'atelier de mécanique de précision
+décrit dans [PLAN_ATELIER_IMMERSIF.md](PLAN_ATELIER_IMMERSIF.md) : une scène
+SVG inline (desktop + mobile, pas un recadrage l'une de l'autre), neuf objets
+dont sept sont de vrais `<a href>` vers les pages projet et deux sont des
+ancres internes (`#experience`, `#projet`). Vue par défaut = `#atelier`.
+L'ancienne interface « L'établi » (dossiers sur fond papier) n'a pas été
+supprimée : elle est devenue la vue « Tous les projets » (`#projects`),
+l'accès texte explicite demandé par le plan.
+
+**Traitement visuel** : dessin technique (ligne encrée, projection cavalière
+28°), pas une illustration peinte/quasi-photo. Aucun outil de génération
+d'image ni Blender n'était disponible dans l'environnement d'exécution —
+détaillé et assumé dans `design/atelier/composition.md`, avec deux prompts
+prêts à l'emploi si Clément veut faire produire la version illustrée à la
+place. Le SVG technique sert alors de base de calibrage des hotspots ; seul
+le fond change.
+
+**Fichiers de référence** : `design/atelier/composition.md` (direction,
+carte objets→destinations, prompts), `hotspots.json` (coordonnées partagées
+desktop/mobile, vérifiées sans chevauchement), `scene-desktop.svg` /
+`scene-mobile.svg` (copies de référence — la version intégrée vit dans
+`index.html`, resynchroniser après toute modification de l'une des deux).
+
+**Ids renommés** : les 7 anciens dossiers (`id="matra"` etc.) sont devenus
+`id="dossier-matra"` etc. pour libérer les ids courts, désormais utilisés par
+le routeur pour désigner l'objet correspondant dans l'atelier (`#matra` =
+« va à l'atelier et mets en évidence le Solder Pen », plus « ouvre
+matra.html » pour le lien réel de l'objet lui-même). Si un nouveau lien
+interne vers un dossier doit être ajouté (ex. liens « preuve » de la section
+compétences), cibler `#dossier-<id>`, pas `#<id>`.
+
+**Mode développeur** : `index.html?hotspots=1` affiche contours, centres et
+identifiants de chaque zone interactive — à utiliser pour recalibrer
+`hotspots.json` après tout changement de cadrage ou d'illustration.
+
+**Non fait / limites connues** (voir aussi section 16-17 du plan) :
+- Pas de test Safari réel (uniquement Chromium via Playwright dans cet
+  environnement).
+- `.tap()` Playwright sur les hotspots SVG mobiles n'a pas navigué dans le
+  test automatisé alors que `.click()` fonctionne parfaitement (probablement
+  une limite de synthèse tactile de Playwright sur `<a>` en SVG, pas un bug
+  du site — mais non confirmé sur un vrai téléphone).
+- Ordre de tabulation des 9 objets stable mais pas strictement trié en ordre
+  de lecture visuelle (gauche→droite, haut→bas) — fonctionnel, perfectible.
+- Pas de ré-audit complet des 7 pages projet + Training (elles n'ont pas été
+  modifiées dans ce chantier, mais n'ont pas non plus été re-testées).
+
+## Historique — avant l'atelier (« L'établi », interface papier)
+
+Ce qui suit décrit l'état à `338234d`, antérieur à l'intégration de
+l'atelier. Gardé pour mémoire : le contenu (parcours, compétences,
+confidentialité) reste valable, mais la description de l'accueil ne
+correspond plus à ce qui est chargé aujourd'hui.
 
 ## État actuel — septembre 2026
 - Copie de travail : `/Users/ClementBalcon/Documents/Pro/clementbalcon.github.io`.
