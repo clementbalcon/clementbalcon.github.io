@@ -1,0 +1,182 @@
+<svg viewBox="0 0 1600 900" role="img" aria-labelledby="at-d-title at-d-desc" xmlns="http://www.w3.org/2000/svg">
+  <title id="at-d-title">L'atelier de Clément Balcon</title>
+  <desc id="at-d-desc">Un établi avec un outil de brasage, une table de montage avec un robot mobile, un poste de CAO, un cric hydraulique, une maquette de tour avec pendule, une tablette, un carnet d'entraînement, un panneau de plans et une fraiseuse — chacun ouvre un projet.</desc>
+  <defs>
+    <pattern id="pegboard" width="34" height="34" patternUnits="userSpaceOnUse">
+      <circle cx="17" cy="17" r="1.6" fill="#252b2733"/>
+    </pattern>
+  </defs>
+
+  <!-- fond -->
+  <rect x="0" y="0" width="1600" height="470" fill="#e6e4da"/>
+  <rect x="0" y="470" width="1600" height="430" fill="#dedcd0"/>
+  <line x1="0" y1="470" x2="1600" y2="470" stroke="#252b2722" stroke-width="1.5"/>
+  <rect x="40" y="40" width="330" height="230" fill="url(#pegboard)" opacity=".5" aria-hidden="true"/>
+
+  <!-- fraiseuse (fond, décor -> #projet) -->
+  <a href="#projet" aria-label="Le cap — mécanique de précision, MECA V.A" class="hotspot hotspot--soft">
+    <g class="obj-machine">
+      <rect x="770" y="470" width="230" height="26" class="furn-front"/>
+      <line x1="790" y1="496" x2="790" y2="530" class="ink-line"/>
+      <line x1="970" y1="496" x2="970" y2="530" class="ink-line"/>
+      <rect x="845" y="300" width="55" height="172" class="furn-side"/>
+      <rect x="812" y="270" width="120" height="48" class="furn-front"/>
+      <rect x="862" y="316" width="22" height="40" class="furn-side"/>
+      <line x1="812" y1="294" x2="812" y2="270" class="ink-thin"/>
+      <line x1="932" y1="294" x2="960" y2="280" class="ink-thin"/>
+      <rect x="895" y="440" width="60" height="20" class="furn-front"/>
+    </g>
+    <rect class="hit" x="750" y="260" width="300" height="240"/>
+  </a>
+
+  <!-- panneau de plans (décor -> #experience) -->
+  <a href="#experience" aria-label="Le parcours — formation, expérience, engagements" class="hotspot hotspot--soft">
+    <g class="obj-panel">
+      <rect x="430" y="60" width="260" height="150" class="furn-front"/>
+      <line x1="450" y1="90" x2="560" y2="90" class="ink-thin"/>
+      <line x1="450" y1="108" x2="620" y2="108" class="ink-thin"/>
+      <rect x="450" y="128" width="70" height="55" class="ink-thin" fill="none"/>
+      <circle cx="600" cy="150" r="26" class="ink-thin" fill="none"/>
+      <circle cx="445" cy="75" r="3" class="accent-fill"/>
+      <circle cx="670" cy="75" r="3" class="accent-fill"/>
+    </g>
+    <rect class="hit" x="420" y="50" width="280" height="170"/>
+  </a>
+
+  <!-- poste CAO -> nerf -->
+  <a href="#nerf" aria-label="Nerf Rider CS-35 — rétro-conception CATIA V5" class="hotspot">
+    <g class="obj-cao">
+      <path class="furn-front" d="M70.0,500.0 L370.0,500.0 L370.0,590.0 L70.0,590.0 Z"/>
+      <path class="furn-top" d="M70.0,500.0 L127.4,469.5 L427.4,469.5 L370.0,500.0 Z"/>
+      <path class="furn-side" d="M370.0,500.0 L427.4,469.5 L427.4,559.5 L370.0,590.0 Z"/>
+      <line x1="90" y1="590" x2="90" y2="700" class="ink-line"/>
+      <line x1="350" y1="590" x2="350" y2="700" class="ink-line"/>
+      <rect x="100" y="330" width="220" height="150" rx="4" class="screen"/>
+      <rect x="112" y="342" width="196" height="126" fill="none" class="ink-thin"/>
+      <g class="wireframe">
+        <path d="M150 440 L150 400 L200 380 L250 400 L250 440 L200 460 Z"/>
+        <path d="M150 400 L200 420 L250 400"/>
+        <path d="M200 420 L200 460"/>
+        <circle cx="270" cy="410" r="16"/>
+      </g>
+      <rect x="195" y="480" width="30" height="18" class="furn-front"/>
+      <rect x="170" y="498" width="80" height="8" class="furn-front"/>
+    </g>
+    <rect class="hit" x="90" y="300" width="260" height="220"/>
+  </a>
+
+  <!-- tablette -> cardashboard -->
+  <a href="#cardashboard" aria-label="CarDashboard — CarPlay maison sur iPad" class="hotspot">
+    <g class="obj-tablet">
+      <rect x="605" y="562" width="90" height="20" class="furn-front"/>
+      <rect x="615" y="465" width="70" height="98" rx="6" class="screen" transform="rotate(-4 650 514)"/>
+      <rect x="623" y="474" width="54" height="80" rx="2" fill="none" class="ink-thin" transform="rotate(-4 650 514)"/>
+      <line x1="630" y1="490" x2="668" y2="490" class="ink-thin" transform="rotate(-4 650 514)"/>
+      <line x1="630" y1="505" x2="655" y2="505" class="ink-thin" transform="rotate(-4 650 514)"/>
+    </g>
+    <rect class="hit" x="590" y="460" width="130" height="140"/>
+  </a>
+
+  <!-- établi + solder pen -> matra -->
+  <a href="#matra" aria-label="Solder Pen — outillage de brasage, projet Matra" class="hotspot">
+    <g class="obj-etabli">
+      <path class="furn-front" d="M280.0,700.0 L740.0,700.0 L740.0,810.0 L280.0,810.0 Z"/>
+      <path class="furn-top" d="M280.0,700.0 L350.6,662.4 L810.6,662.4 L740.0,700.0 Z"/>
+      <path class="furn-side" d="M740.0,700.0 L810.6,662.4 L810.6,772.4 L740.0,810.0 Z"/>
+      <line x1="310" y1="810" x2="310" y2="870" class="ink-line"/>
+      <line x1="710" y1="810" x2="710" y2="870" class="ink-line"/>
+      <g class="scatter" aria-hidden="true">
+        <rect x="640" y="672" width="46" height="10" rx="2" class="tool-tint" transform="rotate(-8 663 677)"/>
+        <circle cx="700" cy="685" r="9" class="tool-tint"/>
+      </g>
+      <g class="obj-pen">
+        <rect x="305" y="655" width="230" height="30" rx="15" class="pen-body" transform="rotate(-9 420 670)"/>
+        <rect x="330" y="648" width="46" height="42" rx="8" class="pen-grip" transform="rotate(-9 420 670)"/>
+        <circle cx="500" cy="640" r="20" class="pen-gear" transform="rotate(-9 420 670)"/>
+        <g class="pen-gear-teeth" transform="rotate(-9 420 670)">
+          <line x1="500" y1="616" x2="500" y2="608"/>
+          <line x1="500" y1="664" x2="500" y2="672"/>
+          <line x1="476" y1="640" x2="468" y2="640"/>
+          <line x1="524" y1="640" x2="532" y2="640"/>
+        </g>
+        <rect x="440" y="632" width="34" height="18" rx="2" class="pen-accent" transform="rotate(-9 420 670)"/>
+      </g>
+    </g>
+    <rect class="hit" x="300" y="560" width="260" height="140"/>
+  </a>
+
+  <!-- cric -> tn06 -->
+  <a href="#tn06" aria-label="Cric hydraulique — étude de statique TN06" class="hotspot">
+    <g class="obj-jack">
+      <rect x="700" y="742" width="260" height="16" class="furn-front"/>
+      <path d="M780 705 L920 705 L905 742 L800 742 Z" class="jack-body"/>
+      <circle cx="800" cy="748" r="8" class="jack-wheel"/>
+      <circle cx="900" cy="748" r="8" class="jack-wheel"/>
+      <rect x="900" y="670" width="10" height="40" class="jack-handle" transform="rotate(20 905 710)"/>
+      <rect x="792" y="638" width="16" height="68" class="jack-ram"/>
+      <ellipse cx="800" cy="636" rx="66" ry="15" class="jack-pad"/>
+    </g>
+    <rect class="hit" x="720" y="600" width="220" height="180"/>
+  </a>
+
+  <!-- étagère + tour/pendule -> am25 -->
+  <a href="#am25" aria-label="Taipei 101 — analyse dynamique, pendule anti-vibratoire" class="hotspot">
+    <g class="obj-shelf">
+      <rect x="1335" y="416" width="235" height="14" class="furn-front"/>
+      <line x1="1350" y1="430" x2="1350" y2="460" class="ink-line"/>
+      <line x1="1545" y1="430" x2="1545" y2="460" class="ink-line"/>
+      <g stroke="currentColor" class="tower-ink" fill="none" stroke-width="2">
+        <path d="M1410 415H1495M1420 415V395H1428L1424 375H1435L1431 355H1442L1438 335H1449L1445 315H1460V300H1470V315H1485L1481 335H1492L1488 355H1499L1495 375H1506L1502 395H1511V415"/>
+        <path d="M1447 300V285H1470V300M1458 285V270"/>
+        <path d="M1452 355H1478M1452 356L1465 385M1478 356L1465 385" stroke-dasharray="2 3"/>
+        <circle cx="1465" cy="380" r="9" class="accent-fill" stroke="none"/>
+      </g>
+    </g>
+    <rect class="hit" x="1360" y="190" width="190" height="260"/>
+  </a>
+
+  <!-- table de montage + robot -> robafis -->
+  <a href="#robafis" aria-label="RobAFIS — robot mobile autonome, concours national" class="hotspot">
+    <g class="obj-robot">
+      <path class="furn-front" d="M1000.0,700.0 L1430.0,700.0 L1430.0,800.0 L1000.0,800.0 Z"/>
+      <path class="furn-top" d="M1000.0,700.0 L1075.1,660.1 L1505.1,660.1 L1430.0,700.0 Z"/>
+      <path class="furn-side" d="M1430.0,700.0 L1505.1,660.1 L1505.1,760.1 L1430.0,800.0 Z"/>
+      <line x1="1030" y1="800" x2="1030" y2="860" class="ink-line"/>
+      <line x1="1400" y1="800" x2="1400" y2="860" class="ink-line"/>
+      <g class="robot-body">
+        <rect x="1150" y="630" width="150" height="70" rx="6" class="robot-chassis"/>
+        <circle cx="1170" cy="700" r="26" class="robot-wheel"/>
+        <circle cx="1280" cy="700" r="26" class="robot-wheel"/>
+        <rect x="1250" y="560" width="14" height="80" class="robot-mast"/>
+        <path d="M1264 570 L1320 545 L1330 500" fill="none" class="robot-arm"/>
+        <path d="M1330 500 L1315 480 M1330 500 L1345 483" class="robot-arm"/>
+        <rect x="1185" y="645" width="45" height="30" class="robot-board"/>
+        <circle cx="1195" cy="655" r="2.4" class="accent-fill"/>
+        <circle cx="1205" cy="655" r="2.4" class="accent-fill"/>
+      </g>
+      <g class="award-ring" transform="translate(1330,640)">
+        <circle r="46" fill="none" class="ink-thin"/>
+        <text x="0" y="-4" text-anchor="middle" class="award-text">PRIX</text>
+        <text x="0" y="10" text-anchor="middle" class="award-text">INNOVATION</text>
+      </g>
+    </g>
+    <rect class="hit" x="1080" y="470" width="300" height="330"/>
+  </a>
+
+  <!-- carnet + sac -> training -->
+  <a href="#training" aria-label="Training Tracker — suivi d'entraînements" class="hotspot">
+    <g class="obj-training">
+      <path d="M60 800 Q50 745 100 740 Q160 735 168 775 Q173 808 138 812 Z" class="bag-shape"/>
+      <line x1="80" y1="752" x2="120" y2="815" class="ink-thin"/>
+      <rect x="140" y="710" width="90" height="70" rx="3" class="notebook" transform="rotate(6 185 745)"/>
+      <g class="spiral" transform="rotate(6 185 745)">
+        <line x1="142" y1="715" x2="142" y2="775"/>
+        <line x1="142" y1="722" x2="137" y2="722"/>
+        <line x1="142" y1="736" x2="137" y2="736"/>
+        <line x1="142" y1="750" x2="137" y2="750"/>
+        <line x1="142" y1="764" x2="137" y2="764"/>
+      </g>
+    </g>
+    <rect class="hit" x="40" y="680" width="210" height="140"/>
+  </a>
+</svg>

@@ -1,0 +1,28 @@
+{
+  "desktop": {
+    "viewBox": "0 0 1600 900",
+    "hotspots": [
+      { "id": "matra", "label": "Solder Pen — outillage de brasage, projet Matra", "x": 300, "y": 560, "w": 260, "h": 140 },
+      { "id": "robafis", "label": "RobAFIS — robot mobile autonome, concours national", "x": 1080, "y": 470, "w": 300, "h": 330 },
+      { "id": "nerf", "label": "Nerf Rider CS-35 — rétro-conception CATIA V5", "x": 90, "y": 300, "w": 260, "h": 220 },
+      { "id": "tn06", "label": "Cric hydraulique — étude de statique TN06", "x": 720, "y": 600, "w": 220, "h": 180 },
+      { "id": "am25", "label": "Taipei 101 — analyse dynamique, pendule anti-vibratoire", "x": 1360, "y": 190, "w": 190, "h": 260 },
+      { "id": "cardashboard", "label": "CarDashboard — CarPlay maison sur iPad", "x": 590, "y": 460, "w": 130, "h": 140 },
+      { "id": "training", "label": "Training Tracker — suivi d'entraînements", "x": 40, "y": 680, "w": 210, "h": 140 },
+      { "id": "experience", "label": "Le parcours — formation, expérience, engagements", "x": 420, "y": 50, "w": 280, "h": 170 },
+      { "id": "projet", "label": "Le cap — mécanique de précision, MECA V.A", "x": 750, "y": 260, "w": 300, "h": 240 }
+    ]
+  },
+  "mobile": {
+    "viewBox": "0 0 720 1180",
+    "hotspots": [
+      { "id": "matra", "label": "Solder Pen — outillage de brasage, projet Matra", "x": 190, "y": 90, "w": 340, "h": 190 },
+      { "id": "robafis", "label": "RobAFIS — robot mobile autonome, concours national", "x": 60, "y": 340, "w": 260, "h": 230 },
+      { "id": "nerf", "label": "Nerf Rider CS-35 — rétro-conception CATIA V5", "x": 380, "y": 340, "w": 280, "h": 200 },
+      { "id": "tn06", "label": "Cric hydraulique — étude de statique TN06", "x": 60, "y": 620, "w": 260, "h": 190 },
+      { "id": "am25", "label": "Taipei 101 — analyse dynamique, pendule anti-vibratoire", "x": 380, "y": 600, "w": 220, "h": 220 },
+      { "id": "cardashboard", "label": "CarDashboard — CarPlay maison sur iPad", "x": 90, "y": 870, "w": 220, "h": 190 },
+      { "id": "training", "label": "Training Tracker — suivi d'entraînements", "x": 380, "y": 880, "w": 260, "h": 180 }
+    ]
+  }
+}
