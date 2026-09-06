@@ -1,5 +1,14 @@
 # Portfolio — clementbalcon.github.io
 
+## Prochaine refonte demandée — atelier immersif
+
+Clément souhaite désormais un accueil représentant un atelier de mécanique de
+précision, dont les objets surlignés ouvrent les projets. Lire
+[PLAN_ATELIER_IMMERSIF.md](PLAN_ATELIER_IMMERSIF.md) pour le brief, le plan
+détaillé, la stratégie d’assets, la navigation et les critères de validation.
+Ce concept a été accepté, mais la scène n’est pas encore produite ni intégrée.
+L’état décrit ci-dessous est celui de l’interface papier existante à `338234d`.
+
 ## État actuel — septembre 2026
 - Copie de travail : `/Users/ClementBalcon/Documents/Pro/clementbalcon.github.io`.
   Éviter la copie Desktop (commandes Git susceptibles de rester bloquées).
