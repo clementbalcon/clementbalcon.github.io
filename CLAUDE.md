@@ -3,20 +3,40 @@
 ## État actuel — septembre 2026
 - Copie de travail : `/Users/ClementBalcon/Documents/Pro/clementbalcon.github.io`.
   Éviter la copie Desktop (commandes Git susceptibles de rester bloquées).
-- Le commit `0819bb8` a remplacé le long accueil par un hero statique, une grille
-  de sept projets, un parcours condensé et une présentation. Thème vert sombre
-  `#0c1713`, accent `#d8f56a`, curseur natif sur l'accueil.
-- `index.html` ne charge plus GSAP, ScrollTrigger, Lenis ni le jeu curseur.
-  La couverture utilise uniquement `frames/hero/frame_0075.webp`. Aucun chargement
-  des 150 frames, verrouillage du scroll, autoplay ou morph vers le curseur.
-  Les fichiers Blender et les frames n'ont pas été modifiés. Le crédit du modèle
-  reste obligatoire même pour cette image statique.
-- Les ancres des cartes (`#matra`, `#robafis`, etc.), `#projects`, `#experience`,
-  `#skills` et `#sandbox` permettent les retours et anciens liens directs.
+- Direction actuelle : **L'établi**, un portfolio à dossiers consultables.
+  Papier `#eeece4`, encre `#252b27`, accent vermillon `#bc3b20`, Archivo condensée
+  et légendes monospace. Privilégier les objets réels, les schémas et les règles
+  fines. La grille de cartes vert sombre de `0819bb8` a été abandonnée après
+  retour de Clément : elle était trop générique et conservait le mauvais hero.
+- Trois vues : `#projects` (sept dossiers, un seul visible), `#experience`
+  (terrain, formation, compétences et engagements), `#projet` (cap MECA V.A).
+  Sur desktop, liste verticale et planche de travail ; sur mobile, liste
+  d'onglets défilant localement et une seule fiche. Ne pas réempiler les sept
+  dossiers dans le parcours normal ni recréer un hero d'introduction long.
+- `index.html` n'affiche plus de Rafale et ne charge ni frame, ni GSAP,
+  ScrollTrigger, Lenis ou jeu curseur. Aucun canvas, scroll verrouillé, autoplay
+  ou morph. Fichiers Blender, 150 frames et jeu des sous-pages inchangés.
+  La nouvelle image de partage `og-atelier.jpg` est une capture de l'accueil.
+- Les images des projets sont les assets publics existants. Le schéma Taipei
+  est un SVG de principe, pas un résultat de simulation. Le diagramme Training
+  décrit les fonctions, sans inventer de mesures. Le zoom est une transformation
+  CSS actionnée par bouton, sans interpolation de nouvelles vues CAO.
+- Les ancres (`#matra`, `#robafis`, etc.) ouvrent le bon dossier au chargement.
+  `history.pushState`, `popstate` et `hashchange` assurent les retours navigateur.
+  Les anciennes ancres `#work`, `#path`, `#about`, `#hero`, `#jet-hero` sont des
+  alias JS. `#skills` ouvre le parcours et son détail ; `#sandbox` reste au footer.
+- Amélioration progressive : HTML complet visible sans JS ; les liens natifs
+  restent fonctionnels. JS applique `hidden`, rôles tab/tablist/tabpanel et
+  tabindex mobile/desktop ; flèches, Home et End activent les dossiers.
+  Curseur natif et focus visible. Le mode mouvement réduit coupe les transitions.
 - Les pages projets conservent le jeu curseur en mode normal. Avec
   `prefers-reduced-motion: reduce`, elles utilisent le curseur natif et des
   portails statiques activables au clavier. Le sandbox attend alors un clic
   explicite sur « Lancer le jeu animé ».
+- Correction `955c4f3` : le jeu des sous-pages attend un mouvement de souris
+  avant de permettre une collision de navigation avec le portail. Sans cela,
+  la position initiale du pointeur virtuel restait au spawn et renvoyait vers
+  l'accueil à l'expiration du cooldown, même pendant une lecture sans souris.
 - Vérifier les huit pages portfolio et l'écran public de `training.html` aux
   largeurs 375 / 680 / 1440, dans les deux modes de mouvement. Ne pas considérer
   un simple parsing HTML comme une validation responsive.
@@ -27,7 +47,30 @@
 - Ne pas pousser sans accord de Clément. Les contraintes de confidentialité
   ci-dessous restent applicables.
 
-### Validation des corrections de la refonte — 5 septembre 2026
+### Validation de L'établi — 6 septembre 2026
+- Chromium / Playwright : 54 combinaisons (8 pages portfolio + écran public
+  Training × 375 / 680 / 1440 × mouvement normal / réduit), sans débordement
+  horizontal, image visible manquante, ancre cassée ou erreur JS détectée.
+- 54 états de l'accueil supplémentaires : sept dossiers et deux autres vues,
+  aux trois largeurs et dans les deux modes. Chaque vue est isolée et ses
+  visuels chargent. Captures inspectées, notamment les cadrages mobile/desktop.
+- Flèches / Home / End, zoom via Espace, liens de compétences, précédent /
+  suivant et rechargement des dix ancres principales vérifiés. Les portails
+  restent activables avec Entrée ; AM25 ne quitte plus la page sans souris.
+- Sans JS : les sept dossiers et trois vues restent accessibles aux largeurs
+  375 et 1440. CDN de polices bloqué : 45 états (neuf vues × cinq largeurs,
+  375 / 680 / 820 / 1024 / 1440) sans débordement horizontal.
+- Accueil Solder Pen : 928 px de hauteur à 1440×900, 1078 px à 375×900.
+  Les autres dossiers remplacent la fiche au lieu d'allonger la page.
+- Rapport : `/private/tmp/pw-check/portfolio-audit/report.json`, états dans
+  `atelier.json`, contrôle CDN dans `resilience.json`, captures `atelier-*.png`.
+  Lanceur : `node /private/tmp/pw-check/portfolio-audit.cjs` hors bac à sable.
+  Option `--social` : capture 1200×630 de l'accueil vers `og-atelier.jpg`.
+- Limites : Chromium uniquement, pas de connexion à Training ni de validation
+  visuelle du lecteur PDF natif headless. Les contraintes de confidentialité
+  Safran / Matra ont été conservées. Aucun push effectué.
+
+### Validation précédente — 5 septembre 2026
 - Chromium / Playwright : 54 combinaisons (9 pages × 3 largeurs × 2 modes),
   sans débordement horizontal, image manquante ou erreur JavaScript détectée.
 - Aucun effet CSS actif en mode mouvement réduit au chargement ; le jeu curseur
@@ -42,11 +85,12 @@
 
 Les descriptions détaillées du hero et de l'ancien accueil ci-dessous sont une
 référence historique antérieure à `0819bb8`, pas la mécanique actuellement chargée.
+Les règles de confidentialité et les descriptions des sous-pages restent valables.
 
 ## Repo & déploiement
 - GitHub Pages : `clementbalcon/clementbalcon.github.io`, branche `main`, push SSH
-- Dossier local : `/Users/ClementBalcon/Desktop/clementbalcon.github.io/`
-- URL publique : `https://clementbalcon.github.io`
+- Dossier local : `/Users/ClementBalcon/Documents/Pro/clementbalcon.github.io/`
+- URL publique : `https://clementbalcon.fr` (GitHub Pages)
 
 ## Stack
 - Site statique monofichier (`index.html`) + sous-pages HTML séparées
@@ -54,7 +98,7 @@ référence historique antérieure à `0819bb8`, pas la mécanique actuellement 
 - Fonts Google : Archivo (variable, axes `wght` 100-900 + `wdth` 62.5-125%) — remplace Inter + Bebas Neue.
   `--font-display` (titres, `font-weight:800; font-stretch:125%`) et `--font-body` (texte courant, poids par défaut),
   déclarées en variables CSS dans chacun des 8 fichiers HTML (hors `training.html`, non concerné).
-- GSAP 3.15 + ScrollTrigger + Lenis (CDN jsdelivr — GSAP ≥3.14 absent de cdnjs) pour le jet hero uniquement
+- Accueil : JS natif embarqué. GSAP / ScrollTrigger / Lenis concernaient le hero historique.
 
 ## Jet hero (séquence Rafale scrubée au scroll, façon rideradian.com) — v2
 - `#jet-hero` (450vh, 360vh mobile) > `.jet-sticky` (sticky 100vh) > `#jet-canvas` + `.jet-title`
@@ -200,8 +244,8 @@ Marqué "Document confidentiel". Règle :
 # Voir les changements
 git diff
 
-# Commit + push rapide
-git add <fichiers> && git commit -m "message" && git push
+# Commit local après validation ; push uniquement après accord de Clément
+git add <fichiers> && git commit -m "message"
 
 # Python pour lire PDF (si besoin)
 /Library/Frameworks/Python.framework/Versions/3.10/bin/python3
