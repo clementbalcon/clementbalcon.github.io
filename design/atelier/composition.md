@@ -59,50 +59,101 @@ en portrait. Tour/fraiseuse et panneau de plans (liens optionnels vers
 garder lisibles, et leurs liens texte restent disponibles dans la nav et le
 pied de page. Les 7 projets restent tous présents.
 
-## Prompts prêts à l'emploi (si génération d'image souhaitée)
+## Prompts prêts à l'emploi — génération via ChatGPT Pro
 
-Objets sans texte, sans logo inventé, sans personne. Référence Solder Pen =
-`solder_pen.png` (rendu public déjà sur le site) ; référence RobAFIS =
-`robafis_img2.png`. Ne pas transmettre de document confidentiel Safran/Matra.
+Marche à suivre :
+1. Nouvelle conversation ChatGPT. Joindre en pièces jointes `solder_pen.png`,
+   `robafis_img2.png`, `tn06_img1.png` et `nerf/hero.png` (dans
+   `~/Documents/Pro/clementbalcon.github.io/`) avant de coller le prompt
+   desktop — ce sont les vraies références de forme des objets.
+2. Choisir le format **paysage** le plus large proposé. Générer, regarder en
+   grand, régénérer si un objet est mal formé ou si du texte est apparu
+   dessus — ça arrive, ce n'est pas grave, il suffit de relancer.
+3. Dans la **même conversation** (pour garder le même style), coller ensuite
+   le prompt mobile en format **portrait**.
+4. Déposer les deux fichiers exportés (PNG, taille maximale disponible) ici,
+   sans rien renommer d'autre que l'extension si besoin :
+   - `~/Documents/Pro/clementbalcon.github.io/assets/atelier/scene-desktop-raw.png`
+   - `~/Documents/Pro/clementbalcon.github.io/assets/atelier/scene-mobile-raw.png`
 
-### Desktop (large, ~16:9)
+Je m'occupe ensuite du recadrage, de l'export WebP optimisé et du calibrage
+des zones cliquables par-dessus.
+
+Aucun document confidentiel Safran/Matra n'est envoyé — uniquement les 4
+images publiques ci-dessus.
+
+### Prompt 1 — Desktop (paysage large)
 
 > Vue légèrement plongeante d'un petit atelier de mécanique de précision
-> français, composition éditoriale immersive, éclairage soigné. Établi en
-> bois clair au premier plan à gauche avec un outil manuel cylindrique noir et
-> bleu à gâchette orange (inspiré de la référence fournie) posé dessus, entouré
-> d'outils épars. À droite, une table de montage avec un petit robot mécanique
-> bleu à roues et bras articulé (inspiré de la référence fournie). En arrière-
-> plan gauche, un poste de CAO avec écran affichant un assemblage technique en
-> fil de fer. En arrière-plan centre, un tour ou une fraiseuse d'atelier, vert
-> industriel désaturé, gris acier. Sur une étagère à droite, une petite
-> maquette de tour avec un pendule suspendu à l'intérieur. Une tablette sur un
-> support près de l'établi. Un carnet et un sac de sport dans un coin. Métal
-> brossé, matières crédibles, lumière naturelle latérale et lampe d'atelier
-> chaude. Perspective et échelles cohérentes, objets clairement séparés et
-> reconnaissables. Illustration détaillée légèrement stylisée, ambiance
-> personnelle et calme. Espace négatif en haut de l'image pour une identité et
-> une navigation ajoutées en HTML par-dessus. Aucun texte dessiné, aucune
-> marque inventée, aucune personne, aucun effet holographique.
+> français, illustration éditoriale détaillée et légèrement stylisée, entre
+> réalisme et illustration soignée, composition immersive à la profondeur
+> lisible.
+>
+> Premier plan gauche : un établi en bois clair. Dessus repose l'outil manuel
+> de la première image jointe (corps cylindrique gris, poignée bleu marine
+> texturée, petit engrenage bleu, bloc de gâchette orange/jaune) — respecter
+> fidèlement sa forme. Quelques outils épars autour.
+>
+> Premier plan droite : une table de montage métallique avec le petit robot
+> mobile de la deuxième image jointe (châssis bleu, roues noires, bras
+> articulé avec pince, petite carte électronique visible) — respecter
+> fidèlement sa forme. Une médaille/anneau argenté posé à côté évoque un prix
+> gagné, sans texte lisible dessus.
+>
+> Zone médiane droite, un peu en retrait : le cric hydraulique rouge de la
+> troisième image jointe, posé sur une petite zone d'essai au sol — respecter
+> fidèlement sa forme et sa couleur rouge.
+>
+> Arrière-plan gauche : un poste de CAO, écran affichant un assemblage
+> technique simplifié inspiré de la quatrième image jointe (fil de fer, pas de
+> texte lisible).
+>
+> Arrière-plan centre : une fraiseuse ou un tour d'atelier, vert industriel
+> désaturé, gris acier.
+>
+> Étagère en hauteur à droite : une petite maquette de tour avec un pendule
+> suspendu à l'intérieur par de fins câbles.
+>
+> Une tablette numérique sur un petit support près de l'établi.
+>
+> Coin avant gauche, au sol : un carnet et un sac de sport.
+>
+> Matières crédibles (bois, métal brossé, acier peint), lumière naturelle
+> latérale douce complétée d'une lampe d'atelier chaude au-dessus de l'établi.
+> Perspective et échelles cohérentes, chaque objet clairement séparé et
+> identifiable, aucune superposition. Palette : bois et papier ivoire chaud,
+> machines vert industriel désaturé et gris acier, ombres anthracite chaud,
+> une seule touche de couleur vive (cuivre clair ou ambre) sur l'outil de
+> l'établi. Espace négatif calme dans le tiers supérieur pour ajouter un titre
+> en HTML par-dessus. Aucun texte, aucun logo ou marque inventée, aucune
+> personne, aucun effet holographique ou futuriste.
 
-### Mobile (portrait, ~9:16)
+### Prompt 2 — Mobile (portrait), à coller juste après dans la même conversation
 
-> Même atelier, même palette, même lumière, cadrage portrait resserré et
-> légèrement plongeant sur l'établi principal au premier plan (outil manuel
-> cylindrique noir et bleu à gâchette orange, inspiré de la référence
-> fournie). En dessous, deux rangées d'objets regroupés et bien séparés : le
-> petit robot mécanique bleu à roues, un écran de CAO affichant un assemblage
-> technique en fil de fer, une tablette sur un support, un carnet et un sac de
-> sport. Pas de machine-outil lointaine ni de mur d'arrière-plan chargé : la
-> composition reste resserrée et lisible en hauteur. Illustration détaillée
-> légèrement stylisée, matières crédibles. Espace négatif en haut pour une
-> identité ajoutée en HTML. Aucun texte dessiné, aucune marque inventée,
-> aucune personne, aucun effet holographique.
+> Dans la continuité exacte de l'image précédente (même atelier, même
+> palette, même lumière, mêmes objets), génère une nouvelle composition en
+> format portrait, cadrée plus serrée et légèrement plongeante.
+>
+> Premier plan, en haut : l'établi avec l'outil manuel noir/bleu à gâchette
+> orange, comme dans l'image précédente.
+>
+> En dessous, organisée en rangées bien séparées et lisibles, sans mur
+> d'arrière-plan chargé : le petit robot bleu à roues, l'écran de CAO avec son
+> assemblage en fil de fer, le cric hydraulique rouge, la petite maquette de
+> tour avec le pendule suspendu, la tablette sur son support, et enfin le
+> carnet avec le sac de sport.
+>
+> Ne pas inclure la fraiseuse/le tour d'atelier ni de mur d'arrière-plan
+> chargé : la composition doit rester resserrée et lisible du haut vers le
+> bas. Même palette, mêmes matières. Espace négatif calme en haut de l'image
+> pour un titre ajouté en HTML. Aucun texte, aucun logo ou marque inventée,
+> aucune personne.
 
 ## Ce que je livre dans ce chantier
 
 Scène desktop et mobile en SVG inline (`#atelier-desktop`, `#atelier-mobile`
 dans `index.html`), un lien `<a>` réel par objet, coordonnées partagées avec le
-mode développeur (`?hotspots=1`, contours + centres + identifiants). Pas de
-fichier raster dans `assets/atelier/` pour l'instant : le dossier reste prêt à
-recevoir la variante illustrée si Clément la fait produire.
+mode développeur (`?hotspots=1`, contours + centres + identifiants). C'est un
+dessin technique de repli (voir plus haut), pas la version finale — dès que
+`scene-desktop-raw.png` et `scene-mobile-raw.png` arrivent dans
+`assets/atelier/`, je les intègre et je recalibre les zones dessus.
