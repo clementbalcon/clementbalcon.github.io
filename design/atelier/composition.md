@@ -1,5 +1,52 @@
 # Composition — L'atelier
 
+## Résultat final (7 septembre 2026) — lire ceci en premier
+
+Le dessin technique SVG décrit ci-dessous (section suivante) a été jugé raté
+par Clément : « le résultat est naze », ça se lisait comme un diagramme, pas
+un lieu. Deuxième itération : Claude et Codex (via le plugin `openai/codex-plugin-cc`,
+installé depuis) ont d'abord confronté leurs idées de composition en lecture
+seule (voir « Débat Claude/Codex » plus bas), puis Codex a généré directement
+les deux images finales via la génération d'image incluse dans l'abonnement
+ChatGPT déjà connecté à sa CLI locale — aucune clé API, aucune facturation
+séparée. Résultat : `assets/atelier/scene-desktop.webp` et `scene-mobile.webp`
+(+ les `-raw.png` non compressés, gardés comme source), intégrés dans
+`index.html` avec des `<a>` réels positionnés en pourcentage par-dessus
+(coordonnées dans `hotspots.json`, retracées entièrement sur les nouvelles
+images — les anciennes valeurs SVG ne servent plus à rien).
+
+Composition retenue : celle proposée par Codex (établi éclairé comme point
+d'ancrage, robot BACAR comme silhouette la plus forte, Solder Pen en
+découverte au premier plan, cric/Taipei/CAO/tablette/carnet répartis autour,
+**pas** de fraiseuse ni de panneau de plans dans la scène — ces deux accès
+optionnels restent uniquement dans la nav). Le désaccord Claude/Codex sur la
+hiérarchie visuelle (Solder Pen à poids égal vs. robot dominant) et sur la
+méthode de production (composer les vraies photos vs. tout régénérer) a été
+tranché par Clément en faveur de la proposition Codex, testée directement en
+image plutôt que débattue davantage.
+
+Ce qui suit (sections « Constat sur les moyens disponibles » à « Prompts
+prêts à l'emploi ») documente la **première itération**, gardée pour
+mémoire — le raisonnement sur pourquoi le SVG a été choisi puis rejeté reste
+instructif, mais ce n'est plus l'état du site.
+
+## Débat Claude/Codex sur la composition (lecture seule, avant génération)
+
+Résumé des positions, en désaccord assumé plutôt que convergées de force :
+
+| Point | Claude | Codex |
+|---|---|---|
+| Hiérarchie visuelle | Solder Pen et robot à poids égal | Robot dominant, Solder Pen secondaire (retenu) |
+| Liens optionnels (parcours/cap) | Gardés en décor non cliquable sur desktop | Retirés de la scène, dans la nav uniquement (retenu) |
+| Méthode de production | Décor généré + vraies photos produits composées dessus | Scène entièrement générée, objets réinventés (retenu) |
+| Disposition mobile | Tension non tranchée (lisibilité vs. crédibilité) | Surface continue, pas de grille (retenu) |
+
+Codex a aussi relevé, à raison, que la contrainte « zéro chevauchement »
+entre zones était un artefact du dessin technique à la main (pas un vrai
+principe de composition une fois une illustration réelle en place), et que
+la palette « une seule touche de couleur vive » se contredisait déjà avec le
+bleu du robot et le rouge du cric — les deux corrigés dans cette itération.
+
 ## Constat sur les moyens disponibles
 
 Aucun outil de génération d'image et aucune installation Blender ne sont

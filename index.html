@@ -66,51 +66,37 @@
 
     /* ── Atelier ── */
     .atelier-intro { margin: 0 0 16px; color: var(--muted); font-size: 14px; max-width: 460px; }
-    .atelier-stage { border: 1px solid var(--ink); background: #eeece4; }
+    .atelier-stage { position: relative; border: 1px solid var(--ink); background: #1c1712; line-height: 0; }
+    .atelier-scene-wrap { position: relative; }
     .atelier-scene { display: block; width: 100%; height: auto; }
     .atelier-scene--mobile { display: none; }
-    .atelier-scene text { font-family: var(--mono); }
-    .atelier-scene .furn-front { fill: var(--board); stroke: var(--ink); stroke-width: 2; }
-    .atelier-scene .furn-top { fill: #eae8de; stroke: var(--ink); stroke-width: 2; }
-    .atelier-scene .furn-side { fill: #d2d3c8; stroke: var(--ink); stroke-width: 2; }
-    .atelier-scene .ink-line { stroke: var(--ink); stroke-width: 2; }
-    .atelier-scene .ink-thin { stroke: var(--ink); stroke-width: 1.2; }
-    .atelier-scene .accent-fill { fill: var(--accent); }
-    .atelier-scene .tool-tint { fill: #c8c6ba; stroke: var(--ink); stroke-width: 1.2; }
-    .atelier-scene .obj-machine .furn-front, .atelier-scene .obj-machine .furn-side { fill: #cfddd5; }
-    .atelier-scene .screen { fill: #dfe3da; stroke: var(--ink); stroke-width: 2; }
-    .atelier-scene .wireframe path, .atelier-scene .wireframe circle { fill: none; stroke: var(--muted); stroke-width: 1.3; }
-    .atelier-scene .pen-body { fill: #9aa0a6; stroke: var(--ink); stroke-width: 2; }
-    .atelier-scene .pen-grip, .atelier-scene .pen-gear { fill: #2c4a7c; stroke: var(--ink); stroke-width: 2; }
-    .atelier-scene .pen-gear-teeth line { stroke: var(--ink); stroke-width: 2.4; }
-    .atelier-scene .pen-accent { fill: #d99a2b; stroke: var(--ink); stroke-width: 1.6; }
-    .atelier-scene .jack-body { fill: #b23a2a; stroke: var(--ink); stroke-width: 2; }
-    .atelier-scene .jack-pad { fill: #3a3a3a; stroke: var(--ink); stroke-width: 2; }
-    .atelier-scene .jack-ram { fill: #9aa0a6; stroke: var(--ink); stroke-width: 1.6; }
-    .atelier-scene .jack-wheel { fill: var(--ink); }
-    .atelier-scene .jack-handle { fill: #d99a2b; stroke: var(--ink); stroke-width: 1.6; }
-    .atelier-scene .robot-chassis { fill: #2c4a7c; stroke: var(--ink); stroke-width: 2; }
-    .atelier-scene .robot-wheel { fill: var(--ink); }
-    .atelier-scene .robot-mast, .atelier-scene .robot-arm { stroke: #2c4a7c; stroke-width: 6; fill: none; stroke-linecap: round; }
-    .atelier-scene .robot-board { fill: #d9c079; stroke: var(--ink); stroke-width: 1.2; }
-    .atelier-scene .award-text { font-size: 9px; fill: var(--muted); letter-spacing: .04em; }
-    .atelier-scene .bag-shape { fill: #c8b79a; stroke: var(--ink); stroke-width: 2; }
-    .atelier-scene .notebook { fill: #eeece4; stroke: var(--ink); stroke-width: 2; }
-    .atelier-scene .spiral line { stroke: var(--muted); stroke-width: 1.4; }
-    .atelier-scene .hotspot .hit { fill: transparent; stroke: none; cursor: pointer; }
-    .atelier-scene .hotspot { outline: none; }
-    .atelier-scene .hotspot:hover .furn-front, .atelier-scene .hotspot:focus-visible .furn-front,
-    .atelier-scene .hotspot:hover .screen, .atelier-scene .hotspot:focus-visible .screen,
-    .atelier-scene .hotspot.is-focused .furn-front, .atelier-scene .hotspot.is-focused .screen { stroke: var(--accent); stroke-width: 3; }
-    .atelier-scene .hotspot:hover .hit, .atelier-scene .hotspot:focus-visible .hit,
-    .atelier-scene .hotspot.is-focused .hit { stroke: var(--accent); stroke-width: 3; fill: rgba(188,59,32,.08); }
-    .atelier-scene .hotspot--soft:hover .furn-front, .atelier-scene .hotspot--soft:focus-visible .furn-front { stroke: var(--accent); stroke-width: 2.4; }
-    .atelier-tag { position: absolute; pointer-events: none; background: var(--paper); border: 1px solid var(--ink); padding: 3px 8px; font: 11px var(--mono); white-space: nowrap; transform: translate(-50%, -100%); margin-top: -8px; opacity: 0; transition: opacity .12s; }
+    .atelier-hotspot {
+      position: absolute;
+      display: block;
+      border: 2px solid transparent;
+      border-radius: 2px;
+      outline: none;
+    }
+    .atelier-hotspot:hover, .atelier-hotspot:focus-visible, .atelier-hotspot.is-focused {
+      border-color: var(--accent);
+      background: rgba(188, 59, 32, .12);
+      box-shadow: 0 0 0 3px rgba(188, 59, 32, .18);
+    }
+    .hotspot-debug .atelier-hotspot { border-color: #0a7dff; background: rgba(10, 125, 255, .12); }
+    .hotspot-debug .atelier-hotspot::after {
+      content: attr(data-hotspot);
+      position: absolute; top: -1.4em; left: 0;
+      font: 11px var(--mono); color: #0a7dff; background: var(--paper);
+      padding: 0 3px; white-space: nowrap;
+    }
+    .hotspot-debug-dot {
+      position: absolute; top: 50%; left: 50%; width: 7px; height: 7px;
+      background: #0a7dff; border-radius: 50%; transform: translate(-50%, -50%);
+    }
+    .atelier-tag { position: absolute; pointer-events: none; background: var(--paper); border: 1px solid var(--ink); padding: 3px 8px; font: 11px var(--mono); white-space: nowrap; transform: translate(-50%, -100%); margin-top: -8px; opacity: 0; transition: opacity .12s; z-index: 2; }
     .atelier-tag.is-visible { opacity: 1; }
-    .atelier-stage { position: relative; }
     .atelier-alt { margin: 14px 0 0; font-size: 13px; color: var(--muted); }
     .atelier-alt a { text-underline-offset: 3px; }
-    .hotspot-debug .hit { stroke: #0a7dff !important; stroke-width: 1.5 !important; fill: rgba(10,125,255,.12) !important; }
     @media (max-width: 740px) {
       .atelier-scene--desktop { display: none; }
       .atelier-scene--mobile { display: block; }
@@ -381,319 +367,26 @@
       <section class="view" id="atelier" aria-label="L'atelier — sept projets, deux accès directs">
         <p class="atelier-intro">Explorez l'atelier. Chaque objet raconte un projet.</p>
         <div class="atelier-stage">
-          <svg class="atelier-scene atelier-scene--desktop" viewBox="0 0 1600 900" role="group" aria-labelledby="at-d-title at-d-desc" xmlns="http://www.w3.org/2000/svg">
-  <title id="at-d-title">L'atelier de Clément Balcon</title>
-  <desc id="at-d-desc">Un établi avec un outil de brasage, une table de montage avec un robot mobile, un poste de CAO, un cric hydraulique, une maquette de tour avec pendule, une tablette, un carnet d'entraînement, un panneau de plans et une fraiseuse — chacun ouvre un projet.</desc>
-  <defs>
-    <pattern id="pegboard" width="34" height="34" patternUnits="userSpaceOnUse">
-      <circle cx="17" cy="17" r="1.6" fill="#252b2733"/>
-    </pattern>
-  </defs>
-
-  <!-- fond -->
-  <rect x="0" y="0" width="1600" height="470" fill="#e6e4da"/>
-  <rect x="0" y="470" width="1600" height="430" fill="#dedcd0"/>
-  <line x1="0" y1="470" x2="1600" y2="470" stroke="#252b2722" stroke-width="1.5"/>
-  <rect x="40" y="40" width="330" height="230" fill="url(#pegboard)" opacity=".5" aria-hidden="true"/>
-
-  <!-- fraiseuse (fond, décor -> #projet) -->
-  <a href="#projet" aria-label="Le cap — mécanique de précision, MECA V.A" class="hotspot hotspot--soft">
-    <g class="obj-machine">
-      <rect x="770" y="470" width="230" height="26" class="furn-front"/>
-      <line x1="790" y1="496" x2="790" y2="530" class="ink-line"/>
-      <line x1="970" y1="496" x2="970" y2="530" class="ink-line"/>
-      <rect x="845" y="300" width="55" height="172" class="furn-side"/>
-      <rect x="812" y="270" width="120" height="48" class="furn-front"/>
-      <rect x="862" y="316" width="22" height="40" class="furn-side"/>
-      <line x1="812" y1="294" x2="812" y2="270" class="ink-thin"/>
-      <line x1="932" y1="294" x2="960" y2="280" class="ink-thin"/>
-      <rect x="895" y="440" width="60" height="20" class="furn-front"/>
-    </g>
-    <rect class="hit" x="750" y="260" width="300" height="240"/>
-  </a>
-
-  <!-- panneau de plans (décor -> #experience) -->
-  <a href="#experience" aria-label="Le parcours — formation, expérience, engagements" class="hotspot hotspot--soft">
-    <g class="obj-panel">
-      <rect x="430" y="60" width="260" height="150" class="furn-front"/>
-      <line x1="450" y1="90" x2="560" y2="90" class="ink-thin"/>
-      <line x1="450" y1="108" x2="620" y2="108" class="ink-thin"/>
-      <rect x="450" y="128" width="70" height="55" class="ink-thin" fill="none"/>
-      <circle cx="600" cy="150" r="26" class="ink-thin" fill="none"/>
-      <circle cx="445" cy="75" r="3" class="accent-fill"/>
-      <circle cx="670" cy="75" r="3" class="accent-fill"/>
-    </g>
-    <rect class="hit" x="420" y="50" width="280" height="170"/>
-  </a>
-
-  <!-- poste CAO -> nerf -->
-  <a href="nerf.html" data-hotspot="nerf" aria-label="Nerf Rider CS-35 — rétro-conception CATIA V5" class="hotspot">
-    <g class="obj-cao">
-      <path class="furn-front" d="M70.0,500.0 L370.0,500.0 L370.0,590.0 L70.0,590.0 Z"/>
-      <path class="furn-top" d="M70.0,500.0 L127.4,469.5 L427.4,469.5 L370.0,500.0 Z"/>
-      <path class="furn-side" d="M370.0,500.0 L427.4,469.5 L427.4,559.5 L370.0,590.0 Z"/>
-      <line x1="90" y1="590" x2="90" y2="700" class="ink-line"/>
-      <line x1="350" y1="590" x2="350" y2="700" class="ink-line"/>
-      <rect x="100" y="330" width="220" height="150" rx="4" class="screen"/>
-      <rect x="112" y="342" width="196" height="126" fill="none" class="ink-thin"/>
-      <g class="wireframe">
-        <path d="M150 440 L150 400 L200 380 L250 400 L250 440 L200 460 Z"/>
-        <path d="M150 400 L200 420 L250 400"/>
-        <path d="M200 420 L200 460"/>
-        <circle cx="270" cy="410" r="16"/>
-      </g>
-      <rect x="195" y="480" width="30" height="18" class="furn-front"/>
-      <rect x="170" y="498" width="80" height="8" class="furn-front"/>
-    </g>
-    <rect class="hit" x="90" y="300" width="260" height="220"/>
-  </a>
-
-  <!-- tablette -> cardashboard -->
-  <a href="cardashboard.html" data-hotspot="cardashboard" aria-label="CarDashboard — CarPlay maison sur iPad" class="hotspot">
-    <g class="obj-tablet">
-      <rect x="605" y="562" width="90" height="20" class="furn-front"/>
-      <rect x="615" y="465" width="70" height="98" rx="6" class="screen" transform="rotate(-4 650 514)"/>
-      <rect x="623" y="474" width="54" height="80" rx="2" fill="none" class="ink-thin" transform="rotate(-4 650 514)"/>
-      <line x1="630" y1="490" x2="668" y2="490" class="ink-thin" transform="rotate(-4 650 514)"/>
-      <line x1="630" y1="505" x2="655" y2="505" class="ink-thin" transform="rotate(-4 650 514)"/>
-    </g>
-    <rect class="hit" x="590" y="460" width="130" height="140"/>
-  </a>
-
-  <!-- établi + solder pen -> matra -->
-  <a href="matra.html" data-hotspot="matra" aria-label="Solder Pen — outillage de brasage, projet Matra" class="hotspot">
-    <g class="obj-etabli">
-      <path class="furn-front" d="M280.0,700.0 L740.0,700.0 L740.0,810.0 L280.0,810.0 Z"/>
-      <path class="furn-top" d="M280.0,700.0 L350.6,662.4 L810.6,662.4 L740.0,700.0 Z"/>
-      <path class="furn-side" d="M740.0,700.0 L810.6,662.4 L810.6,772.4 L740.0,810.0 Z"/>
-      <line x1="310" y1="810" x2="310" y2="870" class="ink-line"/>
-      <line x1="710" y1="810" x2="710" y2="870" class="ink-line"/>
-      <g class="scatter" aria-hidden="true">
-        <rect x="640" y="672" width="46" height="10" rx="2" class="tool-tint" transform="rotate(-8 663 677)"/>
-        <circle cx="700" cy="685" r="9" class="tool-tint"/>
-      </g>
-      <g class="obj-pen">
-        <rect x="305" y="655" width="230" height="30" rx="15" class="pen-body" transform="rotate(-9 420 670)"/>
-        <rect x="330" y="648" width="46" height="42" rx="8" class="pen-grip" transform="rotate(-9 420 670)"/>
-        <circle cx="500" cy="640" r="20" class="pen-gear" transform="rotate(-9 420 670)"/>
-        <g class="pen-gear-teeth" transform="rotate(-9 420 670)">
-          <line x1="500" y1="616" x2="500" y2="608"/>
-          <line x1="500" y1="664" x2="500" y2="672"/>
-          <line x1="476" y1="640" x2="468" y2="640"/>
-          <line x1="524" y1="640" x2="532" y2="640"/>
-        </g>
-        <rect x="440" y="632" width="34" height="18" rx="2" class="pen-accent" transform="rotate(-9 420 670)"/>
-      </g>
-    </g>
-    <rect class="hit" x="300" y="560" width="260" height="140"/>
-  </a>
-
-  <!-- cric -> tn06 -->
-  <a href="tn06.html" data-hotspot="tn06" aria-label="Cric hydraulique — étude de statique TN06" class="hotspot">
-    <g class="obj-jack">
-      <rect x="700" y="742" width="260" height="16" class="furn-front"/>
-      <path d="M780 705 L920 705 L905 742 L800 742 Z" class="jack-body"/>
-      <circle cx="800" cy="748" r="8" class="jack-wheel"/>
-      <circle cx="900" cy="748" r="8" class="jack-wheel"/>
-      <rect x="900" y="670" width="10" height="40" class="jack-handle" transform="rotate(20 905 710)"/>
-      <rect x="792" y="638" width="16" height="68" class="jack-ram"/>
-      <ellipse cx="800" cy="636" rx="66" ry="15" class="jack-pad"/>
-    </g>
-    <rect class="hit" x="720" y="600" width="220" height="180"/>
-  </a>
-
-  <!-- étagère + tour/pendule -> am25 -->
-  <a href="am25.html" data-hotspot="am25" aria-label="Taipei 101 — analyse dynamique, pendule anti-vibratoire" class="hotspot">
-    <g class="obj-shelf">
-      <rect x="1335" y="416" width="235" height="14" class="furn-front"/>
-      <line x1="1350" y1="430" x2="1350" y2="460" class="ink-line"/>
-      <line x1="1545" y1="430" x2="1545" y2="460" class="ink-line"/>
-      <g stroke="currentColor" class="tower-ink" fill="none" stroke-width="2">
-        <path d="M1410 415H1495M1420 415V395H1428L1424 375H1435L1431 355H1442L1438 335H1449L1445 315H1460V300H1470V315H1485L1481 335H1492L1488 355H1499L1495 375H1506L1502 395H1511V415"/>
-        <path d="M1447 300V285H1470V300M1458 285V270"/>
-        <path d="M1452 355H1478M1452 356L1465 385M1478 356L1465 385" stroke-dasharray="2 3"/>
-        <circle cx="1465" cy="380" r="9" class="accent-fill" stroke="none"/>
-      </g>
-    </g>
-    <rect class="hit" x="1360" y="190" width="190" height="260"/>
-  </a>
-
-  <!-- table de montage + robot -> robafis -->
-  <a href="robafis.html" data-hotspot="robafis" aria-label="RobAFIS — robot mobile autonome, concours national" class="hotspot">
-    <g class="obj-robot">
-      <path class="furn-front" d="M1000.0,700.0 L1430.0,700.0 L1430.0,800.0 L1000.0,800.0 Z"/>
-      <path class="furn-top" d="M1000.0,700.0 L1075.1,660.1 L1505.1,660.1 L1430.0,700.0 Z"/>
-      <path class="furn-side" d="M1430.0,700.0 L1505.1,660.1 L1505.1,760.1 L1430.0,800.0 Z"/>
-      <line x1="1030" y1="800" x2="1030" y2="860" class="ink-line"/>
-      <line x1="1400" y1="800" x2="1400" y2="860" class="ink-line"/>
-      <g class="robot-body">
-        <rect x="1150" y="630" width="150" height="70" rx="6" class="robot-chassis"/>
-        <circle cx="1170" cy="700" r="26" class="robot-wheel"/>
-        <circle cx="1280" cy="700" r="26" class="robot-wheel"/>
-        <rect x="1250" y="560" width="14" height="80" class="robot-mast"/>
-        <path d="M1264 570 L1320 545 L1330 500" fill="none" class="robot-arm"/>
-        <path d="M1330 500 L1315 480 M1330 500 L1345 483" class="robot-arm"/>
-        <rect x="1185" y="645" width="45" height="30" class="robot-board"/>
-        <circle cx="1195" cy="655" r="2.4" class="accent-fill"/>
-        <circle cx="1205" cy="655" r="2.4" class="accent-fill"/>
-      </g>
-      <g class="award-ring" transform="translate(1330,640)">
-        <circle r="46" fill="none" class="ink-thin"/>
-        <text x="0" y="-4" text-anchor="middle" class="award-text">PRIX</text>
-        <text x="0" y="10" text-anchor="middle" class="award-text">INNOVATION</text>
-      </g>
-    </g>
-    <rect class="hit" x="1080" y="470" width="300" height="330"/>
-  </a>
-
-  <!-- carnet + sac -> training -->
-  <a href="training.html" data-hotspot="training" aria-label="Training Tracker — suivi d'entraînements" class="hotspot">
-    <g class="obj-training">
-      <path d="M60 800 Q50 745 100 740 Q160 735 168 775 Q173 808 138 812 Z" class="bag-shape"/>
-      <line x1="80" y1="752" x2="120" y2="815" class="ink-thin"/>
-      <rect x="140" y="710" width="90" height="70" rx="3" class="notebook" transform="rotate(6 185 745)"/>
-      <g class="spiral" transform="rotate(6 185 745)">
-        <line x1="142" y1="715" x2="142" y2="775"/>
-        <line x1="142" y1="722" x2="137" y2="722"/>
-        <line x1="142" y1="736" x2="137" y2="736"/>
-        <line x1="142" y1="750" x2="137" y2="750"/>
-        <line x1="142" y1="764" x2="137" y2="764"/>
-      </g>
-    </g>
-    <rect class="hit" x="40" y="680" width="210" height="140"/>
-  </a>
-</svg>
-          <svg class="atelier-scene atelier-scene--mobile" viewBox="0 0 720 1180" role="group" aria-labelledby="at-m-title at-m-desc" xmlns="http://www.w3.org/2000/svg">
-  <title id="at-m-title">L'atelier de Clément Balcon</title>
-  <desc id="at-m-desc">Un établi avec un outil de brasage, un robot mobile, un poste de CAO, un cric hydraulique, une maquette de tour avec pendule, une tablette et un carnet d'entraînement — chacun ouvre un projet.</desc>
-  <rect x="0" y="0" width="720" height="1180" fill="#eeece4"/>
-
-  <!-- établi + solder pen -->
-  <a href="matra.html" data-hotspot="matra" aria-label="Solder Pen — outillage de brasage, projet Matra" class="hotspot">
-    <g class="obj-etabli">
-      <rect x="120" y="270" width="480" height="90" class="furn-front"/>
-      <line x1="150" y1="360" x2="150" y2="400" class="ink-line"/>
-      <line x1="570" y1="360" x2="570" y2="400" class="ink-line"/>
-      <g class="obj-pen">
-        <rect x="200" y="200" width="230" height="30" rx="15" class="pen-body" transform="rotate(-9 315 215)"/>
-        <rect x="225" y="193" width="46" height="42" rx="8" class="pen-grip" transform="rotate(-9 315 215)"/>
-        <circle cx="395" cy="185" r="20" class="pen-gear" transform="rotate(-9 315 215)"/>
-        <g class="pen-gear-teeth" transform="rotate(-9 315 215)">
-          <line x1="395" y1="161" x2="395" y2="153"/>
-          <line x1="395" y1="209" x2="395" y2="217"/>
-          <line x1="371" y1="185" x2="363" y2="185"/>
-          <line x1="419" y1="185" x2="427" y2="185"/>
-        </g>
-        <rect x="335" y="177" width="34" height="18" rx="2" class="pen-accent" transform="rotate(-9 315 215)"/>
-      </g>
-    </g>
-    <rect class="hit" x="190" y="90" width="340" height="190"/>
-  </a>
-
-  <!-- robot -->
-  <a href="robafis.html" data-hotspot="robafis" aria-label="RobAFIS — robot mobile autonome, concours national" class="hotspot">
-    <g class="obj-robot">
-      <rect x="40" y="555" width="300" height="70" class="furn-front"/>
-      <line x1="70" y1="625" x2="70" y2="655" class="ink-line"/>
-      <line x1="310" y1="625" x2="310" y2="655" class="ink-line"/>
-      <g class="robot-body">
-        <rect x="120" y="480" width="130" height="65" rx="6" class="robot-chassis"/>
-        <circle cx="140" cy="550" r="24" class="robot-wheel"/>
-        <circle cx="235" cy="550" r="24" class="robot-wheel"/>
-        <rect x="205" y="415" width="13" height="70" class="robot-mast"/>
-        <path d="M218 424 L268 402 L278 362" fill="none" class="robot-arm"/>
-        <path d="M278 362 L264 344 M278 362 L292 346" class="robot-arm"/>
-        <rect x="150" y="495" width="42" height="28" class="robot-board"/>
-        <circle cx="160" cy="504" r="2.3" class="accent-fill"/>
-        <circle cx="170" cy="504" r="2.3" class="accent-fill"/>
-      </g>
-      <g class="award-ring" transform="translate(285,500)">
-        <circle r="38" fill="none" class="ink-thin"/>
-        <text x="0" y="-3" text-anchor="middle" class="award-text">PRIX</text>
-        <text x="0" y="9" text-anchor="middle" class="award-text">INNOVATION</text>
-      </g>
-    </g>
-    <rect class="hit" x="60" y="340" width="260" height="230"/>
-  </a>
-
-  <!-- CAO -->
-  <a href="nerf.html" data-hotspot="nerf" aria-label="Nerf Rider CS-35 — rétro-conception CATIA V5" class="hotspot">
-    <g class="obj-cao">
-      <rect x="400" y="490" width="240" height="60" class="furn-front"/>
-      <line x1="420" y1="550" x2="420" y2="580" class="ink-line"/>
-      <line x1="620" y1="550" x2="620" y2="580" class="ink-line"/>
-      <rect x="425" y="368" width="190" height="128" rx="4" class="screen"/>
-      <rect x="435" y="378" width="170" height="108" fill="none" class="ink-thin"/>
-      <g class="wireframe">
-        <path d="M465 470 L465 435 L505 418 L545 435 L545 470 L505 487 Z"/>
-        <path d="M465 435 L505 452 L545 435"/>
-        <path d="M505 452 L505 487"/>
-        <circle cx="565" cy="445" r="13"/>
-      </g>
-      <rect x="500" y="500" width="26" height="16" class="furn-front"/>
-    </g>
-    <rect class="hit" x="380" y="340" width="280" height="200"/>
-  </a>
-
-  <!-- cric -->
-  <a href="tn06.html" data-hotspot="tn06" aria-label="Cric hydraulique — étude de statique TN06" class="hotspot">
-    <g class="obj-jack">
-      <rect x="70" y="782" width="230" height="16" class="furn-front"/>
-      <path d="M110 745 L250 745 L235 782 L120 782 Z" class="jack-body"/>
-      <circle cx="130" cy="788" r="7" class="jack-wheel"/>
-      <circle cx="230" cy="788" r="7" class="jack-wheel"/>
-      <rect x="225" y="716" width="9" height="34" class="jack-handle" transform="rotate(20 230 750)"/>
-      <rect x="122" y="683" width="14" height="63" class="jack-ram"/>
-      <ellipse cx="129" cy="681" rx="58" ry="13" class="jack-pad"/>
-    </g>
-    <rect class="hit" x="60" y="620" width="260" height="190"/>
-  </a>
-
-  <!-- tour / pendule -->
-  <a href="am25.html" data-hotspot="am25" aria-label="Taipei 101 — analyse dynamique, pendule anti-vibratoire" class="hotspot">
-    <g class="obj-shelf">
-      <rect x="368" y="793" width="220" height="14" class="furn-front"/>
-      <line x1="382" y1="807" x2="382" y2="835" class="ink-line"/>
-      <line x1="558" y1="807" x2="558" y2="835" class="ink-line"/>
-      <g stroke="currentColor" class="tower-ink" fill="none" stroke-width="2">
-        <path d="M425 792H495M433 792V775H440L437 758H446L443 741H454L451 724H460L457 707H468V695H476V707H489L486 724H495L492 741H501L498 758H507L504 775H511V792"/>
-        <path d="M450 695V682H468V695M458 682V670"/>
-        <path d="M453 741H473M453 742L463 765M473 742L463 765" stroke-dasharray="2 3"/>
-        <circle cx="463" cy="761" r="8" class="accent-fill" stroke="none"/>
-      </g>
-    </g>
-    <rect class="hit" x="380" y="600" width="220" height="220"/>
-  </a>
-
-  <!-- tablette -->
-  <a href="cardashboard.html" data-hotspot="cardashboard" aria-label="CarDashboard — CarPlay maison sur iPad" class="hotspot">
-    <g class="obj-tablet">
-      <rect x="140" y="1032" width="90" height="18" class="furn-front"/>
-      <rect x="150" y="945" width="68" height="94" rx="6" class="screen" transform="rotate(-4 184 992)"/>
-      <rect x="158" y="954" width="52" height="76" rx="2" fill="none" class="ink-thin" transform="rotate(-4 184 992)"/>
-      <line x1="164" y1="969" x2="200" y2="969" class="ink-thin" transform="rotate(-4 184 992)"/>
-      <line x1="164" y1="983" x2="190" y2="983" class="ink-thin" transform="rotate(-4 184 992)"/>
-    </g>
-    <rect class="hit" x="90" y="870" width="220" height="190"/>
-  </a>
-
-  <!-- carnet + sac -->
-  <a href="training.html" data-hotspot="training" aria-label="Training Tracker — suivi d'entraînements" class="hotspot">
-    <g class="obj-training">
-      <path d="M400 1040 Q390 985 440 980 Q500 975 508 1015 Q513 1048 478 1052 Z" class="bag-shape"/>
-      <line x1="420" y1="992" x2="460" y2="1055" class="ink-thin"/>
-      <rect x="490" y="950" width="86" height="66" rx="3" class="notebook" transform="rotate(6 533 983)"/>
-      <g class="spiral" transform="rotate(6 533 983)">
-        <line x1="492" y1="954" x2="492" y2="1012"/>
-        <line x1="492" y1="961" x2="487" y2="961"/>
-        <line x1="492" y1="974" x2="487" y2="974"/>
-        <line x1="492" y1="987" x2="487" y2="987"/>
-        <line x1="492" y1="1000" x2="487" y2="1000"/>
-      </g>
-    </g>
-    <rect class="hit" x="380" y="880" width="260" height="180"/>
-  </a>
-</svg>
+          <div class="atelier-scene-wrap atelier-scene--desktop">
+            <img class="atelier-scene atelier-scene--desktop" src="assets/atelier/scene-desktop.webp" alt="L'atelier de Clément Balcon : établi, robot, poste de CAO, cric hydraulique, maquette de tour, tablette et carnet — chaque objet ouvre un projet" width="1600" height="900">
+            <a class="atelier-hotspot" href="nerf.html" data-hotspot="nerf" style="left:43.75%;top:2.78%;width:26.56%;height:40.56%;" aria-label="Nerf Rider CS-35 — rétro-conception CATIA V5"></a>
+            <a class="atelier-hotspot" href="am25.html" data-hotspot="am25" style="left:71.25%;top:6.11%;width:9.69%;height:41.67%;" aria-label="Taipei 101 — analyse dynamique, pendule anti-vibratoire"></a>
+            <a class="atelier-hotspot" href="tn06.html" data-hotspot="tn06" style="left:0.0%;top:33.33%;width:28.75%;height:31.67%;" aria-label="Cric hydraulique — étude de statique TN06"></a>
+            <a class="atelier-hotspot" href="robafis.html" data-hotspot="robafis" style="left:27.19%;top:18.33%;width:31.87%;height:55.56%;" aria-label="RobAFIS — robot mobile autonome, concours national"></a>
+            <a class="atelier-hotspot" href="cardashboard.html" data-hotspot="cardashboard" style="left:80.94%;top:35.56%;width:15.94%;height:25.0%;" aria-label="CarDashboard — CarPlay maison sur iPad"></a>
+            <a class="atelier-hotspot" href="matra.html" data-hotspot="matra" style="left:6.25%;top:76.67%;width:31.56%;height:10.56%;" aria-label="Solder Pen — outillage de brasage, projet Matra"></a>
+            <a class="atelier-hotspot" href="training.html" data-hotspot="training" style="left:64.38%;top:68.33%;width:35.62%;height:21.11%;" aria-label="Training Tracker — suivi d'entraînements"></a>
+          </div>
+          <div class="atelier-scene-wrap atelier-scene--mobile">
+            <img class="atelier-scene atelier-scene--mobile" src="assets/atelier/scene-mobile.webp" alt="L'atelier de Clément Balcon, vu en hauteur : mêmes objets, chacun ouvre un projet" width="900" height="1599">
+            <a class="atelier-hotspot" href="nerf.html" data-hotspot="nerf" style="left:28.89%;top:5.94%;width:44.44%;height:15.01%;" aria-label="Nerf Rider CS-35 — rétro-conception CATIA V5"></a>
+            <a class="atelier-hotspot" href="am25.html" data-hotspot="am25" style="left:76.67%;top:6.57%;width:16.11%;height:21.89%;" aria-label="Taipei 101 — analyse dynamique, pendule anti-vibratoire"></a>
+            <a class="atelier-hotspot" href="tn06.html" data-hotspot="tn06" style="left:0.0%;top:78.49%;width:39.44%;height:21.51%;" aria-label="Cric hydraulique — étude de statique TN06"></a>
+            <a class="atelier-hotspot" href="robafis.html" data-hotspot="robafis" style="left:13.89%;top:21.89%;width:66.67%;height:30.02%;" aria-label="RobAFIS — robot mobile autonome, concours national"></a>
+            <a class="atelier-hotspot" href="cardashboard.html" data-hotspot="cardashboard" style="left:78.89%;top:36.59%;width:21.11%;height:11.88%;" aria-label="CarDashboard — CarPlay maison sur iPad"></a>
+            <a class="atelier-hotspot" href="matra.html" data-hotspot="matra" style="left:2.78%;top:55.66%;width:52.22%;height:7.19%;" aria-label="Solder Pen — outillage de brasage, projet Matra"></a>
+            <a class="atelier-hotspot" href="training.html" data-hotspot="training" style="left:52.78%;top:62.23%;width:47.22%;height:15.01%;" aria-label="Training Tracker — suivi d'entraînements"></a>
+          </div>
           <div class="atelier-tag" id="atelier-tag" aria-hidden="true"></div>
         </div>
         <p class="atelier-alt">Vous préférez une liste ? <a href="#projects" data-view-link>Tous les projets ↓</a></p>
@@ -923,7 +616,7 @@
         if (focusTab) tabs.find(tab => tab.hash === next)?.focus({ preventScroll: true });
       }
 
-      [...tabs, ...viewLinks, ...document.querySelectorAll('[data-project-link], .hotspot--soft, [data-view-link]')].forEach(link => {
+      [...tabs, ...viewLinks, ...document.querySelectorAll('[data-project-link], [data-view-link]')].forEach(link => {
         link.addEventListener('click', event => {
           if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
           event.preventDefault();
@@ -962,17 +655,19 @@
       // Étiquette visible au survol/focus (pas seulement l'aria-label, qui ne sert
       // qu'aux lecteurs d'écran) : nom de l'objet + discipline, comme demandé par le
       // plan. Le texte affiché existe déjà dans le lien (nom accessible), pas
-      // uniquement dans cette étiquette.
+      // uniquement dans cette étiquette. Les hotspots sont maintenant de vrais <a>
+      // positionnés en pourcentage par-dessus l'image (voir design/atelier/hotspots.json) —
+      // plus de <rect class="hit"> SVG imbriqué, le lien lui-même est la zone cliquable.
       const stage = document.querySelector('.atelier-stage');
       const tag = document.getElementById('atelier-tag');
       if (stage && tag) {
-        document.querySelectorAll('.atelier-scene .hotspot').forEach(hotspot => {
+        document.querySelectorAll('.atelier-hotspot').forEach(hotspot => {
           const reveal = () => {
             const stageBox = stage.getBoundingClientRect();
-            const hitBox = hotspot.querySelector('.hit').getBoundingClientRect();
+            const hotBox = hotspot.getBoundingClientRect();
             tag.textContent = hotspot.getAttribute('aria-label');
-            tag.style.left = (hitBox.left - stageBox.left + hitBox.width / 2) + 'px';
-            tag.style.top = (hitBox.top - stageBox.top) + 'px';
+            tag.style.left = (hotBox.left - stageBox.left + hotBox.width / 2) + 'px';
+            tag.style.top = (hotBox.top - stageBox.top) + 'px';
             tag.classList.add('is-visible');
           };
           const hide = () => tag.classList.remove('is-visible');
@@ -984,24 +679,15 @@
       }
 
       // Mode développeur : ?hotspots=1 affiche les contours, centres et identifiants
-      // des zones interactives de l'atelier (repère partagé image/liens, voir
-      // design/atelier/composition.md).
+      // des zones interactives de l'atelier (repère partagé image/liens en %, voir
+      // design/atelier/hotspots.json). Contours + identifiant en CSS ; le centre
+      // seul demande un point injecté ici.
       if (new URLSearchParams(location.search).get('hotspots') === '1') {
         document.body.classList.add('hotspot-debug');
-        document.querySelectorAll('.atelier-scene .hotspot').forEach(hotspot => {
-          const hit = hotspot.querySelector('.hit');
-          const svgNS = 'http://www.w3.org/2000/svg';
-          const cx = Number(hit.getAttribute('x')) + Number(hit.getAttribute('width')) / 2;
-          const cy = Number(hit.getAttribute('y')) + Number(hit.getAttribute('height')) / 2;
-          const dot = document.createElementNS(svgNS, 'circle');
-          dot.setAttribute('cx', cx); dot.setAttribute('cy', cy); dot.setAttribute('r', 4);
-          dot.setAttribute('fill', '#0a7dff');
-          const label = document.createElementNS(svgNS, 'text');
-          label.setAttribute('x', hit.getAttribute('x')); label.setAttribute('y', Number(hit.getAttribute('y')) - 4);
-          label.setAttribute('fill', '#0a7dff'); label.setAttribute('font-size', '13'); label.setAttribute('font-family', 'monospace');
-          label.textContent = hotspot.dataset.hotspot || hotspot.getAttribute('href');
+        document.querySelectorAll('.atelier-hotspot').forEach(hotspot => {
+          const dot = document.createElement('span');
+          dot.className = 'hotspot-debug-dot';
           hotspot.appendChild(dot);
-          hotspot.appendChild(label);
         });
       }
     })();

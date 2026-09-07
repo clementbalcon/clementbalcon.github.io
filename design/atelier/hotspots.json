@@ -1,28 +1,21 @@
 {
+  "note": "Coordonnées en pourcentage de l'image (left/top/width/height), recalibrées sur scene-desktop.webp (1600x900) et scene-mobile.webp (900x1599) après passage à l'illustration générée. Les anciennes coordonnées SVG (viewBox pixels) sont obsolètes. Les 2 accès optionnels (#experience, #projet) ne sont plus des objets de la scène : ils restent dans la nav uniquement.",
   "desktop": {
-    "viewBox": "0 0 1600 900",
-    "hotspots": [
-      { "id": "matra", "label": "Solder Pen — outillage de brasage, projet Matra", "x": 300, "y": 560, "w": 260, "h": 140 },
-      { "id": "robafis", "label": "RobAFIS — robot mobile autonome, concours national", "x": 1080, "y": 470, "w": 300, "h": 330 },
-      { "id": "nerf", "label": "Nerf Rider CS-35 — rétro-conception CATIA V5", "x": 90, "y": 300, "w": 260, "h": 220 },
-      { "id": "tn06", "label": "Cric hydraulique — étude de statique TN06", "x": 720, "y": 600, "w": 220, "h": 180 },
-      { "id": "am25", "label": "Taipei 101 — analyse dynamique, pendule anti-vibratoire", "x": 1360, "y": 190, "w": 190, "h": 260 },
-      { "id": "cardashboard", "label": "CarDashboard — CarPlay maison sur iPad", "x": 590, "y": 460, "w": 130, "h": 140 },
-      { "id": "training", "label": "Training Tracker — suivi d'entraînements", "x": 40, "y": 680, "w": 210, "h": 140 },
-      { "id": "experience", "label": "Le parcours — formation, expérience, engagements", "x": 420, "y": 50, "w": 280, "h": 170 },
-      { "id": "projet", "label": "Le cap — mécanique de précision, MECA V.A", "x": 750, "y": 260, "w": 300, "h": 240 }
-    ]
+    "matra": { "left": 6.25, "top": 76.67, "width": 31.56, "height": 10.56 },
+    "robafis": { "left": 27.19, "top": 18.33, "width": 31.87, "height": 55.56 },
+    "nerf": { "left": 43.75, "top": 2.78, "width": 26.56, "height": 40.56 },
+    "tn06": { "left": 0.0, "top": 33.33, "width": 28.75, "height": 31.67 },
+    "am25": { "left": 71.25, "top": 6.11, "width": 9.69, "height": 41.67 },
+    "cardashboard": { "left": 80.94, "top": 35.56, "width": 15.94, "height": 25.0 },
+    "training": { "left": 64.38, "top": 68.33, "width": 35.62, "height": 21.11 }
   },
   "mobile": {
-    "viewBox": "0 0 720 1180",
-    "hotspots": [
-      { "id": "matra", "label": "Solder Pen — outillage de brasage, projet Matra", "x": 190, "y": 90, "w": 340, "h": 190 },
-      { "id": "robafis", "label": "RobAFIS — robot mobile autonome, concours national", "x": 60, "y": 340, "w": 260, "h": 230 },
-      { "id": "nerf", "label": "Nerf Rider CS-35 — rétro-conception CATIA V5", "x": 380, "y": 340, "w": 280, "h": 200 },
-      { "id": "tn06", "label": "Cric hydraulique — étude de statique TN06", "x": 60, "y": 620, "w": 260, "h": 190 },
-      { "id": "am25", "label": "Taipei 101 — analyse dynamique, pendule anti-vibratoire", "x": 380, "y": 600, "w": 220, "h": 220 },
-      { "id": "cardashboard", "label": "CarDashboard — CarPlay maison sur iPad", "x": 90, "y": 870, "w": 220, "h": 190 },
-      { "id": "training", "label": "Training Tracker — suivi d'entraînements", "x": 380, "y": 880, "w": 260, "h": 180 }
-    ]
+    "nerf": { "left": 28.89, "top": 5.94, "width": 44.44, "height": 15.01 },
+    "am25": { "left": 76.67, "top": 6.57, "width": 16.11, "height": 21.89 },
+    "robafis": { "left": 13.89, "top": 21.89, "width": 66.67, "height": 30.02 },
+    "cardashboard": { "left": 78.89, "top": 36.59, "width": 21.11, "height": 11.88 },
+    "matra": { "left": 2.78, "top": 55.66, "width": 52.22, "height": 7.19 },
+    "training": { "left": 52.78, "top": 62.23, "width": 47.22, "height": 15.01 },
+    "tn06": { "left": 0.0, "top": 78.49, "width": 39.44, "height": 21.51 }
   }
 }

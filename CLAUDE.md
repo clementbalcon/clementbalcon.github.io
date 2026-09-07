@@ -1,29 +1,45 @@
 # Portfolio — clementbalcon.github.io
 
-## L'atelier — état réel au 6 septembre 2026
+## L'atelier — état réel au 7 septembre 2026
 
-L'accueil (`index.html`) est désormais l'atelier de mécanique de précision
-décrit dans [PLAN_ATELIER_IMMERSIF.md](PLAN_ATELIER_IMMERSIF.md) : une scène
-SVG inline (desktop + mobile, pas un recadrage l'une de l'autre), neuf objets
-dont sept sont de vrais `<a href>` vers les pages projet et deux sont des
-ancres internes (`#experience`, `#projet`). Vue par défaut = `#atelier`.
-L'ancienne interface « L'établi » (dossiers sur fond papier) n'a pas été
-supprimée : elle est devenue la vue « Tous les projets » (`#projects`),
-l'accès texte explicite demandé par le plan.
+L'accueil (`index.html`) est l'atelier de mécanique de précision décrit dans
+[PLAN_ATELIER_IMMERSIF.md](PLAN_ATELIER_IMMERSIF.md) : deux images
+(`assets/atelier/scene-desktop.webp`, `scene-mobile.webp`, pas un recadrage
+l'une de l'autre) avec des `<a href>` réels positionnés en pourcentage
+par-dessus, un par projet (7 : matra, robafis, nerf, tn06, am25,
+cardashboard, training). Vue par défaut = `#atelier`. L'ancienne interface
+« L'établi » (dossiers) est devenue la vue « Tous les projets » (`#projects`),
+l'accès texte explicite demandé par le plan. Les 2 accès optionnels
+(#experience, #projet) ne sont plus des objets de la scène — seulement dans
+la nav (voir composition.md, choix de Codex repris tel quel).
 
-**Traitement visuel** : dessin technique (ligne encrée, projection cavalière
-28°), pas une illustration peinte/quasi-photo. Aucun outil de génération
-d'image ni Blender n'était disponible dans l'environnement d'exécution —
-détaillé et assumé dans `design/atelier/composition.md`, avec deux prompts
-prêts à l'emploi si Clément veut faire produire la version illustrée à la
-place. Le SVG technique sert alors de base de calibrage des hotspots ; seul
-le fond change.
+**Traitement visuel — deuxième itération, celle qui reste** : illustration
+générée (photo-réaliste, éclairage chaud d'atelier), pas le dessin technique
+SVG de la première tentative (rejeté : « le résultat est naze », ça se
+lisait comme un diagramme, pas un lieu). Générée via le plugin Codex pour
+Claude Code (`openai/codex-plugin-cc`), qui a utilisé la génération d'image
+incluse dans l'abonnement ChatGPT déjà connecté à la CLI Codex locale
+(`auth_mode: chatgpt`, vérifié avant coup — aucune clé API, aucune
+facturation séparée activée). Les fichiers `scene-*.svg` dans
+`design/atelier/` restent comme référence historique de la première
+tentative ; ne pas les réintégrer.
 
-**Fichiers de référence** : `design/atelier/composition.md` (direction,
-carte objets→destinations, prompts), `hotspots.json` (coordonnées partagées
-desktop/mobile, vérifiées sans chevauchement), `scene-desktop.svg` /
-`scene-mobile.svg` (copies de référence — la version intégrée vit dans
-`index.html`, resynchroniser après toute modification de l'une des deux).
+**Fichiers de référence** : `design/atelier/composition.md` (les deux
+directions successives, le debat Claude/Codex, les prompts utilisés),
+`hotspots.json` (coordonnées en % partagées desktop/mobile, vérifiées sans
+chevauchement — recalibrées sur les nouvelles images, les anciennes valeurs
+SVG sont obsolètes), `assets/atelier/scene-*-raw.png` (sorties brutes de
+génération, ~2,4 Mo chacune, gardées comme source — les `.webp` optimisés à
+~175 Ko chacun sont ce qui est réellement chargé par `index.html`).
+
+**Structure des hotspots** : chaque `<a class="atelier-hotspot" data-hotspot="…">`
+est positionné en `left/top/width/height` (%) directement dans son `style`,
+à l'intérieur d'un `.atelier-scene-wrap` (`position: relative`) qui contient
+aussi l'`<img>`. Pas de `<rect class="hit">` imbriqué comme dans l'ancienne
+version SVG — le lien lui-même EST la zone cliquable. `.atelier-hotspot:hover`
+et `:focus-visible` partagent le même style (bordure + fond teintés) ; l'état
+`.is-focused` (posé par le JS au retour d'une page projet) déclenche le même
+style.
 
 **Ids renommés** : les 7 anciens dossiers (`id="matra"` etc.) sont devenus
 `id="dossier-matra"` etc. pour libérer les ids courts, désormais utilisés par
@@ -33,21 +49,43 @@ matra.html » pour le lien réel de l'objet lui-même). Si un nouveau lien
 interne vers un dossier doit être ajouté (ex. liens « preuve » de la section
 compétences), cibler `#dossier-<id>`, pas `#<id>`.
 
-**Mode développeur** : `index.html?hotspots=1` affiche contours, centres et
-identifiants de chaque zone interactive — à utiliser pour recalibrer
-`hotspots.json` après tout changement de cadrage ou d'illustration.
+**Mode développeur** : `index.html?hotspots=1` affiche contours, centre et
+identifiant de chaque zone interactive (classe `.hotspot-debug` sur `body`,
+overlay CSS + un `<span class="hotspot-debug-dot">` injecté par JS) — à
+utiliser pour recalibrer `hotspots.json` après tout changement de cadrage ou
+de régénération d'image.
+
+**Codex pour Claude Code** : plugin installé (`/plugin marketplace add
+openai/codex-plugin-cc`, `/plugin install codex@openai-codex`). Invocation
+uniquement via l'agent `codex:codex-rescue` (forwarder simple vers
+`codex-companion.mjs task`, voir la skill `codex:codex-cli-runtime` pour la
+convention d'appel exacte). Auth réutilisée automatiquement depuis la CLI
+Codex locale déjà connectée en `chatgpt` — ne jamais configurer de clé API
+séparée pour ce projet, ça activerait une facturation que Clément a
+explicitement refusée.
+
+**Piège d'environnement rencontré** : macOS a révoqué l'accès à tout
+`~/Documents` en pleine édition (même famille de bug TCC que le dossier
+Desktop, documenté plus bas) — `ls`, Python et les outils de fichiers du
+CLI Claude Code renvoyaient tous `Operation not permitted` sur le dossier
+entier, pas seulement ce dépôt. Un simple octroi de Full Disk Access au
+Terminal n'a pas suffi tant que l'appli n'avait pas été entièrement quittée
+(Cmd+Q) puis rouverte — les process déjà lancés gardent l'état TCC refusé
+jusqu'au redémarrage. Si ça se reproduit : redémarrer Terminal, pas
+seulement retenter.
 
 **Non fait / limites connues** (voir aussi section 16-17 du plan) :
 - Pas de test Safari réel (uniquement Chromium via Playwright dans cet
   environnement).
-- `.tap()` Playwright sur les hotspots SVG mobiles n'a pas navigué dans le
-  test automatisé alors que `.click()` fonctionne parfaitement (probablement
-  une limite de synthèse tactile de Playwright sur `<a>` en SVG, pas un bug
-  du site — mais non confirmé sur un vrai téléphone).
-- Ordre de tabulation des 9 objets stable mais pas strictement trié en ordre
+- Ordre de tabulation des 7 objets stable mais pas strictement trié en ordre
   de lecture visuelle (gauche→droite, haut→bas) — fonctionnel, perfectible.
 - Pas de ré-audit complet des 7 pages projet + Training (elles n'ont pas été
   modifiées dans ce chantier, mais n'ont pas non plus été re-testées).
+- Une seule génération de chaque image (pas d'itération sur plusieurs
+  variantes) — acceptée telle quelle par Clément après revue, mais si un
+  détail gêne à l'usage (ex. le cric TN06 partiellement hors cadre côté
+  mobile), une régénération ciblée reste possible plutôt qu'un correctif
+  manuel de l'image.
 
 ## Historique — avant l'atelier (« L'établi », interface papier)
 
