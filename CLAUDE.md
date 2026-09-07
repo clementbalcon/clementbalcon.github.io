@@ -24,6 +24,21 @@ facturation séparée activée). Les fichiers `scene-*.svg` dans
 `design/atelier/` restent comme référence historique de la première
 tentative ; ne pas les réintégrer.
 
+**Curseur des sous-pages projet (7 septembre 2026, plus récent que le reste de
+cette section)** : le jeu curseur-avion (`rafale-game.js` — avion jouable,
+tirs, ennemis F35) a été retiré des 7 pages projet à la demande de Clément
+(« retire le tracker avion, met un tracker banal »). `rafale-game.js` ne
+contient plus que le nécessaire pour le portail de sortie (« Sortie », en
+haut à droite) : clic ou Entrée/Espace au clavier, avec le même fondu blanc
+qu'avant. Curseur natif partout, plus de `cursor: none` ni de canvas. Les
+lignes `window.RAFALE_OPTS = …` (options de spawn du jeu) ont été retirées
+des 7 pages, devenues sans objet. Les fichiers `rafale_top.webp`, `mica.png`,
+`F35.png` restent utilisés par `sandbox-game.js` (page `sandbox.html`,
+non concernée) — ne pas les supprimer. Le jet-hero de `index.html` (avion
+scrubé au scroll qui se morphe en curseur-jeu, section « Jet hero » plus bas)
+est un mécanisme entièrement différent, inline dans `index.html`, non
+chargé par `rafale-game.js` — non affecté par ce changement.
+
 **Fichiers de référence** : `design/atelier/composition.md` (les deux
 directions successives, le debat Claude/Codex, les prompts utilisés),
 `hotspots.json` (coordonnées en % partagées desktop/mobile, vérifiées sans
@@ -109,7 +124,8 @@ correspond plus à ce qui est chargé aujourd'hui.
   dossiers dans le parcours normal ni recréer un hero d'introduction long.
 - `index.html` n'affiche plus de Rafale et ne charge ni frame, ni GSAP,
   ScrollTrigger, Lenis ou jeu curseur. Aucun canvas, scroll verrouillé, autoplay
-  ou morph. Fichiers Blender, 150 frames et jeu des sous-pages inchangés.
+  ou morph. Fichiers Blender et 150 frames inchangés ; le jeu curseur des
+  sous-pages, lui, a depuis été retiré (voir note du 7 septembre plus haut).
   La nouvelle image de partage `og-atelier.jpg` est une capture de l'accueil.
 - Les images des projets sont les assets publics existants. Le schéma Taipei
   est un SVG de principe, pas un résultat de simulation. Le diagramme Training
@@ -123,14 +139,17 @@ correspond plus à ce qui est chargé aujourd'hui.
   restent fonctionnels. JS applique `hidden`, rôles tab/tablist/tabpanel et
   tabindex mobile/desktop ; flèches, Home et End activent les dossiers.
   Curseur natif et focus visible. Le mode mouvement réduit coupe les transitions.
-- Les pages projets conservent le jeu curseur en mode normal. Avec
-  `prefers-reduced-motion: reduce`, elles utilisent le curseur natif et des
-  portails statiques activables au clavier. Le sandbox attend alors un clic
-  explicite sur « Lancer le jeu animé ».
-- Correction `955c4f3` : le jeu des sous-pages attend un mouvement de souris
-  avant de permettre une collision de navigation avec le portail. Sans cela,
-  la position initiale du pointeur virtuel restait au spawn et renvoyait vers
-  l'accueil à l'expiration du cooldown, même pendant une lecture sans souris.
+- (Périmé depuis le 7 septembre — voir note plus haut) Les pages projets
+  conservaient un jeu curseur-avion en mode normal, avec un portail statique
+  activable au clavier en `prefers-reduced-motion: reduce`. Le jeu a été
+  retiré ; le portail clic/clavier est désormais le seul mécanisme, dans
+  tous les modes. Le sandbox (page séparée) attend toujours un clic explicite
+  sur « Lancer le jeu animé », inchangé.
+- (Périmé, ne s'applique plus depuis le retrait du jeu) Correction `955c4f3` :
+  le jeu des sous-pages attendait un mouvement de souris avant de permettre
+  une collision de navigation avec le portail, pour éviter qu'une lecture au
+  clavier sans souris ne renvoie vers l'accueil au spawn. Gardé pour mémoire
+  du bug d'origine, plus pertinent maintenant que le jeu n'existe plus.
 - Vérifier les huit pages portfolio et l'écran public de `training.html` aux
   largeurs 375 / 680 / 1440, dans les deux modes de mouvement. Ne pas considérer
   un simple parsing HTML comme une validation responsive.
