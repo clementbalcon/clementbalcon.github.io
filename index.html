@@ -26,23 +26,27 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62.5..125,100..900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --paper: #eeece4;
+      --paper: #e6f0ea;
       --ink: #252b27;
       --muted: #63675f;
-      --line: #cacbc1;
+      --line: #bfd6c8;
       --accent: #bc3b20;
-      --board: #e0e1d7;
-      --site-green: #40916c; /* ancien fond de base du site, avant la refonte "atelier" */
+      --board: #d7e9df;
+      --site-green: #40916c; /* ancien fond de base du site, avant la refonte "atelier" — sert
+                                maintenant de bandeau plein (header/footer) */
+      --site-green-ink: #eaf6f0; /* texte clair pour ces bandeaux */
       --font: 'Archivo', sans-serif;
       --mono: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
     }
     *, *::before, *::after { box-sizing: border-box; }
     html { scroll-behavior: auto; }
-    /* Le vert d'origine revient en fond de page ; le contenu (.shell) garde son
-       papier crème par-dessus, comme un cadre plutôt qu'une reteinte complète —
-       demande de Clément après avoir revu l'atelier en plein écran. */
-    body { margin: 0; background: var(--site-green); color: var(--ink); font: 400 15px/1.5 var(--font); -webkit-font-smoothing: antialiased; }
-    .shell { background: var(--paper); }
+    /* Thème reteinté en vert (demande de Clément) : --paper/--board passent du
+       crème à une teinte verte pâle, même luminosité qu'avant donc mêmes
+       contrastes texte déjà validés partout — pas d'inversion clair/sombre
+       risquée composant par composant. Le header et le footer, eux, passent
+       en vert plein (--site-green) avec texte clair, pour une présence forte
+       du vert dès l'entrée, pas juste un liseré en marge. */
+    body { margin: 0; background: var(--paper); color: var(--ink); font: 400 15px/1.5 var(--font); -webkit-font-smoothing: antialiased; }
     a { color: inherit; }
     button { color: inherit; font: inherit; cursor: pointer; }
     button, a { -webkit-tap-highlight-color: transparent; }
@@ -54,24 +58,31 @@
     .skip-link:focus { transform: none; }
     .shell { width: min(1500px, calc(100% - 72px)); margin-inline: auto; }
     .micro { font: 11px/1.5 var(--mono); text-transform: uppercase; letter-spacing: .07em; }
-    .masthead { display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center; min-height: 116px; border-bottom: 2px solid var(--ink); }
+    .masthead {
+      display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center; min-height: 116px;
+      background: var(--site-green); color: var(--site-green-ink);
+    }
     .identity { display: flex; align-items: center; gap: 18px; }
     .maker-mark { width: 48px; height: 48px; flex: 0 0 48px; }
-    .identity a { text-decoration: none; }
+    .identity a { text-decoration: none; color: inherit; }
     .identity h1 { font-size: clamp(28px, 3.5vw, 48px); font-weight: 800; font-stretch: 85%; letter-spacing: -.055em; line-height: 1; margin: 0 0 6px; }
     h1, h2, .drawer-title { word-spacing: .06em; }
-    .identity p { margin: 0; color: var(--muted); }
+    .identity p { margin: 0; color: rgba(234, 246, 240, .72); }
     .header-contact { text-align: right; }
     .header-contact a { display: inline-block; font-size: 14px; text-underline-offset: 5px; }
-    .header-contact span { display: block; color: var(--muted); margin-top: 7px; }
-    .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 64px; }
-    .edition { color: var(--muted); }
+    .header-contact span { display: block; color: rgba(234, 246, 240, .72); margin-top: 7px; }
+    .toolbar {
+      display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 64px;
+      background: var(--site-green); color: var(--site-green-ink);
+      border-top: 1px solid rgba(234, 246, 240, .18);
+    }
+    .edition { color: rgba(234, 246, 240, .72); }
     .view-nav { display: flex; gap: 4px; }
-    .view-link { padding: 10px 17px; text-decoration: none; font-size: 13px; border: 1px solid transparent; }
-    .view-link .num { margin-right: 9px; font: 10px var(--mono); color: var(--muted); }
-    .view-link[aria-current="page"] { background: var(--ink); color: var(--paper); }
-    .view-link[aria-current="page"] .num { color: #c4cbbd; }
-    .view-link:hover { border-color: var(--ink); }
+    .view-link { padding: 10px 17px; text-decoration: none; font-size: 13px; border: 1px solid transparent; color: inherit; }
+    .view-link .num { margin-right: 9px; font: 10px var(--mono); color: rgba(234, 246, 240, .6); }
+    .view-link[aria-current="page"] { background: rgba(234, 246, 240, .16); color: var(--site-green-ink); }
+    .view-link[aria-current="page"] .num { color: var(--site-green-ink); }
+    .view-link:hover { border-color: rgba(234, 246, 240, .5); }
     main { min-width: 0; }
     .view { margin-bottom: 32px; }
     .js .view { margin-bottom: 0; }
@@ -265,12 +276,16 @@
     .route-item .micro { color: var(--accent); }
     .route-item h3 { font-size: 24px; line-height: 1.1; font-weight: 550; letter-spacing: -.04em; margin: 15px 0 10px; }
     .route-item p { font-size: 12px; color: var(--muted); margin: 0; }
-    .footer { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 20px 0; }
+    .footer {
+      display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 22px 28px;
+      background: var(--site-green); color: var(--site-green-ink); margin-top: 32px;
+    }
+    .footer .micro { color: rgba(234, 246, 240, .72); }
     .footer p { margin: 0; color: var(--muted); font-size: 10px; }
     .footer-links { display: flex; align-items: center; gap: 24px; }
     .footer a { font-size: 11px; text-decoration: none; white-space: nowrap; }
     .footer a:hover { text-decoration: underline; text-underline-offset: 4px; }
-    .footer .play-link { font: 10px var(--mono); color: var(--muted); }
+    .footer .play-link { font: 10px var(--mono); color: rgba(234, 246, 240, .72); }
     .view.is-entering, .sheet.is-entering { animation: sheet-enter 230ms ease both; }
     @keyframes sheet-enter { from { opacity: .35; transform: translateY(6px); } to { opacity: 1; transform: none; } }
     @media (min-width: 1100px) and (min-height: 850px) {
@@ -785,6 +800,13 @@
       }
       if (!webglAvailable()) return;
 
+      // On va tenter le 3D : l'image n'a plus lieu d'être pendant le chargement
+      // (~1s), le fond sombre de la scène sert d'attente naturelle. Elle revient
+      // si jamais le chargement échoue plus bas (réseau, WebGL qui refuse in fine).
+      const img = wrap.querySelector('.atelier-scene');
+      if (img) img.style.visibility = 'hidden';
+      const restoreImage = () => { if (img) img.style.visibility = ''; };
+
       // Un seul lien réel par objet fait foi (data-hotspot="matra" → obj_matra dans
       // le modèle) — pas de carte séparée à maintenir en double.
       const anchors = {};
@@ -799,12 +821,12 @@
           import('three/addons/controls/OrbitControls.js'),
           import('three/addons/loaders/GLTFLoader.js'),
         ]);
-      } catch (err) { console.warn('Établi 3D : chargement de Three.js échoué', err); return; }
+      } catch (err) { console.warn('Établi 3D : chargement de Three.js échoué', err); restoreImage(); return; }
 
       let renderer;
       try {
         renderer = new THREE.WebGLRenderer({ antialias: true });
-      } catch (err) { console.warn('Établi 3D : contexte WebGL indisponible', err); return; }
+      } catch (err) { console.warn('Établi 3D : contexte WebGL indisponible', err); restoreImage(); return; }
 
       const scene = new THREE.Scene();
       const BG = 0x1c1712; // même brun que le fond de .atelier-stage : pas de coupure visible
@@ -877,8 +899,9 @@
         }).filter(Boolean);
         if (!clickable.length) throw new Error('aucun objet obj_* trouvé dans le modèle');
       } catch (err) {
-        console.warn('Établi 3D : chargement du modèle échoué, image conservée', err);
+        console.warn('Établi 3D : chargement du modèle échoué, image rétablie', err);
         renderer.dispose();
+        restoreImage();
         return;
       }
 
