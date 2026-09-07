@@ -32,12 +32,17 @@
       --line: #cacbc1;
       --accent: #bc3b20;
       --board: #e0e1d7;
+      --site-green: #40916c; /* ancien fond de base du site, avant la refonte "atelier" */
       --font: 'Archivo', sans-serif;
       --mono: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
     }
     *, *::before, *::after { box-sizing: border-box; }
     html { scroll-behavior: auto; }
-    body { margin: 0; background: var(--paper); color: var(--ink); font: 400 15px/1.5 var(--font); -webkit-font-smoothing: antialiased; }
+    /* Le vert d'origine revient en fond de page ; le contenu (.shell) garde son
+       papier crème par-dessus, comme un cadre plutôt qu'une reteinte complète —
+       demande de Clément après avoir revu l'atelier en plein écran. */
+    body { margin: 0; background: var(--site-green); color: var(--ink); font: 400 15px/1.5 var(--font); -webkit-font-smoothing: antialiased; }
+    .shell { background: var(--paper); }
     a { color: inherit; }
     button { color: inherit; font: inherit; cursor: pointer; }
     button, a { -webkit-tap-highlight-color: transparent; }
