@@ -89,7 +89,16 @@
 
     /* ── Atelier ── */
     .atelier-intro { margin: 0 0 16px; color: var(--muted); font-size: 14px; max-width: 460px; }
-    .atelier-stage { position: relative; border: 1px solid var(--ink); background: #1c1712; line-height: 0; }
+    /* Hors plein écran, la boîte sombre de l'atelier tranchait trop fort sur le
+       fond vert (retour de Clément : "on dirait une fenêtre étrangère collée
+       dans la page") — coins arrondis + halo vert plutôt qu'un bord noir sec,
+       et un peu de respiration au-dessus/en dessous pour que ça se pose sur la
+       page plutôt que d'être plaqué contre le texte. */
+    .atelier-stage {
+      position: relative; background: #1c1712; line-height: 0;
+      border-radius: 14px; overflow: hidden; margin: 18px 0;
+      box-shadow: 0 0 0 1px rgba(64, 145, 108, .35), 0 14px 34px rgba(37, 43, 39, .16);
+    }
     .atelier-scene-wrap { position: relative; }
     .atelier-scene { display: block; width: 100%; height: auto; }
     .atelier-scene--mobile { display: none; }
@@ -151,7 +160,10 @@
       position: fixed; inset: 0; z-index: 30; margin: 0; padding: 0;
       display: flex; align-items: center; justify-content: center; background: #1c1712;
     }
-    body.atelier-immersive .atelier-stage { border: 0; width: 100%; max-height: 100vh; aspect-ratio: 16 / 9; }
+    body.atelier-immersive .atelier-stage {
+      width: 100%; max-height: 100vh; aspect-ratio: 16 / 9;
+      border-radius: 0; box-shadow: none; margin: 0;
+    }
     @media (max-width: 740px) { body.atelier-immersive .atelier-stage { aspect-ratio: 900 / 1599; max-width: 100vw; width: auto; height: 100vh; } }
     body.atelier-immersive .atelier-alt {
       position: fixed; z-index: 31; bottom: 18px; left: 50%; transform: translateX(-50%);
