@@ -24,6 +24,58 @@ facturation séparée activée). Les fichiers `scene-*.svg` dans
 `design/atelier/` restent comme référence historique de la première
 tentative ; ne pas les réintégrer.
 
+**Établi 3D (7 septembre 2026, la plus récente évolution de l'atelier)** :
+au-dessus de l'image desktop (`scene-desktop.webp`), un rendu Three.js
+(r0.160, CDN jsdelivr, importmap dans le `<head>`) charge
+`assets/atelier3d/atelier_scene.glb` — un établi modélisé sous Blender
+(script de génération et pipeline complet gardés hors dépôt, dans un
+scratchpad de session — à reconstituer si besoin, pas de source `.blend`
+committée) : les 7 objets projet posés dessus, plus tour/fraiseuse/CNC/stock
+de matières en arrière-plan pour le décor, une lampe industrielle en
+« coupole » qui éclaire la scène façon flaque de lumière (brouillard +
+lumière ambiante réduite tout autour, pour attirer l'œil au centre). Caméra
+orbitale à 360° (glisser-déposer), zoom volontairement borné
+(`minDistance`/`maxDistance`) pour ne jamais sortir de l'ambiance. Survol =
+contour blanc (technique de la coque inversée : copie légèrement agrandie du
+mesh, rendue de l'intérieur), pas d'étiquette flottante — demande explicite
+de Clément après un premier essai avec étiquette.
+
+C'est une **amélioration progressive au-dessus de l'existant**, pas un
+remplacement : l'image desktop reste dans le DOM et visible par défaut ; le
+script (`<script type="module">`, tout en bas de `index.html`) ne bascule
+vers le rendu 3D que si `!prefers-reduced-motion` **et**
+`(hover: hover) and (pointer: fine)` **et** WebGL disponible **et** le
+modèle a fini de charger sans erreur — sinon (JS coupé, mobile/tactile,
+mouvement réduit, échec réseau, WebGL absent) l'image 2D reste affichée
+telle quelle, jamais retirée du DOM. Aucun changement côté mobile
+(`scene-mobile.webp` + ses hotspots, intouchés).
+
+Les 7 `<a class="atelier-hotspot">` existants restent la seule source de
+vérité des liens (`data-hotspot="matra"` → objet `obj_matra` du modèle,
+correspondance directe, pas de carte dupliquée dans le script 3D) : ils
+restent dans le DOM et dans l'ordre de tabulation même quand le 3D est
+actif. Classe `.atelier-3d-active` sur le wrap desktop : les hotspots
+passent à `opacity:0; pointer-events:none` (la souris clique sur le canvas,
+qui fait le raycasting puis appelle `.click()` sur le vrai lien), mais
+redeviennent visibles sur `:focus-visible` — au clavier, l'expérience est
+**identique** à la version 2D (même rectangle, même étiquette flottante déjà
+existante qui réagit à `focus`/`blur`, Entrée navigue). Le mode développeur
+`?hotspots=1` continue de fonctionner par-dessus le 3D.
+
+Vérifié via Playwright : activation correcte selon les 4 conditions
+(desktop/souris fine + mouvement normal → 3D ; mouvement réduit → 2D ;
+mobile/tactile → 2D), navigation réelle clic-sur-objet → vraie page projet,
+navigation clavier (Tab jusqu'au hotspot, focus visible, Entrée) → vraie
+page, aucune erreur console/réseau après une session d'interaction
+(survol, glisser pour orbiter, molette pour zoomer).
+
+**Limite connue, acceptée pour ce premier jet** : le clic 3D fonctionne par
+raycasting sur les meshes réels (donc précis), mais je n'ai pas re-testé les
+7 objets un par un avec des coordonnées calculées analytiquement sur le
+site intégré (seulement 2 sur 7 vérifiés directement, le mécanisme
+sous-jacent étant identique à celui déjà testé exhaustivement dans le
+prototype scratchpad). À refaire si un objet semble insensible au clic en usage réel.
+
 **Curseur des sous-pages projet (7 septembre 2026, plus récent que le reste de
 cette section)** : le jeu curseur-avion (`rafale-game.js` — avion jouable,
 tirs, ennemis F35) a été retiré des 7 pages projet à la demande de Clément

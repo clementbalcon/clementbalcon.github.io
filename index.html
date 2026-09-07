@@ -16,6 +16,13 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon-portfolio.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Établi 3D (progressive : voir le script type=module en bas de page) -->
+  <script type="importmap">
+  { "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  } }
+  </script>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62.5..125,100..900&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -76,12 +83,28 @@
       border: 2px solid transparent;
       border-radius: 2px;
       outline: none;
+      z-index: 3;
     }
     .atelier-hotspot:hover, .atelier-hotspot:focus-visible, .atelier-hotspot.is-focused {
       border-color: var(--accent);
       background: rgba(188, 59, 32, .12);
       box-shadow: 0 0 0 3px rgba(188, 59, 32, .18);
     }
+    /* Établi 3D : ne remplace l'image que si le script confirme un chargement réussi
+       (WebGL dispo, souris fine, pas de mouvement réduit) — voir le script module.
+       Les hotspots restent réels et dans l'ordre de tabulation ; ils s'effacent au
+       clic souris (pointer-events: none) mais réapparaissent au focus clavier, donc
+       le clavier garde exactement le comportement 2D existant. */
+    .atelier-3d-mount { position: absolute; inset: 0; z-index: 2; cursor: grab; }
+    .atelier-3d-mount:active { cursor: grabbing; }
+    .atelier-3d-mount canvas { display: block; width: 100%; height: 100%; }
+    .atelier-3d-active .atelier-hotspot { opacity: 0; pointer-events: none; }
+    .atelier-3d-active .atelier-hotspot:focus-visible { opacity: 1; }
+    .atelier-3d-hint {
+      position: absolute; z-index: 3; bottom: 10px; left: 12px; pointer-events: none;
+      font: 11px var(--mono); color: rgba(255,255,255,.55); opacity: 0; transition: opacity .3s;
+    }
+    .atelier-3d-active .atelier-3d-hint { opacity: 1; }
     .hotspot-debug .atelier-hotspot { border-color: #0a7dff; background: rgba(10, 125, 255, .12); }
     .hotspot-debug .atelier-hotspot::after {
       content: attr(data-hotspot);
@@ -369,6 +392,8 @@
         <div class="atelier-stage">
           <div class="atelier-scene-wrap atelier-scene--desktop">
             <img class="atelier-scene atelier-scene--desktop" src="assets/atelier/scene-desktop.webp" alt="L'atelier de Clément Balcon : établi, robot, poste de CAO, cric hydraulique, maquette de tour, tablette et carnet — chaque objet ouvre un projet" width="1600" height="900">
+            <div class="atelier-3d-mount" id="atelier3d-mount" hidden></div>
+            <p class="atelier-3d-hint" id="atelier3d-hint" aria-hidden="true">glisser = tourner autour de l'établi</p>
             <a class="atelier-hotspot" href="nerf.html" data-hotspot="nerf" style="left:43.75%;top:2.78%;width:26.56%;height:40.56%;" aria-label="Nerf Rider CS-35 — rétro-conception CATIA V5"></a>
             <a class="atelier-hotspot" href="am25.html" data-hotspot="am25" style="left:71.25%;top:6.11%;width:9.69%;height:41.67%;" aria-label="Taipei 101 — analyse dynamique, pendule anti-vibratoire"></a>
             <a class="atelier-hotspot" href="tn06.html" data-hotspot="tn06" style="left:0.0%;top:33.33%;width:28.75%;height:31.67%;" aria-label="Cric hydraulique — étude de statique TN06"></a>
@@ -690,6 +715,187 @@
           hotspot.appendChild(dot);
         });
       }
+    })();
+  </script>
+
+  <script type="module">
+    // Établi 3D — amélioration progressive au-dessus de l'image statique.
+    // N'active le rendu 3D que si : souris fine + survol possible (pas tactile),
+    // pas de préférence "mouvement réduit", ET WebGL + le modèle chargent sans
+    // erreur. Dans tous les autres cas (JS coupé, mobile, mouvement réduit, échec
+    // réseau, WebGL indisponible) l'image existante reste affichée telle quelle —
+    // elle n'est jamais retirée du DOM, seulement recouverte en cas de succès.
+    (async () => {
+      const wrap = document.querySelector('.atelier-scene-wrap.atelier-scene--desktop');
+      const mount = document.getElementById('atelier3d-mount');
+      if (!wrap || !mount) return;
+
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const fineHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+      if (reducedMotion || !fineHover) return;
+
+      function webglAvailable() {
+        try {
+          const c = document.createElement('canvas');
+          return !!(window.WebGLRenderingContext && (c.getContext('webgl2') || c.getContext('webgl')));
+        } catch { return false; }
+      }
+      if (!webglAvailable()) return;
+
+      // Un seul lien réel par objet fait foi (data-hotspot="matra" → obj_matra dans
+      // le modèle) — pas de carte séparée à maintenir en double.
+      const anchors = {};
+      wrap.querySelectorAll('.atelier-hotspot[data-hotspot]').forEach(a => {
+        anchors['obj_' + a.dataset.hotspot] = a;
+      });
+
+      let THREE, OrbitControls, GLTFLoader;
+      try {
+        [THREE, { OrbitControls }, { GLTFLoader }] = await Promise.all([
+          import('three'),
+          import('three/addons/controls/OrbitControls.js'),
+          import('three/addons/loaders/GLTFLoader.js'),
+        ]);
+      } catch (err) { console.warn('Établi 3D : chargement de Three.js échoué', err); return; }
+
+      let renderer;
+      try {
+        renderer = new THREE.WebGLRenderer({ antialias: true });
+      } catch (err) { console.warn('Établi 3D : contexte WebGL indisponible', err); return; }
+
+      const scene = new THREE.Scene();
+      const BG = 0x1c1712; // même brun que le fond de .atelier-stage : pas de coupure visible
+      scene.background = new THREE.Color(BG);
+      scene.fog = new THREE.Fog(BG, 5, 15);
+
+      const camera = new THREE.PerspectiveCamera(50, 16 / 9, 0.1, 100);
+      camera.position.set(0, 2.9, 6.4);
+
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      mount.appendChild(renderer.domElement);
+
+      function resize() {
+        const w = mount.clientWidth, h = mount.clientHeight;
+        if (!w || !h) return;
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        renderer.setSize(w, h);
+      }
+
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.08;
+      controls.minDistance = 1.5;
+      controls.maxDistance = 8.5; // zoom volontairement borné : on reste près de l'établi éclairé
+      controls.maxPolarAngle = Math.PI * 0.49;
+      controls.target.set(0, 0.75, 0);
+
+      const key = new THREE.DirectionalLight(0xd9dee8, 0.9);
+      key.position.set(3, 5, 2);
+      scene.add(key);
+      const fill = new THREE.DirectionalLight(0x8fa0c0, 0.35);
+      fill.position.set(-3, 2, -2);
+      scene.add(fill);
+      scene.add(new THREE.AmbientLight(0xffffff, 0.28));
+
+      const lampSpot = new THREE.SpotLight(0xfff3d6, 6.5, 9, Math.PI * 0.24, 0.65, 0);
+      lampSpot.position.set(0, 2.2, -0.1);
+      lampSpot.target.position.set(0, 0.75, 0);
+      scene.add(lampSpot, lampSpot.target);
+
+      const OUTLINE_MAT = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.BackSide });
+      const OUTLINE_SCALE = 1.12;
+      function setOutline(group, on) {
+        if (on) {
+          if (group.outlineMeshes) return;
+          group.outlineMeshes = group.meshes.map(m => {
+            const o = new THREE.Mesh(m.geometry, OUTLINE_MAT);
+            o.scale.setScalar(OUTLINE_SCALE);
+            m.add(o);
+            return o;
+          });
+        } else if (group.outlineMeshes) {
+          group.outlineMeshes.forEach(o => o.parent && o.parent.remove(o));
+          group.outlineMeshes = null;
+        }
+      }
+
+      const loader = new GLTFLoader();
+      let clickable;
+      try {
+        const gltf = await loader.loadAsync('assets/atelier3d/atelier_scene.glb');
+        scene.add(gltf.scene);
+        clickable = Object.keys(anchors).map(name => {
+          const root = gltf.scene.getObjectByName(name);
+          if (!root) return null;
+          const meshes = [];
+          root.traverse(n => { if (n.isMesh) meshes.push(n); });
+          return { name, root, meshes };
+        }).filter(Boolean);
+        if (!clickable.length) throw new Error('aucun objet obj_* trouvé dans le modèle');
+      } catch (err) {
+        console.warn('Établi 3D : chargement du modèle échoué, image conservée', err);
+        renderer.dispose();
+        return;
+      }
+
+      // Tout a réussi : on affiche le rendu 3D par-dessus l'image.
+      mount.hidden = false;
+      wrap.classList.add('atelier-3d-active');
+      const ro = new ResizeObserver(resize);
+      ro.observe(mount);
+      resize();
+
+      const raycaster = new THREE.Raycaster();
+      const pointer = new THREE.Vector2();
+      let hovered = null;
+
+      function allMeshes() {
+        return clickable.flatMap(c => c.meshes.map(m => ({ mesh: m, group: c })));
+      }
+      function updatePointer(clientX, clientY) {
+        const r = renderer.domElement.getBoundingClientRect();
+        pointer.x = ((clientX - r.left) / r.width) * 2 - 1;
+        pointer.y = -((clientY - r.top) / r.height) * 2 + 1;
+      }
+      function pickGroup() {
+        raycaster.setFromCamera(pointer, camera);
+        const entries = allMeshes();
+        const hits = raycaster.intersectObjects(entries.map(e => e.mesh), false);
+        if (!hits.length) return null;
+        return entries.find(e => e.mesh === hits[0].object)?.group || null;
+      }
+
+      renderer.domElement.addEventListener('mousemove', e => {
+        updatePointer(e.clientX, e.clientY);
+        const group = pickGroup();
+        if (group !== hovered) {
+          if (hovered) setOutline(hovered, false);
+          hovered = group;
+          mount.classList.toggle('hovering', !!group);
+          renderer.domElement.style.cursor = group ? 'pointer' : 'grab';
+          if (group) setOutline(group, true);
+        }
+      });
+
+      let downPos = null;
+      renderer.domElement.addEventListener('pointerdown', e => { downPos = { x: e.clientX, y: e.clientY }; });
+      renderer.domElement.addEventListener('pointerup', e => {
+        if (!downPos) return;
+        const moved = Math.hypot(e.clientX - downPos.x, e.clientY - downPos.y);
+        downPos = null;
+        if (moved > 6) return; // c'était un glissé (rotation), pas un clic
+        updatePointer(e.clientX, e.clientY);
+        const group = pickGroup();
+        if (group) anchors[group.name].click(); // même lien réel que le mode 2D/clavier
+      });
+
+      function animate() {
+        requestAnimationFrame(animate);
+        controls.update();
+        renderer.render(scene, camera);
+      }
+      animate();
     })();
   </script>
 </body>
