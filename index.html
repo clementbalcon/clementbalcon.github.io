@@ -179,7 +179,13 @@
     }
     .atelier-fullscreen-exit:hover, .atelier-fullscreen-exit:focus-visible { border-color: var(--paper); }
     body.atelier-immersive .atelier-fullscreen-exit { display: flex; }
-    .workspace { display: grid; grid-template-columns: 270px minmax(0, 1fr); border: 1px solid var(--ink); min-height: 560px; }
+    /* Même traitement que .atelier-stage : coins arrondis + halo vert plutôt
+       qu'un bord noir sec, posé sur la page au lieu d'y être plaqué. */
+    .workspace {
+      display: grid; grid-template-columns: 270px minmax(0, 1fr); min-height: 560px;
+      border-radius: 14px; overflow: hidden; margin: 18px 0;
+      box-shadow: 0 0 0 1px rgba(64, 145, 108, .35), 0 14px 34px rgba(37, 43, 39, .12);
+    }
     .drawer { display: flex; flex-direction: column; border-right: 1px solid var(--ink); padding: 25px 22px 18px; }
     .drawer-title { margin: 0 0 12px; font-size: 42px; font-weight: 750; font-stretch: 80%; letter-spacing: -.055em; line-height: .99; }
     .drawer-intro { margin: 0 0 23px; color: var(--muted); font-size: 13px; max-width: 205px; }
@@ -250,7 +256,10 @@
     .training-step b { display: block; font-size: 27px; font-weight: 600; letter-spacing: -.04em; }
     .training-step span { font: 10px var(--mono); color: var(--muted); }
     .training .micro-badge { position: absolute; bottom: 27px; left: 30px; font: 11px var(--mono); border: 1px solid var(--ink); padding: 5px 9px; }
-    .folio { border: 1px solid var(--ink); padding: 32px; }
+    .folio {
+      padding: 32px; border-radius: 14px; margin: 18px 0;
+      box-shadow: 0 0 0 1px rgba(64, 145, 108, .35), 0 14px 34px rgba(37, 43, 39, .12);
+    }
     .folio-heading { display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, .65fr); gap: 45px; align-items: start; margin-bottom: 30px; }
     .folio h2 { font-size: clamp(43px, 5.7vw, 78px); font-stretch: 85%; letter-spacing: -.065em; line-height: .95; margin: 10px 0 0; }
     .folio-intro { color: var(--muted); font-size: 14px; margin: 5px 0 0; }
