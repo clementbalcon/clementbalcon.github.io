@@ -463,8 +463,6 @@
           <button type="button" class="atelier-fullscreen-exit" id="atelier-fullscreen-exit" aria-label="Réduire l'atelier, afficher le menu">✕</button>
           <div class="atelier-scene-wrap atelier-scene--desktop">
             <img class="atelier-scene atelier-scene--desktop" src="assets/atelier/scene-desktop.webp" alt="L'atelier de Clément Balcon : établi, robot, poste de CAO, cric hydraulique, maquette de tour, tablette et carnet — chaque objet ouvre un projet" width="1600" height="900">
-            <div class="atelier-3d-mount" id="atelier3d-mount" hidden></div>
-            <p class="atelier-3d-hint" id="atelier3d-hint" aria-hidden="true">glisser = tourner autour de l'établi</p>
             <a class="atelier-hotspot" href="nerf.html" data-hotspot="nerf" style="left:43.75%;top:2.78%;width:26.56%;height:40.56%;" aria-label="Nerf Rider CS-35 — rétro-conception CATIA V5"></a>
             <a class="atelier-hotspot" href="am25.html" data-hotspot="am25" style="left:71.25%;top:6.11%;width:9.69%;height:41.67%;" aria-label="Taipei 101 — analyse dynamique, pendule anti-vibratoire"></a>
             <a class="atelier-hotspot" href="tn06.html" data-hotspot="tn06" style="left:0.0%;top:33.33%;width:28.75%;height:31.67%;" aria-label="Cric hydraulique — étude de statique TN06"></a>
@@ -483,6 +481,8 @@
             <a class="atelier-hotspot" href="matra.html" data-hotspot="matra" style="left:2.78%;top:55.66%;width:52.22%;height:7.19%;" aria-label="Solder Pen — outillage de brasage, projet Matra"></a>
             <a class="atelier-hotspot" href="training.html" data-hotspot="training" style="left:52.78%;top:62.23%;width:47.22%;height:15.01%;" aria-label="Training Tracker — suivi d'entraînements"></a>
           </div>
+          <div class="atelier-3d-mount" id="atelier3d-mount" hidden></div>
+          <p class="atelier-3d-hint" id="atelier3d-hint" aria-hidden="true">glisser = tourner autour de l'établi</p>
           <div class="atelier-tag" id="atelier-tag" aria-hidden="true"></div>
         </div>
         <p class="atelier-alt">Vous préférez une liste ? <a href="#projects" data-view-link>Tous les projets ↓</a></p>
@@ -800,20 +800,27 @@
   </script>
 
   <script type="module">
-    // Établi 3D — amélioration progressive au-dessus de l'image statique.
-    // N'active le rendu 3D que si : souris fine + survol possible (pas tactile),
-    // pas de préférence "mouvement réduit", ET WebGL + le modèle chargent sans
-    // erreur. Dans tous les autres cas (JS coupé, mobile, mouvement réduit, échec
-    // réseau, WebGL indisponible) l'image existante reste affichée telle quelle —
-    // elle n'est jamais retirée du DOM, seulement recouverte en cas de succès.
+    // Établi 3D — amélioration progressive au-dessus de l'image statique, sur
+    // desktop ET tactile (OrbitControls gère le glisser/pincer nativement, le
+    // raycasting marche pareil au tap qu'au clic — Pointer Events unifie les
+    // deux). N'active le rendu 3D que si : pas de préférence "mouvement réduit"
+    // ET WebGL + le modèle chargent sans erreur. Dans tous les autres cas (JS
+    // coupé, mouvement réduit, échec réseau, WebGL indisponible) l'image
+    // existante reste affichée telle quelle — jamais retirée du DOM, seulement
+    // recouverte en cas de succès. Le mount est un enfant direct de
+    // .atelier-stage (pas d'un wrap en particulier) : on choisit ci-dessous le
+    // wrap desktop ou mobile actuellement affiché, même repère que le CSS
+    // (max-width: 740px).
     (async () => {
-      const wrap = document.querySelector('.atelier-scene-wrap.atelier-scene--desktop');
+      const small = window.matchMedia('(max-width: 740px)');
+      const wrap = document.querySelector(small.matches
+        ? '.atelier-scene-wrap.atelier-scene--mobile'
+        : '.atelier-scene-wrap.atelier-scene--desktop');
       const mount = document.getElementById('atelier3d-mount');
       if (!wrap || !mount) return;
 
       const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const fineHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-      if (reducedMotion || !fineHover) return;
+      if (reducedMotion) return;
 
       function webglAvailable() {
         try {
