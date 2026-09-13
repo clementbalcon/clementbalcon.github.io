@@ -1,158 +1,177 @@
 # Portfolio — clementbalcon.github.io
 
-## L'atelier — état réel au 7 septembre 2026
+## L'accueil — état réel au 13 septembre 2026
 
-L'accueil (`index.html`) est l'atelier de mécanique de précision décrit dans
-[PLAN_ATELIER_IMMERSIF.md](PLAN_ATELIER_IMMERSIF.md) : deux images
-(`assets/atelier/scene-desktop.webp`, `scene-mobile.webp`, pas un recadrage
-l'une de l'autre) avec des `<a href>` réels positionnés en pourcentage
-par-dessus, un par projet (7 : matra, robafis, nerf, tn06, am25,
-cardashboard, training). Vue par défaut = `#atelier`. L'ancienne interface
-« L'établi » (dossiers) est devenue la vue « Tous les projets » (`#projects`),
-l'accès texte explicite demandé par le plan. Les 2 accès optionnels
-(#experience, #projet) ne sont plus des objets de la scène — seulement dans
-la nav (voir composition.md, choix de Codex repris tel quel).
+`index.html` est l'atelier de mécanique de précision décrit dans
+[PLAN_ATELIER_IMMERSIF.md](PLAN_ATELIER_IMMERSIF.md) : un établi avec 7
+objets, chacun un vrai `<a href>` vers sa page projet (matra, robafis, nerf,
+tn06, am25, cardashboard, training). Vue par défaut = `#atelier`, affichée en
+**plein écran** (voir plus bas). Trois autres vues dans la nav : `#projects`
+(« Tous les projets », accès texte complet, l'ancienne interface « L'établi »
+à dossiers), `#experience` (« Le parcours »), `#projet` (« Le cap »).
 
-**Traitement visuel — deuxième itération, celle qui reste** : illustration
-générée (photo-réaliste, éclairage chaud d'atelier), pas le dessin technique
-SVG de la première tentative (rejeté : « le résultat est naze », ça se
-lisait comme un diagramme, pas un lieu). Générée via le plugin Codex pour
-Claude Code (`openai/codex-plugin-cc`), qui a utilisé la génération d'image
-incluse dans l'abonnement ChatGPT déjà connecté à la CLI Codex locale
-(`auth_mode: chatgpt`, vérifié avant coup — aucune clé API, aucune
-facturation séparée activée). Les fichiers `scene-*.svg` dans
-`design/atelier/` restent comme référence historique de la première
-tentative ; ne pas les réintégrer.
+### Établi : image 2D + rendu 3D, amélioration progressive stricte
+Deux couches, jamais l'une sans l'autre :
 
-**Établi 3D (7 septembre 2026, la plus récente évolution de l'atelier)** :
-au-dessus de l'image desktop (`scene-desktop.webp`), un rendu Three.js
-(r0.160, CDN jsdelivr, importmap dans le `<head>`) charge
-`assets/atelier3d/atelier_scene.glb` — un établi modélisé sous Blender
-(script de génération et pipeline complet gardés hors dépôt, dans un
-scratchpad de session — à reconstituer si besoin, pas de source `.blend`
-committée) : les 7 objets projet posés dessus, plus tour/fraiseuse/CNC/stock
-de matières en arrière-plan pour le décor, une lampe industrielle en
-« coupole » qui éclaire la scène façon flaque de lumière (brouillard +
-lumière ambiante réduite tout autour, pour attirer l'œil au centre). Caméra
-orbitale à 360° (glisser-déposer), zoom volontairement borné
-(`minDistance`/`maxDistance`) pour ne jamais sortir de l'ambiance. Survol =
-contour blanc (technique de la coque inversée : copie légèrement agrandie du
-mesh, rendue de l'intérieur), pas d'étiquette flottante — demande explicite
-de Clément après un premier essai avec étiquette.
+- **Base, toujours présente, jamais retirée du DOM** : image générée par IA
+  (`assets/atelier/scene-desktop.webp` desktop, `scene-mobile.webp` mobile —
+  pas un recadrage l'une de l'autre), avec les 7
+  `<a class="atelier-hotspot" data-hotspot="…">` positionnés en % par-dessus
+  dans un `.atelier-scene-wrap` (`position: relative`). Fonctionne sans JS,
+  sans souris, avec un lecteur d'écran — c'est le vrai repli, pas juste un
+  état de chargement.
+- **Amélioration, si les conditions sont réunies** : rendu Three.js (r0.160,
+  CDN jsdelivr, importmap dans le `<head>`) qui charge
+  `assets/atelier3d/atelier_scene.glb` (~310 Ko) — l'établi et ses 7 objets,
+  plus tour/fraiseuse/CNC/stock de matières en décor, une lampe industrielle
+  en « coupole » (spot + brouillard, pour attirer l'œil au centre et estomper
+  le décor). Orbite à 360° au glisser — **souris ET tactile** : OrbitControls
+  gère le glisser/pincer nativement, et le raycasting marche identiquement au
+  tap qu'au clic (Pointer Events unifie les deux) — zoom volontairement
+  borné (`minDistance`/`maxDistance` 1.5–8.5) pour ne jamais sortir de
+  l'ambiance. S'active si `!prefers-reduced-motion` **et** WebGL disponible
+  **et** le modèle charge sans erreur — sinon (JS coupé, mouvement réduit,
+  échec réseau, WebGL absent) l'image reste affichée telle quelle. Dès que
+  ces conditions sont réunies, l'image est masquée (`visibility: hidden`)
+  *avant* le chargement du modèle — pas de flash image→3D, le fond sombre de
+  la scène sert d'attente naturelle (~1s) ; l'image est ré-affichée
+  automatiquement si le chargement échoue à n'importe quelle étape.
+- Le point de montage `#atelier3d-mount` est un **enfant direct de
+  `.atelier-stage`** (pas d'un wrap desktop/mobile en particulier, pour
+  fonctionner sur les deux) : le script choisit au chargement le wrap
+  actuellement affiché (repère `max-width: 740px`, même que le CSS).
+- Survol souris = contour blanc (technique de la coque inversée : copie
+  légèrement agrandie du mesh, rendue de l'intérieur), pas d'étiquette
+  flottante en 3D. Focus clavier (Tab) déclenche ce **même contour**, pas le
+  rectangle 2D — ses coordonnées sont calées sur l'image plate et n'ont plus
+  aucun rapport avec la disposition 3D, le montrer faisait apparaître un
+  rectangle fantôme sans lien avec la scène (bug remonté par Clément, corrigé).
+  L'étiquette texte (`#atelier-tag`) continue de s'afficher au focus,
+  comportement hérité du 2D, inchangé.
+- Clic/tap sur un objet 3D → raycasting puis `.click()` sur le vrai `<a>`
+  correspondant (`data-hotspot="matra"` → objet `obj_matra` du modèle) : une
+  seule source de vérité pour les liens, pas de carte dupliquée dans le
+  script 3D. Les 7 `<a class="atelier-hotspot">` restent dans le DOM et dans
+  l'ordre de tabulation même quand le 3D est actif (classe
+  `.atelier-3d-active` sur le wrap : les hotspots passent à `opacity:0;
+  pointer-events:none`, sauf sur `:focus-visible` — voir ci-dessus).
+- **Pas de script Blender source committé** — le script de génération de la
+  scène (matériaux, objets, décor, lampe) vivait dans un scratchpad de
+  session qui a été purgé par un reset d'environnement. Toute modification
+  de géométrie depuis (ex. la tige de la lampe rallongée à 8 unités pour ne
+  plus voir son extrémité) s'est faite en ré-import/édition/export direct du
+  GLB via Blender headless, objet par objet. Si une refonte plus profonde de
+  la scène est nécessaire, il faudra soit reconstruire le script depuis
+  zéro, soit continuer à éditer le GLB directement.
 
-C'est une **amélioration progressive au-dessus de l'existant**, pas un
-remplacement : l'image desktop reste dans le DOM et visible par défaut ; le
-script (`<script type="module">`, tout en bas de `index.html`) ne bascule
-vers le rendu 3D que si `!prefers-reduced-motion` **et**
-`(hover: hover) and (pointer: fine)` **et** WebGL disponible **et** le
-modèle a fini de charger sans erreur — sinon (JS coupé, mobile/tactile,
-mouvement réduit, échec réseau, WebGL absent) l'image 2D reste affichée
-telle quelle, jamais retirée du DOM. Aucun changement côté mobile
-(`scene-mobile.webp` + ses hotspots, intouchés).
+### Plein écran de l'atelier
+`body.atelier-immersive` (posé par défaut sur la vue atelier via `show()`
+dans le routeur, retiré ponctuellement par le bouton `#atelier-fullscreen-exit`
+jusqu'à la prochaine navigation — recliquer sur « 01 L'atelier » réactive le
+plein écran) : header (`.masthead`) et barre de vues (`.toolbar`) masqués
+(`display:none`), `.atelier-stage` en `position:fixed;inset:0`. Le ratio
+natif est conservé (`aspect-ratio: 16/9` desktop, `900/1599` mobile) plutôt
+qu'un `object-fit:cover` qui décalerait les hotspots en % par rapport à
+l'image visible — léger lettrboxing accepté sur les écrans très différents
+de ces ratios. Hors plein écran, `.atelier-stage` garde un traitement de
+carte (coins arrondis 14px, halo vert fin `rgba(64,145,108,.35)`, ombre
+douce) — **volontairement différent du reste du site** (voir thème
+ci-dessous) : son fond sombre ne peut pas se fondre dans le vert de la page
+comme du texte, contrainte confirmée explicitement par Clément.
 
-Les 7 `<a class="atelier-hotspot">` existants restent la seule source de
-vérité des liens (`data-hotspot="matra"` → objet `obj_matra` du modèle,
-correspondance directe, pas de carte dupliquée dans le script 3D) : ils
-restent dans le DOM et dans l'ordre de tabulation même quand le 3D est
-actif. Classe `.atelier-3d-active` sur le wrap desktop : les hotspots
-passent à `opacity:0; pointer-events:none` (la souris clique sur le canvas,
-qui fait le raycasting puis appelle `.click()` sur le vrai lien), mais
-redeviennent visibles sur `:focus-visible` — au clavier, l'expérience est
-**identique** à la version 2D (même rectangle, même étiquette flottante déjà
-existante qui réagit à `focus`/`blur`, Entrée navigue). Le mode développeur
-`?hotspots=1` continue de fonctionner par-dessus le 3D.
+### Thème vert (13 septembre 2026)
+Rappel de l'ancien fond `#40916C` du site, d'avant la refonte atelier :
+- `--paper` (`#bcdcc5`) et `--board` (`#acd2b8`) remplacent le crème
+  d'origine (`#eeece4`/`#e0e1d7`) — même luminosité, mêmes contrastes texte
+  déjà validés partout, juste reteinté. Un premier essai plus pâle
+  (`#e6f0ea`/`#d7e9df`) a été jugé « lu comme blanc, pas vraiment vert » et
+  approfondi.
+- `--site-green` (`#40916c`) = fond plein du **header uniquement**
+  (`.masthead`, `.toolbar`), texte clair `--site-green-ink`. Le **footer
+  n'a pas ce bandeau** — retiré après retour de Clément (« je veux que le
+  site soit fluide ») : un deuxième bandeau plein en plus du header faisait
+  trop de zones cloisonnées.
+- **Aucun cadre nulle part sauf l'atelier** : « Tous les projets »
+  (`.workspace`) et « Le parcours »/« Le cap » (`.folio`, partagé) n'ont ni
+  bordure, ni ombre, ni coins arrondis, ni marge — le contenu est posé
+  directement sur le fond vert de la page. Deux itérations ont précédé ce
+  résultat : la première (même traitement carte que l'atelier : coins +
+  halo) a été jugée encore « à part » ; Clément a précisé vouloir du contenu
+  qui flotte sans conteneur visible du tout, d'où le retrait complet. Ne pas
+  réintroduire de cadre sur ces vues sans qu'on le redemande explicitement.
 
-Vérifié via Playwright : activation correcte selon les 4 conditions
-(desktop/souris fine + mouvement normal → 3D ; mouvement réduit → 2D ;
-mobile/tactile → 2D), navigation réelle clic-sur-objet → vraie page projet,
-navigation clavier (Tab jusqu'au hotspot, focus visible, Entrée) → vraie
-page, aucune erreur console/réseau après une session d'interaction
-(survol, glisser pour orbiter, molette pour zoomer).
+### Curseur des sous-pages projet
+Les 7 pages projet (matra, robafis, nerf, tn06, am25, cardashboard,
+training) n'ont plus de jeu curseur-avion. `rafale-game.js` (partagé par les
+7) ne contient plus que le nécessaire pour le portail de sortie
+(« Sortie », en haut à droite) : clic ou Entrée/Espace au clavier, avec un
+fondu blanc de transition. Curseur natif partout, plus de `cursor: none` ni
+de canvas/jeu. Les fichiers `rafale_top.webp`, `mica.png`, `F35.png`
+restent utilisés par `sandbox-game.js` (page `sandbox.html`, séparée, non
+concernée) — ne pas les supprimer. Le jet-hero historique de `index.html`
+(avion scrubé au scroll → curseur-jeu) n'existe plus du tout dans le fichier
+actuel — seul un alias de hash (`'jet-hero': 'atelier'`) reste dans le
+routeur pour qu'un ancien lien ne casse pas.
 
-**Limite connue, acceptée pour ce premier jet** : le clic 3D fonctionne par
-raycasting sur les meshes réels (donc précis), mais je n'ai pas re-testé les
-7 objets un par un avec des coordonnées calculées analytiquement sur le
-site intégré (seulement 2 sur 7 vérifiés directement, le mécanisme
-sous-jacent étant identique à celui déjà testé exhaustivement dans le
-prototype scratchpad). À refaire si un objet semble insensible au clic en usage réel.
+### Fichiers de référence
+- `design/atelier/composition.md` : débat Claude/Codex sur la composition de
+  l'image 2D, prompts utilisés pour la génération.
+- `hotspots.json` : coordonnées % desktop/mobile des 7 zones cliquables.
+- `assets/atelier/scene-*-raw.png` : sorties brutes de génération (gardées,
+  gitignorées) ; les `.webp` optimisés sont ce qui charge réellement.
+- `assets/atelier3d/atelier_scene.glb` : le modèle 3D (voir plus haut pour
+  l'absence de script source).
 
-**Curseur des sous-pages projet (7 septembre 2026, plus récent que le reste de
-cette section)** : le jeu curseur-avion (`rafale-game.js` — avion jouable,
-tirs, ennemis F35) a été retiré des 7 pages projet à la demande de Clément
-(« retire le tracker avion, met un tracker banal »). `rafale-game.js` ne
-contient plus que le nécessaire pour le portail de sortie (« Sortie », en
-haut à droite) : clic ou Entrée/Espace au clavier, avec le même fondu blanc
-qu'avant. Curseur natif partout, plus de `cursor: none` ni de canvas. Les
-lignes `window.RAFALE_OPTS = …` (options de spawn du jeu) ont été retirées
-des 7 pages, devenues sans objet. Les fichiers `rafale_top.webp`, `mica.png`,
-`F35.png` restent utilisés par `sandbox-game.js` (page `sandbox.html`,
-non concernée) — ne pas les supprimer. Le jet-hero de `index.html` (avion
-scrubé au scroll qui se morphe en curseur-jeu, section « Jet hero » plus bas)
-est un mécanisme entièrement différent, inline dans `index.html`, non
-chargé par `rafale-game.js` — non affecté par ce changement.
+### Mode développeur
+`index.html?hotspots=1` affiche contours, centre et identifiant de chaque
+zone interactive (classe `.hotspot-debug` sur `body`, overlay CSS + un
+`<span class="hotspot-debug-dot">` injecté par JS) — à utiliser pour
+recalibrer `hotspots.json` après tout changement de cadrage ou de
+régénération d'image. Fonctionne aussi par-dessus le rendu 3D.
 
-**Fichiers de référence** : `design/atelier/composition.md` (les deux
-directions successives, le debat Claude/Codex, les prompts utilisés),
-`hotspots.json` (coordonnées en % partagées desktop/mobile, vérifiées sans
-chevauchement — recalibrées sur les nouvelles images, les anciennes valeurs
-SVG sont obsolètes), `assets/atelier/scene-*-raw.png` (sorties brutes de
-génération, ~2,4 Mo chacune, gardées comme source — les `.webp` optimisés à
-~175 Ko chacun sont ce qui est réellement chargé par `index.html`).
+### Codex pour Claude Code
+Plugin installé (`/plugin marketplace add openai/codex-plugin-cc`,
+`/plugin install codex@openai-codex`). Invocation uniquement via l'agent
+`codex:codex-rescue` (forwarder simple vers `codex-companion.mjs task`, voir
+la skill `codex:codex-cli-runtime`). Auth réutilisée depuis la CLI Codex
+locale déjà connectée en `chatgpt` — ne jamais configurer de clé API séparée
+pour ce projet, ça activerait une facturation que Clément a explicitement
+refusée. **Limite rencontrée à plusieurs reprises** : Chromium refuse de se
+lancer dans le bac à sable de Codex (`Operation not permitted` /
+`MachPortRendezvousServer: Permission denied`) — Codex ne peut donc pas
+vérifier visuellement son propre travail via Playwright. Toujours revérifier
+soi-même (Playwright en direct, hors du bac à sable Codex) tout changement
+CSS/visuel fait par Codex avant de le pousser.
 
-**Structure des hotspots** : chaque `<a class="atelier-hotspot" data-hotspot="…">`
-est positionné en `left/top/width/height` (%) directement dans son `style`,
-à l'intérieur d'un `.atelier-scene-wrap` (`position: relative`) qui contient
-aussi l'`<img>`. Pas de `<rect class="hit">` imbriqué comme dans l'ancienne
-version SVG — le lien lui-même EST la zone cliquable. `.atelier-hotspot:hover`
-et `:focus-visible` partagent le même style (bordure + fond teintés) ; l'état
-`.is-focused` (posé par le JS au retour d'une page projet) déclenche le même
-style.
+### Piège d'environnement rencontré
+macOS a révoqué l'accès à tout `~/Documents` en pleine édition (bug TCC) —
+`ls`, Python et les outils de fichiers du CLI Claude Code renvoyaient tous
+`Operation not permitted` sur le dossier entier, pas seulement ce dépôt. Un
+simple octroi de Full Disk Access au Terminal n'a pas suffi tant que l'appli
+n'avait pas été entièrement quittée (Cmd+Q) puis rouverte — les process déjà
+lancés gardent l'état TCC refusé jusqu'au redémarrage. Si ça se reproduit :
+redémarrer Terminal, pas seulement retenter.
 
-**Ids renommés** : les 7 anciens dossiers (`id="matra"` etc.) sont devenus
-`id="dossier-matra"` etc. pour libérer les ids courts, désormais utilisés par
-le routeur pour désigner l'objet correspondant dans l'atelier (`#matra` =
-« va à l'atelier et mets en évidence le Solder Pen », plus « ouvre
-matra.html » pour le lien réel de l'objet lui-même). Si un nouveau lien
-interne vers un dossier doit être ajouté (ex. liens « preuve » de la section
-compétences), cibler `#dossier-<id>`, pas `#<id>`.
+Séparément, les scratchpads de session (utilisés pour le prototypage 3D,
+les scripts Blender, les installations Playwright) peuvent disparaître d'un
+reset d'environnement à l'autre — c'est ce qui a fait perdre le script de
+génération de la scène 3D (voir plus haut). Ne rien considérer comme durable
+en dehors du dépôt Git lui-même.
 
-**Mode développeur** : `index.html?hotspots=1` affiche contours, centre et
-identifiant de chaque zone interactive (classe `.hotspot-debug` sur `body`,
-overlay CSS + un `<span class="hotspot-debug-dot">` injecté par JS) — à
-utiliser pour recalibrer `hotspots.json` après tout changement de cadrage ou
-de régénération d'image.
-
-**Codex pour Claude Code** : plugin installé (`/plugin marketplace add
-openai/codex-plugin-cc`, `/plugin install codex@openai-codex`). Invocation
-uniquement via l'agent `codex:codex-rescue` (forwarder simple vers
-`codex-companion.mjs task`, voir la skill `codex:codex-cli-runtime` pour la
-convention d'appel exacte). Auth réutilisée automatiquement depuis la CLI
-Codex locale déjà connectée en `chatgpt` — ne jamais configurer de clé API
-séparée pour ce projet, ça activerait une facturation que Clément a
-explicitement refusée.
-
-**Piège d'environnement rencontré** : macOS a révoqué l'accès à tout
-`~/Documents` en pleine édition (même famille de bug TCC que le dossier
-Desktop, documenté plus bas) — `ls`, Python et les outils de fichiers du
-CLI Claude Code renvoyaient tous `Operation not permitted` sur le dossier
-entier, pas seulement ce dépôt. Un simple octroi de Full Disk Access au
-Terminal n'a pas suffi tant que l'appli n'avait pas été entièrement quittée
-(Cmd+Q) puis rouverte — les process déjà lancés gardent l'état TCC refusé
-jusqu'au redémarrage. Si ça se reproduit : redémarrer Terminal, pas
-seulement retenter.
-
-**Non fait / limites connues** (voir aussi section 16-17 du plan) :
-- Pas de test Safari réel (uniquement Chromium via Playwright dans cet
-  environnement).
-- Ordre de tabulation des 7 objets stable mais pas strictement trié en ordre
-  de lecture visuelle (gauche→droite, haut→bas) — fonctionnel, perfectible.
-- Pas de ré-audit complet des 7 pages projet + Training (elles n'ont pas été
-  modifiées dans ce chantier, mais n'ont pas non plus été re-testées).
-- Une seule génération de chaque image (pas d'itération sur plusieurs
-  variantes) — acceptée telle quelle par Clément après revue, mais si un
-  détail gêne à l'usage (ex. le cric TN06 partiellement hors cadre côté
-  mobile), une régénération ciblée reste possible plutôt qu'un correctif
-  manuel de l'image.
+### Non fait / limites connues
+- Pas de test Safari réel (Chromium uniquement via Playwright).
+- Ordre de tabulation des 7 objets de l'atelier stable mais pas strictement
+  trié en ordre de lecture visuelle — fonctionnel, perfectible.
+- Pas de ré-audit complet des 7 pages projet + Training au-delà de la
+  vérification faite lors du retrait du curseur-jeu.
+- Une seule génération de chaque image 2D (pas d'itération sur plusieurs
+  variantes) — si un détail gêne à l'usage, une régénération ciblée reste
+  possible plutôt qu'un correctif manuel de l'image.
+- Clic/tap 3D vérifié sur un sous-ensemble des 7 objets à chaque campagne de
+  test (raycasting sur meshes réels, donc fiable), pas systématiquement les
+  7 un par un à chaque changement — le mécanisme sous-jacent est le même
+  pour tous, mais à revérifier si un objet précis semble insensible en usage
+  réel.
 
 ## Historique — avant l'atelier (« L'établi », interface papier)
 
@@ -266,6 +285,10 @@ Les règles de confidentialité et les descriptions des sous-pages restent valab
 - Accueil : JS natif embarqué. GSAP / ScrollTrigger / Lenis concernaient le hero historique.
 
 ## Jet hero (séquence Rafale scrubée au scroll, façon rideradian.com) — v2
+**Périmé : ce hero n'existe plus du tout dans `index.html` actuel (remplacé
+par l'atelier, voir tout en haut du fichier). Section gardée pour mémoire
+technique uniquement (les fichiers Blender/frames existent toujours mais ne
+sont plus chargés par la page).**
 - `#jet-hero` (450vh, 360vh mobile) > `.jet-sticky` (sticky 100vh) > `#jet-canvas` + `.jet-title`
 - 150 frames WebP transparentes 1920×1080 dans `frames/hero/` (~4,2 Mo), rendues avec Blender (EEVEE)
 - Scène Blender autonome (textures packées) : `blender/rafale_hero.blend` + script `blender/animate_render_v2.py`
@@ -294,6 +317,9 @@ Les règles de confidentialité et les descriptions des sous-pages restent valab
   une limite de l'outil de test, pas du site.
 
 ## Thème visuel
+**Périmé : décrit l'ancien hero ci-dessus, plus chargé par `index.html`.**
+Le thème réellement actif aujourd'hui (papier/encre reteinté en vert) est
+documenté tout en haut du fichier, section « Thème vert ».
 - Fond : `#40916C` (vert), highlight radial `#52a87e` — l'ancien thème dark aerospace `#060c15` n'est plus utilisé sur index
 - Variables CSS : `--bg`, `--white`, `--w70`, `--w40`, `--w20`
 - Curseur desktop : Rafale jouable (`rafale-game.js`, `Rafale.png`), `cursor: none`
@@ -319,17 +345,15 @@ logo_bde.jpeg       — logo BDE UTC
 Rafale.png          — avion Rafale (animé, effet blueprint)
 A400M.png           — avion A400M (animé, effet blueprint)
 robafis.pdf, tn06.pdf, nerf_*.png/jpeg — assets projets
+assets/atelier/      — image 2D de l'atelier (desktop/mobile, webp + raw png)
+assets/atelier3d/     — modèle 3D de l'atelier (atelier_scene.glb)
 ```
 
 ## Sections index.html (dans l'ordre)
-0. **Jet hero** — séquence Rafale au scroll, nom + titre en overlay (hors `.wrap`)
-1. **Hero** — bio + langues (le nom/titre a migré dans le jet hero)
-2. **Qui suis-je** — présentation, langues
-3. **Expérience** — timeline Pro + Formation (côte à côte)
-4. **Ce que je maîtrise** — skill cards (CAO, Production, Prog, Ingénierie Système)
-5. **Projets** — 7 cartes : Solder Pen · RobAFIS · TN06 · Nerf · AM25 Taipei 101 · CarDashboard · Training Tracker
-6. **Bénévolat & Associations**
-7. **Mon projet** — section AE03 / parcours Safran (vague, confidentiel)
+0. **L'atelier** — établi 2D/3D, plein écran, 7 objets → 7 pages projet
+1. **Tous les projets** — sept dossiers consultables (ex-« L'établi »)
+2. **Le parcours** — timeline Pro + Formation, compétences, associatif
+3. **Le cap** — section AE03 / parcours Safran (vague, confidentiel)
 
 ## Timeline — entrées actuelles
 
